@@ -5,6 +5,7 @@ spring:
     import: "configserver:"
   cloud:
     config:
+      name: customers, common
       discovery:
         enabled: true
         serviceId: config-server

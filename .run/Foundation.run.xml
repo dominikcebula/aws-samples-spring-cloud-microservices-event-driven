@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="Foundation" type="CompoundRunConfigurationType">
+        <toRun name="Config Server" type="Application"/>
+        <toRun name="Eureka" type="Application"/>
+        <toRun name="Gateway" type="Application"/>
+        <toRun name="Spring Boot Admin" type="Application"/>
+        <toRun name="compose.yml: Compose Deployment" type="docker-deploy"/>
+        <method v="2"/>
+    </configuration>
+</component>

@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="Spring Boot Admin" type="Application" factoryName="Application">
+        <envs>
+            <env name="SPRING_PROFILES_ACTIVE" value="local"/>
+        </envs>
+        <option name="MAIN_CLASS_NAME" value="com.dominikcebula.aws.samples.spring.boot.admin.Application"/>
+        <module name="spring-boot-admin"/>
+        <extension name="coverage">
+            <pattern>
+                <option name="PATTERN" value="com.dominikcebula.aws.samples.spring.boot.admin.*"/>
+                <option name="ENABLED" value="true"/>
+            </pattern>
+        </extension>
+        <method v="2">
+            <option name="Make" enabled="true"/>
+        </method>
+    </configuration>
+</component>

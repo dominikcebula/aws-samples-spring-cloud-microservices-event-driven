@@ -5,6 +5,7 @@
         </envs>
         <option name="MAIN_CLASS_NAME" value="com.dominikcebula.aws.samples.spring.cloud.customers.Application"/>
         <module name="microservice-customers"/>
+        <option name="VM_PARAMETERS" value="-Xmx64m"/>
         <extension name="coverage">
             <pattern>
                 <option name="PATTERN" value="com.dominikcebula.aws.samples.spring.cloud.customers.*"/>
