@@ -18,8 +18,9 @@
     </properties>
 
     <modules>
-        <module>spring-cloud-gateway</module>
+        <module>config-server</module>
         <module>eureka-server</module>
+        <module>spring-cloud-gateway</module>
     </modules>
 
     <dependencyManagement>
