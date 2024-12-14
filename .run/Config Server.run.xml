@@ -1,5 +1,8 @@
 <component name="ProjectRunConfigurationManager">
     <configuration default="false" name="Config Server" type="Application" factoryName="Application">
+        <envs>
+            <env name="SPRING_PROFILES_ACTIVE" value="local,native"/>
+        </envs>
         <option name="MAIN_CLASS_NAME" value="com.dominikcebula.aws.samples.spring.cloud.config.server.Application"/>
         <module name="config-server"/>
         <extension name="coverage">

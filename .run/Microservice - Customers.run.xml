@@ -1,13 +1,13 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="Gateway" type="Application" factoryName="Application">
+    <configuration default="false" name="Microservice - Customers" type="Application" factoryName="Application">
         <envs>
             <env name="SPRING_PROFILES_ACTIVE" value="local"/>
         </envs>
-        <option name="MAIN_CLASS_NAME" value="com.dominikcebula.aws.samples.spring.cloud.gateway.Application"/>
-        <module name="spring-cloud-gateway"/>
+        <option name="MAIN_CLASS_NAME" value="com.dominikcebula.aws.samples.spring.cloud.customers.Application"/>
+        <module name="microservice-customers"/>
         <extension name="coverage">
             <pattern>
-                <option name="PATTERN" value="com.dominikcebula.aws.samples.spring.cloud.gateway.*"/>
+                <option name="PATTERN" value="com.dominikcebula.aws.samples.spring.cloud.customers.*"/>
                 <option name="ENABLED" value="true"/>
             </pattern>
         </extension>
