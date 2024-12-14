@@ -2,8 +2,6 @@ server:
   port: 8091
 
 spring:
-  config:
-    import: "configserver:"
   datasource:
     url: jdbc:postgresql://localhost:5432/appdb
     username: appuser
