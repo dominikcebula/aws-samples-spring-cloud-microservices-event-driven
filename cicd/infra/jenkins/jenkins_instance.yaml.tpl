@@ -47,3 +47,7 @@ spec:
           limits:
             cpu: 1500m
             memory: 500Mi
+  service:
+    type: LoadBalancer
+    port: 80
+    loadBalancerSourceRanges: ["${MY_PUBLIC_IP}/32"]
