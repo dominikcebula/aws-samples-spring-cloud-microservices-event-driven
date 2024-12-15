@@ -62,6 +62,8 @@ spec:
         version: "1903.v004d55388f30"
       - name: kubernetes-credentials-provider
         version: "1.262.v2670ef7ea_0c5"
+      - name: maven-plugin
+        version: "3.24"
   service:
     type: LoadBalancer
     port: 80
