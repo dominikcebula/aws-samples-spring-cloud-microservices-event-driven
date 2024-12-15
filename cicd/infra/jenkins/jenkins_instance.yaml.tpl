@@ -5,11 +5,11 @@ metadata:
   namespace: default
 spec:
   configurationAsCode:
-    configurations: [ ]
+    configurations: []
     secret:
       name: ""
   groovyScripts:
-    configurations: [ ]
+    configurations: []
     secret:
       name: ""
   jenkinsAPISettings:
@@ -18,7 +18,7 @@ spec:
     disableCSRFProtection: false
     containers:
       - name: jenkins-master
-        image: jenkins/jenkins:2.401.1-lts
+        image: jenkins/jenkins:lts
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 12
@@ -43,10 +43,25 @@ spec:
         resources:
           requests:
             cpu: 250m
-            memory: 128Mi
+            memory: 256Mi
           limits:
             cpu: 1500m
-            memory: 500Mi
+            memory: 1Gi
+    basePlugins:
+      - name: kubernetes
+        version: "4302.va_756e4b_67715"
+      - name: workflow-job
+        version: "1472.ve4d5eca_143c4"
+      - name: workflow-aggregator
+        version: "600.vb_57cdd26fdd7"
+      - name: git
+        version: "5.6.0"
+      - name: job-dsl
+        version: "1.90"
+      - name: configuration-as-code
+        version: "1903.v004d55388f30"
+      - name: kubernetes-credentials-provider
+        version: "1.262.v2670ef7ea_0c5"
   service:
     type: LoadBalancer
     port: 80
