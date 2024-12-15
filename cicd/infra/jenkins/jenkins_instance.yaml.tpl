@@ -64,6 +64,10 @@ spec:
         version: "1.262.v2670ef7ea_0c5"
       - name: maven-plugin
         version: "3.24"
+      - name: build-pipeline-plugin
+        version: "2.0.2"
+      - name: blueocean
+        version: "1.27.16"
   service:
     type: LoadBalancer
     port: 80
