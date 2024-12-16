@@ -9,10 +9,6 @@ data "aws_availability_zones" "available" {
   }
 }
 
-data "http" "my_public_ip" {
-  url = "https://ifconfig.me/ip"
-}
-
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "20.8.5"
@@ -20,7 +16,7 @@ module "eks" {
   cluster_name    = local.cluster_name
   cluster_version = "1.29"
 
-  cluster_endpoint_public_access_cidrs = ["${data.http.my_public_ip.response_body}/32"]
+  cluster_endpoint_public_access_cidrs = ["${var.my_public_ip}/32"]
 
   cluster_endpoint_public_access           = true
   enable_cluster_creator_admin_permissions = true
