@@ -11,70 +11,48 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
         }
 
         stage('Checkout') {
-            steps {
-                echo 'Checking out source code...'
-                checkout scm
-            }
+            echo 'Checking out source code...'
+            checkout scm
         }
 
         stage('Build') {
-            steps {
-                echo 'Building the project...'
-                sh 'mvn clean compile'
-            }
+            echo 'Building the project...'
+            sh 'mvn clean compile'
         }
 
         stage('Unit Test') {
-            steps {
-                echo 'Running unit tests...'
-                sh 'mvn test'
-            }
+            echo 'Running unit tests...'
+            sh 'mvn test'
         }
 
         stage('Integration Test') {
-            steps {
-                echo 'Running integration tests...'
-                sh 'mvn verify'
-            }
+            echo 'Running integration tests...'
+            sh 'mvn verify'
         }
 
         stage('Package') {
-            steps {
-                echo 'Packaging the application...'
-                sh 'mvn package'
-            }
+            echo 'Packaging the application...'
+            sh 'mvn package'
         }
 
         stage('Containerize') {
-            steps {
-                script {
-                    echo 'Building Docker image...'
-                    sh "docker build -t ${DOCKER_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} ."
-                }
-            }
+            echo 'Building Docker image...'
+            sh "docker build -t ${DOCKER_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} ."
         }
 
         stage('Deploy to AWS ECR') {
-            steps {
-                script {
-                    echo 'Logging in to AWS ECR...'
-                    sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${DOCKER_REGISTRY}"
+            echo 'Logging in to AWS ECR...'
+            sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${DOCKER_REGISTRY}"
 
-                    echo 'Pushing Docker image to ECR...'
-                    sh "docker push ${DOCKER_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
-                }
-            }
+            echo 'Pushing Docker image to ECR...'
+            sh "docker push ${DOCKER_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
         }
 
         stage('Deploy to EKS') {
-            steps {
-                withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
-                    script {
-                        echo 'Deploying to EKS...'
-                        //sh 'kubectl apply -f k8s/deployment.yaml'
-                        //sh 'kubectl apply -f k8s/service.yaml'
-                    }
-                }
+            withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
+                echo 'Deploying to EKS...'
+                //sh 'kubectl apply -f k8s/deployment.yaml'
+                //sh 'kubectl apply -f k8s/service.yaml'
             }
         }
     }
