@@ -1,3 +1,11 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: jenkins-github-token
+stringData:
+  username: ${JENKINS_GITHUB_TOKEN_USERNAME}
+  password:  ${JENKINS_GITHUB_TOKEN_PASSWORD}
+---
 apiVersion: jenkins.io/v1alpha2
 kind: Jenkins
 metadata:
@@ -72,3 +80,11 @@ spec:
     type: LoadBalancer
     port: 80
     loadBalancerSourceRanges: ["${MY_PUBLIC_IP}/32"]
+  seedJobs:
+    - id: jenkins-operator
+      credentialType: usernamePassword
+      credentialID: jenkins-github-token
+      targets: "**/pipeline.jenkins"
+      description: "aws-samples-spring-cloud-microservices-event-driven"
+      repositoryBranch: main
+      repositoryUrl: https://github.com/dominikcebula/aws-samples-spring-cloud-microservices-event-driven.git

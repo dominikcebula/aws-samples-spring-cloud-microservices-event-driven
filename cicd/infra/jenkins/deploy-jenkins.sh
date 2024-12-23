@@ -23,6 +23,13 @@ deploy "Jenkins Operator and other required resources:" \
 
 MY_PUBLIC_IP=$(curl https://ifconfig.me/ip 2> /dev/null)
 export MY_PUBLIC_IP
+
+JENKINS_GITHUB_TOKEN_USERNAME=$(aws secretsmanager get-secret-value --secret-id jenkins-github-token --query SecretString --output text |jq --raw-output '.github_username')
+export JENKINS_GITHUB_TOKEN_USERNAME
+
+JENKINS_GITHUB_TOKEN_PASSWORD=$(aws secretsmanager get-secret-value --secret-id jenkins-github-token --query SecretString --output text |jq --raw-output '.github_password')
+export JENKINS_GITHUB_TOKEN_PASSWORD
+
 envsubst < jenkins_instance.yaml.tpl > jenkins_instance.yaml
 deploy "Jenkins Instance" jenkins_instance.yaml
 
