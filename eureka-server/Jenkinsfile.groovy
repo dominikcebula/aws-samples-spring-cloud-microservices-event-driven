@@ -1,7 +1,10 @@
 podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
-        containerTemplate(name: 'maven', image: 'maven:3.9-eclipse-temurin-21'),
+        containerTemplate(
+                name: 'maven', image: 'maven:3.9-eclipse-temurin-21',
+                volumes: [genericEphemeralVolume(accessModes: 'ReadWriteOnce', mountPath: '/root/.m2/repository', requestsSize: '1Gi')]
+        ),
         containerTemplate(name: 'kaniko', image: "gcr.io/kaniko-project/executor:debug", command: '/busybox/cat', ttyEnabled: true)
-], volumes: [genericEphemeralVolume(accessModes: 'ReadWriteOnce', mountPath: '/root/.m2/repository', requestsSize: '1Gi')]) {
+]) {
     node(POD_LABEL) {
         environment {
             AWS_REGION = 'eu-central-1'
