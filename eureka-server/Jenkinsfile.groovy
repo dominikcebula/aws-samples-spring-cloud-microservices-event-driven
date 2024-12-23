@@ -1,6 +1,6 @@
 podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
         containerTemplate(name: 'maven', image: 'maven:3.9-eclipse-temurin-21'),
-        containerTemplate(name: 'kaniko', image: 'gcr.io/kaniko-project/executor:v1.23.2', command: "sleep", args: "infinity", runAsUser: "0", ttyEnabled: true)
+        containerTemplate(name: 'kaniko', image: "gcr.io/kaniko-project/executor:debug", command: '/busybox/cat', ttyEnabled: true)
 ]) {
     node(POD_LABEL) {
         environment {
