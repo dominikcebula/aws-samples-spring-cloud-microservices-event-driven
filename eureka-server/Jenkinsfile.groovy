@@ -39,7 +39,7 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
         stage('Containerize') {
             container(name: 'kaniko', shell: '/busybox/sh') {
                 echo 'Building Docker image...'
-                sh "/kaniko/executor --dockerfile Dockerfile --context `pwd` --destination aws-samples/eureka-server:latest"
+                sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination aws-samples/eureka-server:latest"
             }
         }
 
