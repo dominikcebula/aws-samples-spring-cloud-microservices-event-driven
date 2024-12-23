@@ -42,22 +42,6 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
                 sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination aws-samples/eureka-server:latest"
             }
         }
-
-        stage('Deploy to AWS ECR') {
-            echo 'Logging in to AWS ECR...'
-            sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${DOCKER_REGISTRY}"
-
-            echo 'Pushing Docker image to ECR...'
-            sh "docker push ${DOCKER_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
-        }
-
-        stage('Deploy to EKS') {
-            withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
-                echo 'Deploying to EKS...'
-                //sh 'kubectl apply -f k8s/deployment.yaml'
-                //sh 'kubectl apply -f k8s/service.yaml'
-            }
-        }
     }
 
     post {
