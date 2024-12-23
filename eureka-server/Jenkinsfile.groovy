@@ -1,12 +1,13 @@
 podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
-        containerTemplate(name: 'maven', image: 'maven:3.9-eclipse-temurin-21')
+        containerTemplate(name: 'maven', image: 'maven:3.9-eclipse-temurin-21'),
+        containerTemplate(name: 'kaniko', image: 'gcr.io/kaniko-project/executor:v1.8.0')
 ]) {
     node(POD_LABEL) {
         environment {
             AWS_REGION = 'eu-central-1'
             ECR_REPO = 'eureka-server'
             IMAGE_TAG = "${env.BUILD_ID}"
-            DOCKER_REGISTRY = "<your_account_id>.dkr.ecr.${AWS_REGION}.amazonaws.com"
+            DOCKER_REGISTRY = "${AWS_ACCOUND_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
             KUBECONFIG_CREDENTIALS_ID = 'your-kubeconfig-credentials-id'
         }
 
@@ -36,8 +37,10 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
         }
 
         stage('Containerize') {
-            echo 'Building Docker image...'
-            sh "docker build -t ${DOCKER_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} ."
+            container(name: 'kaniko', shell: '/busybox/sh') {
+                echo 'Building Docker image...'
+                sh "/kaniko/executor --context `pwd` --destination aws-samples/eureka-server:latest"
+            }
         }
 
         stage('Deploy to AWS ECR') {
