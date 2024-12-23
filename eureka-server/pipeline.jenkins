@@ -5,6 +5,7 @@ pipelineJob('eureka-server') {
         git {
           remote {
             url('https://github.com/dominikcebula/aws-samples-spring-cloud-microservices-event-driven.git')
+            credentials('jenkins-github-token')
           }
           branch('*/main')
         }
