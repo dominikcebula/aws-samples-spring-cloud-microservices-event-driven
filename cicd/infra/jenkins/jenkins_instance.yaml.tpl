@@ -6,6 +6,17 @@ stringData:
   username: ${JENKINS_GITHUB_TOKEN_USERNAME}
   password:  ${JENKINS_GITHUB_TOKEN_PASSWORD}
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: maven-repo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
 apiVersion: jenkins.io/v1alpha2
 kind: Jenkins
 metadata:
