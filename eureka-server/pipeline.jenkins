@@ -10,6 +10,7 @@ pipelineJob('eureka-server') {
           branch('*/main')
         }
       }
+      scriptPath('eureka-server/Jenkinsfile')
       lightweight()
     }
   }
