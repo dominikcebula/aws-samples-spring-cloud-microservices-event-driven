@@ -1,17 +1,15 @@
-pipeline {
-    agent {
-        docker { image '3.9-eclipse-temurin-21' }
-    }
+podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
+        containerTemplate(name: 'maven', image: 'maven:3.9-eclipse-temurin-21')
+]) {
+    node(POD_LABEL) {
+        environment {
+            AWS_REGION = 'eu-central-1'
+            ECR_REPO = 'eureka-server'
+            IMAGE_TAG = "${env.BUILD_ID}"
+            DOCKER_REGISTRY = "<your_account_id>.dkr.ecr.${AWS_REGION}.amazonaws.com"
+            KUBECONFIG_CREDENTIALS_ID = 'your-kubeconfig-credentials-id'
+        }
 
-    environment {
-        AWS_REGION = 'eu-central-1'
-        ECR_REPO = 'eureka-server'
-        IMAGE_TAG = "${env.BUILD_ID}"
-        DOCKER_REGISTRY = "<your_account_id>.dkr.ecr.${AWS_REGION}.amazonaws.com"
-        KUBECONFIG_CREDENTIALS_ID = 'your-kubeconfig-credentials-id'
-    }
-
-    stages {
         stage('Checkout') {
             steps {
                 echo 'Checking out source code...'
