@@ -1,7 +1,3 @@
-locals {
-  cluster_name = "eks-01"
-}
-
 data "aws_availability_zones" "available" {
   filter {
     name = "opt-in-status"
@@ -13,7 +9,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "20.8.5"
 
-  cluster_name    = local.cluster_name
+  cluster_name = var.cluster_name
   cluster_version = "1.29"
 
   cluster_endpoint_public_access_cidrs = ["${var.my_public_ip}/32"]

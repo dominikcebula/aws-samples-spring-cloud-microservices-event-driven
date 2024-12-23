@@ -1,7 +1,3 @@
-resource "kubectl_manifest" "jenkins_master" {
-  depends_on = [kubectl_manifest.jenkins_crd, kubectl_manifest.jenkins_operator]
-
-  yaml_body = <<YAML
 apiVersion: jenkins.io/v1alpha2
 kind: Jenkins
 metadata:
@@ -75,6 +71,4 @@ spec:
   service:
     type: LoadBalancer
     port: 80
-    loadBalancerSourceRanges: ["${var.my_public_ip}/32"]
-YAML
-}
+    loadBalancerSourceRanges: ["${MY_PUBLIC_IP}/32"]
