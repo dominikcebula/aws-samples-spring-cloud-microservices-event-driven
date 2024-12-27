@@ -39,17 +39,4 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
             }
         }
     }
-
-    post {
-        success {
-            echo 'Pipeline executed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
-        }
-        always {
-            echo 'Cleaning up...'
-            cleanWs()
-        }
-    }
 }
