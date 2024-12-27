@@ -38,6 +38,9 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
 
         stage('Containerize') {
             container(name: 'kaniko', shell: '/busybox/sh') {
+                echo 'will sleep now...'
+                sh "sleep 1800"
+
                 echo 'Preparing kaniko configuration...'
                 def kanikoConfigContent = '''
                     {
