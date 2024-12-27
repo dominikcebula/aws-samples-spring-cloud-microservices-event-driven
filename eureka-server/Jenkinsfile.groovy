@@ -3,10 +3,6 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
         containerTemplate(name: 'kaniko', image: "gcr.io/kaniko-project/executor:debug", command: '/busybox/cat', ttyEnabled: true)
 ], volumes: [genericEphemeralVolume(accessModes: 'ReadWriteOnce', mountPath: '/root/.m2/repository', requestsSize: '1Gi')]) {
     node(POD_LABEL) {
-        environment {
-            ECR_IMAGE_URL = "${ECR_REPO_NAMESPACE_URL}/eureka-server:latest"
-        }
-
         stage('Checkout') {
             echo 'Checking out source code...'
             checkout scm
@@ -37,8 +33,9 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
                 echo 'Preparing kaniko configuration...'
                 sh 'echo "{ \\"credsStore\\": \\"ecr-login\\" }" > /kaniko/.docker/config.json'
 
-                echo 'Building Docker image using kaniko...'
-                sh '/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination ${ECR_IMAGE_URL}'
+                echo 'Building and uploading docker image using kaniko...'
+                def ecrImageUrl = "${ECR_REPO_NAMESPACE_URL}/eureka-server:latest"
+                sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination ${ecrImageUrl}"
             }
         }
     }
