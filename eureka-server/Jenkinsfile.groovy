@@ -4,11 +4,7 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
 ], volumes: [genericEphemeralVolume(accessModes: 'ReadWriteOnce', mountPath: '/root/.m2/repository', requestsSize: '1Gi')]) {
     node(POD_LABEL) {
         environment {
-            AWS_REGION = 'eu-central-1'
-            ECR_REPO = 'eureka-server'
-            IMAGE_TAG = "${env.BUILD_ID}"
-            DOCKER_REGISTRY = "${AWS_ACCOUND_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
-            KUBECONFIG_CREDENTIALS_ID = 'your-kubeconfig-credentials-id'
+            ECR_IMAGE_URL = "${ECR_REPO_NAMESPACE_URL}/eureka-server:latest"
         }
 
         stage('Checkout') {
@@ -38,23 +34,11 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
 
         stage('Containerize') {
             container(name: 'kaniko', shell: '/busybox/sh') {
-                echo 'will sleep now...'
-                sh "sleep 1800"
-
                 echo 'Preparing kaniko configuration...'
-                def kanikoConfigContent = '''
-                    {
-                        "credsStore": "ecr-login"
-                    }
-                    '''
-                def kanikoConfigFile = new File("/kaniko/.docker/config.json")
-                kanikoConfigFile.getParentFile().mkdirs()
-                kanikoConfigFile.createNewFile()
-                kanikoConfigFile.write(kanikoConfigContent)
-                kanikoConfigFile.close()
+                sh 'echo "{ \\"credsStore\\": \\"ecr-login\\" }" > /kaniko/.docker/config.json'
 
                 echo 'Building Docker image using kaniko...'
-                sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination aws-samples-spring-cloud-microservices-event-driven/eureka-server:latest"
+                sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination ${ECR_IMAGE_URL}"
             }
         }
     }

@@ -17,6 +17,27 @@ spec:
     requests:
       storage: 10Gi
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins-operator-user-configuration
+data:
+  01-global-node-properties.yaml: |
+    jenkins:
+      globalNodeProperties:
+      - envVars:
+          env:
+          - key: AWS_ACCOUNT_ID
+            value: ${AWS_ACCOUNT_ID}
+          - key: AWS_REGION
+            value: ${AWS_REGION}
+          - key: ECR_REPO_HOSTNAME
+            value: ${ECR_REPO_HOSTNAME}
+          - key: ECR_REPO_NAMESPACE
+            value: ${ECR_REPO_NAMESPACE}
+          - key: ECR_REPO_NAMESPACE_URL
+            value: ${ECR_REPO_NAMESPACE_URL}
+---
 apiVersion: jenkins.io/v1alpha2
 kind: Jenkins
 metadata:
@@ -24,13 +45,15 @@ metadata:
   namespace: default
 spec:
   configurationAsCode:
-    configurations: []
+    configurations:
+    - name: jenkins-operator-user-configuration
     secret:
-      name: ""
+        name: ""
   groovyScripts:
-    configurations: []
+    configurations:
+    - name: jenkins-operator-user-configuration
     secret:
-      name: ""
+        name: ""
   jenkinsAPISettings:
     authorizationStrategy: createUser
   master:
