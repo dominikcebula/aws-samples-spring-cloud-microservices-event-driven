@@ -38,7 +38,7 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
                 sh 'echo "{ \\"credsStore\\": \\"ecr-login\\" }" > /kaniko/.docker/config.json'
 
                 echo 'Building Docker image using kaniko...'
-                sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination ${ECR_IMAGE_URL}"
+                sh '/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination ${ECR_IMAGE_URL}'
             }
         }
     }
