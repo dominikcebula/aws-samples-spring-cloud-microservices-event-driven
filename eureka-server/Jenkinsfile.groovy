@@ -39,9 +39,20 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
         stage('Containerize') {
             container(name: 'kaniko', shell: '/busybox/sh') {
                 echo 'Building Docker image...'
-                sh 'echo $DOCKER_REGISTRY'
-                sh 'mkdir -p /kaniko/.docker'
-                sh 'echo "{\"credsStore\":\"ecr-login\"}" > /kaniko/.docker/config.json'
+
+                def kanikoConfigDirectory = new File('/kaniko/.docker')
+                if (!kanikoConfigDirectory.exists())
+                    kanikoConfigDirectory.mkdirs()
+
+                def kanikoConfigContent = '''
+                    {
+                        "credsStore": "ecr-login"
+                    }
+                    '''
+                def kanikoConfigFile = new File("/kaniko/.docker/config.json")
+                kanikoConfigFile.write(kanikoConfigContent)
+                kanikoConfigFile.close()
+
                 sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination aws-samples-spring-cloud-microservices-event-driven/eureka-server:latest"
             }
         }
