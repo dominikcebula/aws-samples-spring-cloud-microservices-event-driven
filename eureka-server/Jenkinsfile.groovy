@@ -38,21 +38,19 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
 
         stage('Containerize') {
             container(name: 'kaniko', shell: '/busybox/sh') {
-                echo 'Building Docker image...'
-
-                def kanikoConfigDirectory = new File('/kaniko/.docker')
-                if (!kanikoConfigDirectory.exists())
-                    kanikoConfigDirectory.mkdirs()
-
+                echo 'Preparing kaniko configuration...'
                 def kanikoConfigContent = '''
                     {
                         "credsStore": "ecr-login"
                     }
                     '''
                 def kanikoConfigFile = new File("/kaniko/.docker/config.json")
+                kanikoConfigFile.getParent().mkdirs()
+                kanikoConfigFile.createNewFile()
                 kanikoConfigFile.write(kanikoConfigContent)
                 kanikoConfigFile.close()
 
+                echo 'Building Docker image using kaniko...'
                 sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination aws-samples-spring-cloud-microservices-event-driven/eureka-server:latest"
             }
         }
