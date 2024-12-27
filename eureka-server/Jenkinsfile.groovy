@@ -45,7 +45,7 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
                     }
                     '''
                 def kanikoConfigFile = new File("/kaniko/.docker/config.json")
-                kanikoConfigFile.getParent().mkdirs()
+                kanikoConfigFile.getParentFile().mkdirs()
                 kanikoConfigFile.createNewFile()
                 kanikoConfigFile.write(kanikoConfigContent)
                 kanikoConfigFile.close()
