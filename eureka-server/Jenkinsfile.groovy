@@ -1,7 +1,7 @@
 podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
         containerTemplate(name: 'maven', image: 'maven:3.9-eclipse-temurin-21'),
         containerTemplate(name: 'kaniko', image: "gcr.io/kaniko-project/executor:debug", command: '/busybox/cat', ttyEnabled: true)
-], volumes: [genericEphemeralVolume(accessModes: 'ReadWriteOnce', mountPath: '/root/.m2/repository', requestsSize: '10Gi', storageClassName: 'gp2')]) {
+], volumes: [genericEphemeralVolume(claimName: 'maven-repo', mountPath: '/root/.m2/repository')]) {
     node(POD_LABEL) {
         stage('Checkout') {
             echo 'Checking out source code...'
