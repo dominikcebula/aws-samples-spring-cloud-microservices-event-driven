@@ -34,6 +34,9 @@ export ECR_REPO_HOSTNAME="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
 export ECR_REPO_NAMESPACE="aws-samples-spring-cloud-microservices-event-driven"
 export ECR_REPO_NAMESPACE_URL="${ECR_REPO_HOSTNAME}/${ECR_REPO_NAMESPACE}"
 
+AWS_EKS_CLUSTER_NAME=$(kubectl config view --minify -o jsonpath='{.clusters[].name}' |grep -oP 'cluster/.*' |sed 's/cluster\///')
+export AWS_EKS_CLUSTER_NAME
+
 JENKINS_GITHUB_TOKEN_USERNAME=$(aws secretsmanager get-secret-value --secret-id jenkins-github-token --query SecretString --output text |jq --raw-output '.github_username')
 export JENKINS_GITHUB_TOKEN_USERNAME
 
