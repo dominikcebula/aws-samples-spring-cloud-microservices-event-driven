@@ -1,6 +1,7 @@
 eureka:
   instance:
-    hostname: "${HOSTNAME}.eureka"
+    hostname: "${HOSTNAME}.eureka-server"
+  environment: aws
   client:
     serviceUrl:
       defaultZone: ${EUREKA_SERVER_ADDRESS}
