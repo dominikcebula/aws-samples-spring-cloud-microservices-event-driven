@@ -45,6 +45,7 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
         stage('Configure Kubernetes Client') {
             container(name: 'awscli') {
                 sh "aws eks update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME} --region ${AWS_REGION} --kubeconfig /.kube/config"
+                sh "chmod 0640 /.kube/config"
             }
         }
 
