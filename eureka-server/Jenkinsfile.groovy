@@ -1,6 +1,8 @@
 podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
         containerTemplate(name: 'maven', image: 'maven:3.9-eclipse-temurin-21'),
-        containerTemplate(name: 'kaniko', image: "gcr.io/kaniko-project/executor:debug", command: '/busybox/cat', ttyEnabled: true)
+        containerTemplate(name: 'kaniko', image: "gcr.io/kaniko-project/executor:debug", command: '/busybox/cat', ttyEnabled: true),
+        containerTemplate(name: 'awscli', image: 'amazon/aws-cli:2.22.26'),
+        containerTemplate(name: 'kubectl', image: 'bitnami/kubectl:1.29.11')
 ], volumes: [
         persistentVolumeClaim(claimName: 'maven-repo', mountPath: '/root/.m2/repository'),
         configMapVolume(configMapName: 'kaniko-config', mountPath: '/kaniko/.docker')
@@ -36,6 +38,18 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
                 echo 'Building and uploading docker image using kaniko...'
                 def ecrImageUrl = "${ECR_REPO_NAMESPACE_URL}/eureka-server:latest"
                 sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination ${ecrImageUrl}"
+            }
+        }
+
+        stage('Configure Kubernetes Client') {
+            container(name: 'awscli') {
+                sh "aws eks update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME} --region ${AWS_REGION}"
+            }
+        }
+
+        stage('Deploy') {
+            container(name: 'kubectl') {
+                sh "kubectl apply -f `pwd`/eureka-server/deployment/*.yaml"
             }
         }
     }

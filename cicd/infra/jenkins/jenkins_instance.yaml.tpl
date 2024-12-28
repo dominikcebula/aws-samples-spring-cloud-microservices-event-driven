@@ -47,6 +47,8 @@ data:
             value: ${ECR_REPO_NAMESPACE}
           - key: ECR_REPO_NAMESPACE_URL
             value: ${ECR_REPO_NAMESPACE_URL}
+          - key: AWS_EKS_CLUSTER_NAME
+            value: ${AWS_EKS_CLUSTER_NAME}
 ---
 apiVersion: jenkins.io/v1alpha2
 kind: Jenkins
