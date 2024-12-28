@@ -51,6 +51,7 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
 
         stage('Deploy') {
             container(name: 'kubectl', shell: '/bin/bash') {
+                sh "echo ok"
                 sh "KUBECONFIG=/.kube/config kubectl -v=8 apply -f `pwd`/eureka-server/deployment/*.yaml"
             }
         }
