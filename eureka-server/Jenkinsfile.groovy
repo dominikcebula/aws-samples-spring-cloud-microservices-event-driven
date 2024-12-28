@@ -14,44 +14,42 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
             checkout scm
         }
 
-//        stage('Build') {
-//            echo 'Building the project...'
-//            sh 'mvn clean compile'
-//        }
-//
-//        stage('Unit Test') {
-//            echo 'Running unit tests...'
-//            sh 'mvn test'
-//        }
-//
-//        stage('Integration Test') {
-//            echo 'Running integration tests...'
-//            sh 'mvn verify'
-//        }
-//
-//        stage('Package') {
-//            echo 'Packaging the application...'
-//            sh 'mvn package'
-//        }
-//
-//        stage('Containerize') {
-//            container(name: 'kaniko', shell: '/busybox/sh') {
-//                echo 'Building and uploading docker image using kaniko...'
-//                def ecrImageUrl = "${ECR_REPO_NAMESPACE_URL}/eureka-server:latest"
-//                sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination ${ecrImageUrl}"
-//            }
-//        }
-//
-//        stage('Configure Kubernetes Client') {
-//            container(name: 'awscli') {
-//                sh "aws eks update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME} --region ${AWS_REGION} --kubeconfig /.kube/config"
-//                sh "chmod 0640 /.kube/config"
-//            }
-//        }
+        stage('Build') {
+            echo 'Building the project...'
+            sh 'mvn clean compile'
+        }
+
+        stage('Unit Test') {
+            echo 'Running unit tests...'
+            sh 'mvn test'
+        }
+
+        stage('Integration Test') {
+            echo 'Running integration tests...'
+            sh 'mvn verify'
+        }
+
+        stage('Package') {
+            echo 'Packaging the application...'
+            sh 'mvn package'
+        }
+
+        stage('Containerize') {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+                echo 'Building and uploading docker image using kaniko...'
+                def ecrImageUrl = "${ECR_REPO_NAMESPACE_URL}/eureka-server:latest"
+                sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination ${ecrImageUrl}"
+            }
+        }
+
+        stage('Configure Kubernetes Client') {
+            container(name: 'awscli') {
+                sh "aws eks update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME} --region ${AWS_REGION} --kubeconfig /.kube/config"
+            }
+        }
 
         stage('Deploy') {
             container(name: 'kubectl') {
-                sh "echo ok"
                 sh "KUBECONFIG=/.kube/config kubectl -v=8 apply -f `pwd`/eureka-server/deployment/*.yaml"
             }
         }
