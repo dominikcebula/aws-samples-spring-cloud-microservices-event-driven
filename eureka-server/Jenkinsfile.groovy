@@ -6,7 +6,7 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
 ], volumes: [
         persistentVolumeClaim(claimName: 'maven-repo', mountPath: '/root/.m2/repository'),
         configMapVolume(configMapName: 'kaniko-config', mountPath: '/kaniko/.docker'),
-        emptyDirVolume(mountPath: '/root/.kube')
+        emptyDirVolume(mountPath: '/.kube')
 ]) {
     node(POD_LABEL) {
         stage('Checkout') {
@@ -44,13 +44,13 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
 
         stage('Configure Kubernetes Client') {
             container(name: 'awscli') {
-                sh "aws eks update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME} --region ${AWS_REGION}"
+                sh "aws eks update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME} --region ${AWS_REGION} --kubeconfig /.kube/config"
             }
         }
 
         stage('Deploy') {
             container(name: 'kubectl') {
-                sh "KUBECONFIG=/root/.kube/config kubectl apply -f `pwd`/eureka-server/deployment/*.yaml"
+                sh "KUBECONFIG=/.kube/config kubectl apply -f `pwd`/eureka-server/deployment/*.yaml"
             }
         }
     }
