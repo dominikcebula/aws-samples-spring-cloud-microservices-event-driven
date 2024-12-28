@@ -5,7 +5,8 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
         containerTemplate(name: 'kubectl', image: 'bitnami/kubectl:1.29.11', command: 'cat', ttyEnabled: true)
 ], volumes: [
         persistentVolumeClaim(claimName: 'maven-repo', mountPath: '/root/.m2/repository'),
-        configMapVolume(configMapName: 'kaniko-config', mountPath: '/kaniko/.docker')
+        configMapVolume(configMapName: 'kaniko-config', mountPath: '/kaniko/.docker'),
+        emptyDirVolume(mountPath: '/root/.kube')
 ]) {
     node(POD_LABEL) {
         stage('Checkout') {
@@ -49,7 +50,7 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
 
         stage('Deploy') {
             container(name: 'kubectl') {
-                sh "kubectl apply -f `pwd`/eureka-server/deployment/*.yaml"
+                sh "KUBECONFIG=/root/.kube/config kubectl apply -f `pwd`/eureka-server/deployment/*.yaml"
             }
         }
     }
