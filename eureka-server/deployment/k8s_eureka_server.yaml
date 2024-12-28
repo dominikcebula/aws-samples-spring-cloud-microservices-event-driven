@@ -8,17 +8,15 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: eureka-server-np
-  labels:
-    app: eureka-server
+  name: eureka-server-0-lb
 spec:
-  type: NodePort
+  type: LoadBalancer
+  selector:
+    statefulset.kubernetes.io/pod-name: eureka-server-0
   ports:
     - port: 8761
-      nodePort: 30030
+      targetPort: 8761
       name: eureka-server
-  selector:
-    app: eureka-server
 ---
 apiVersion: v1
 kind: Service
