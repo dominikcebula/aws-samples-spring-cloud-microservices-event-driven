@@ -52,6 +52,7 @@ spec:
       containers:
         - name: eureka
           image: 748487307014.dkr.ecr.eu-central-1.amazonaws.com/aws-samples-spring-cloud-microservices-event-driven/eureka-server:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8761
           resources:
