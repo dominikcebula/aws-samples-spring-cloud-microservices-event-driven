@@ -1,7 +1,10 @@
 podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
         containerTemplate(name: 'maven', image: 'maven:3.9-eclipse-temurin-21'),
         containerTemplate(name: 'kaniko', image: "gcr.io/kaniko-project/executor:debug", command: '/busybox/cat', ttyEnabled: true)
-], volumes: [persistentVolumeClaim(claimName: 'maven-repo', mountPath: '/root/.m2/repository')]) {
+], volumes: [
+        persistentVolumeClaim(claimName: 'maven-repo', mountPath: '/root/.m2/repository'),
+        configMapVolume(configMapName: 'kaniko-config', mountPath: '/kaniko/.docker')
+]) {
     node(POD_LABEL) {
         stage('Checkout') {
             echo 'Checking out source code...'
@@ -30,9 +33,6 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
 
         stage('Containerize') {
             container(name: 'kaniko', shell: '/busybox/sh') {
-                echo 'Preparing kaniko configuration...'
-                sh 'echo "{ \\"credsStore\\": \\"ecr-login\\" }" > /kaniko/.docker/config.json'
-
                 echo 'Building and uploading docker image using kaniko...'
                 def ecrImageUrl = "${ECR_REPO_NAMESPACE_URL}/eureka-server:latest"
                 sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination ${ecrImageUrl}"

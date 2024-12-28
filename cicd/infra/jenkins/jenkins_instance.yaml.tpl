@@ -20,6 +20,16 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: kaniko-config
+data:
+  config.json: |
+    {
+      "credsStore": "ecr-login"
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: jenkins-operator-user-configuration
 data:
   01-global-node-properties.yaml: |
