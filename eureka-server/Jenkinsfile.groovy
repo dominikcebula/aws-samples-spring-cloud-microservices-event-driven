@@ -2,7 +2,7 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
         containerTemplate(name: 'maven', image: 'maven:3.9-eclipse-temurin-21'),
         containerTemplate(name: 'kaniko', image: "gcr.io/kaniko-project/executor:debug", command: '/busybox/cat', ttyEnabled: true),
         containerTemplate(name: 'awscli', image: 'amazon/aws-cli:2.22.26', command: 'cat', ttyEnabled: true),
-        containerTemplate(name: 'kubectl', image: 'd3fk/kubectl:v1.29', ttyEnabled: true)
+        containerTemplate(name: 'kubectl', image: 'd3fk/kubectl:v1.29', command: 'cat', ttyEnabled: true)
 ], volumes: [
         persistentVolumeClaim(claimName: 'maven-repo', mountPath: '/root/.m2/repository'),
         configMapVolume(configMapName: 'kaniko-config', mountPath: '/kaniko/.docker'),
