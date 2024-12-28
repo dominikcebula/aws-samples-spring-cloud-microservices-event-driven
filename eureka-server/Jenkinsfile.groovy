@@ -50,7 +50,7 @@ podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
 
         stage('Deploy') {
             container(name: 'kubectl') {
-                sh "KUBECONFIG=/.kube/config kubectl -v=8 apply -f `pwd`/eureka-server/deployment/*.yaml"
+                sh "KUBECONFIG=/.kube/config kubectl apply -f `pwd`/eureka-server/deployment/*.yaml"
             }
         }
     }
