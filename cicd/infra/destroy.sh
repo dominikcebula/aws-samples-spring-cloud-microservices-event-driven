@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Bash helper script to destroy all resources on AWS account created by this project.
+# It was implemented because for some reason Terraform has issues when deleting VPCs,
+# deletion is blocked by ENIs used by LBs. Additionally Terraform cannot delete ECRs even with force_delete.
+
 REGION=$(aws configure get region)
 
 function delete_load_balancers() {
