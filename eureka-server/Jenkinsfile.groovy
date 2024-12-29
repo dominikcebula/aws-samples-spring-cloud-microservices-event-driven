@@ -40,13 +40,13 @@ podTemplate(agentContainer: 'maven', agentInjection: true, serviceAccount: 'jenk
             }
         }
 
-        stage('Containerize') {
-            container(name: 'kaniko', shell: '/busybox/sh') {
-                echo 'Building and uploading docker image using kaniko...'
-                def ecrImageUrl = "${ECR_REPO_NAMESPACE_URL}/eureka-server:latest"
-                sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination ${ecrImageUrl}"
-            }
-        }
+//        stage('Containerize') {
+//            container(name: 'kaniko', shell: '/busybox/sh') {
+//                echo 'Building and uploading docker image using kaniko...'
+//                def ecrImageUrl = "${ECR_REPO_NAMESPACE_URL}/eureka-server:latest"
+//                sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination ${ecrImageUrl}"
+//            }
+//        }
 
         stage('Configure Kubernetes Client') {
             container(name: 'awscli') {
