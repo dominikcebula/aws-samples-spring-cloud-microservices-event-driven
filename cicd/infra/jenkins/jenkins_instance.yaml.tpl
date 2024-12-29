@@ -50,6 +50,13 @@ data:
           - key: AWS_EKS_CLUSTER_NAME
             value: ${AWS_EKS_CLUSTER_NAME}
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+    name: jenkins-cicd-sa
+    annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/jenkins-cicd-role
+---
 apiVersion: jenkins.io/v1alpha2
 kind: Jenkins
 metadata:
