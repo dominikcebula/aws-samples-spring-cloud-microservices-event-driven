@@ -14,24 +14,30 @@ podTemplate(agentContainer: 'maven', agentInjection: true, serviceAccount: 'jenk
             checkout scm
         }
 
-        stage('Build') {
-            echo 'Building the project...'
-            sh 'mvn clean compile'
-        }
+//        stage('Build') {
+//            echo 'Building the project...'
+//            sh 'mvn clean compile'
+//        }
+//
+//        stage('Unit Test') {
+//            echo 'Running unit tests...'
+//            sh 'mvn test'
+//        }
+//
+//        stage('Integration Test') {
+//            echo 'Running integration tests...'
+//            sh 'mvn verify'
+//        }
+//
+//        stage('Package') {
+//            echo 'Packaging the application...'
+//            sh 'mvn package'
+//        }
 
-        stage('Unit Test') {
-            echo 'Running unit tests...'
-            sh 'mvn test'
-        }
-
-        stage('Integration Test') {
-            echo 'Running integration tests...'
-            sh 'mvn verify'
-        }
-
-        stage('Package') {
-            echo 'Packaging the application...'
-            sh 'mvn package'
+        stage('Get Caller Identity') {
+            container(name: 'awscli') {
+                sh "aws sts get-caller-identity"
+            }
         }
 
         stage('Containerize') {
