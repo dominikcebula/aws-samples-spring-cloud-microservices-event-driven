@@ -1,4 +1,4 @@
-podTemplate(agentContainer: 'maven', agentInjection: true, containers: [
+podTemplate(agentContainer: 'maven', agentInjection: true, serviceAccount: 'jenkins-operator',containers: [
         containerTemplate(name: 'maven', image: 'maven:3.9-eclipse-temurin-21'),
         containerTemplate(name: 'kaniko', image: "gcr.io/kaniko-project/executor:debug", command: '/busybox/cat', ttyEnabled: true),
         containerTemplate(name: 'awscli', image: 'amazon/aws-cli:2.22.26', command: 'cat', ttyEnabled: true),
