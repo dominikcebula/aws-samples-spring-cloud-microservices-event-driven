@@ -44,7 +44,9 @@ function delete_enis() {
 
 function delete_vpcs() {
     echo "Fetching VPCs..."
+
     vpcs=$(aws ec2 describe-vpcs --query "Vpcs[*].VpcId" --output text --region "$REGION")
+
     for vpc_id in $vpcs; do
         echo "Processing VPC: $vpc_id"
 
@@ -69,8 +71,7 @@ function delete_vpcs() {
 
         # Delete Route Tables
         echo "Deleting route tables in VPC: $vpc_id"
-        # shellcheck disable=SC2006
-        route_tables=$(aws ec2 describe-route-tables --filters Name=vpc-id,Values="$vpc_id" --query "RouteTables[?Associations[0].Main==`false`].RouteTableId" --output text --region "$REGION")
+        route_tables=$(aws ec2 describe-route-tables --filters Name=vpc-id,Values="$vpc_id" --query "RouteTables[*].RouteTableId" --output text --region "$REGION")
         for route_table_id in $route_tables; do
             echo "Deleting route table: $route_table_id"
             aws ec2 delete-route-table --route-table-id "$route_table_id" --region "$REGION"
@@ -81,15 +82,14 @@ function delete_vpcs() {
         igws=$(aws ec2 describe-internet-gateways --filters Name=attachment.vpc-id,Values="$vpc_id" --query "InternetGateways[*].InternetGatewayId" --output text --region "$REGION")
         for igw_id in $igws; do
             echo "Detaching internet gateway: $igw_id"
-            # shellcheck disable=SC2086
-            aws ec2 detach-internet-gateway --internet-gateway-id "$igw_id" --vpc-id $vpc_id --region $REGION
+            aws ec2 detach-internet-gateway --internet-gateway-id "$igw_id" --vpc-id "$vpc_id" --region "$REGION"
             echo "Deleting internet gateway: $igw_id"
             aws ec2 delete-internet-gateway --internet-gateway-id "$igw_id" --region "$REGION"
         done
 
         # Delete Security Groups
         echo "Deleting security groups in VPC: $vpc_id"
-        sg_ids=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values="$vpc_id" --query "SecurityGroups[?GroupName!='default'].GroupId" --output text --region "$REGION")
+        sg_ids=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values="$vpc_id" --query "SecurityGroups[*].GroupId" --output text --region "$REGION")
         for sg_id in $sg_ids; do
             echo "Deleting security group: $sg_id"
             aws ec2 delete-security-group --group-id "$sg_id" --region "$REGION"
