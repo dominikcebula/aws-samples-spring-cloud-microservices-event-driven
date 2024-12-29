@@ -44,7 +44,6 @@ podTemplate(agentContainer: 'maven', agentInjection: true, serviceAccount: 'jenk
 
         stage('Configure Kubernetes Client') {
             container(name: 'awscli') {
-                sh "aws sts get-caller-identity"
                 sh "aws eks update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME} --region ${AWS_REGION} --kubeconfig /.kube/config"
             }
         }
