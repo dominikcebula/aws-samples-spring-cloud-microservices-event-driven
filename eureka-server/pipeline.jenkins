@@ -1,3 +1,3 @@
-def pipelineJob = evaluate(readFileFromWorkspace("${WORKSPACE}/cicd/jobdsl/pipelineJob.groovy"))
+evaluate(readFileFromWorkspace("${WORKSPACE}/cicd/jobdsl/pipelineJob.groovy"))
 
-pipelineJob()
+commonPipelineJob()

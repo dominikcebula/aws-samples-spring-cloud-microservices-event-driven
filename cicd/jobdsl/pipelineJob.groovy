@@ -1,4 +1,4 @@
-def call() {
+commonPipelineJob = {
     pipelineJob('eureka-server') {
         definition {
             cpsScm {
@@ -17,5 +17,3 @@ def call() {
         }
     }
 }
-
-return call
