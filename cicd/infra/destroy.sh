@@ -5,6 +5,7 @@
 # deletion is blocked by ENIs used by LBs. Additionally Terraform cannot delete ECRs even with force_delete.
 
 REGION=$(aws configure get region)
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 
 function delete_eks_node_groups() {
     echo "Fetching EKS clusters for node groups list..."
@@ -99,11 +100,20 @@ function delete_rds_resources() {
 }
 
 function delete_ebs_volumes() {
-    echo "Fetching unused EBS volumes..."
+    # Delete EBS Volumes
+    echo "Fetching EBS volumes..."
     volumes=$(aws ec2 describe-volumes --query "Volumes[*].VolumeId" --output text --region "$REGION")
     for volume_id in $volumes; do
         echo "Deleting EBS volume: $volume_id"
         aws ec2 delete-volume --volume-id "$volume_id" --region "$REGION"
+    done
+
+    # Delete EBS Snapshots
+    echo "Fetching EBS snapshots..."
+    snapshots=$(aws ec2 describe-snapshots --filters Name=owner-id,Values="${AWS_ACCOUNT_ID}" --query "Snapshots[*].SnapshotId" --output text --region "$REGION")
+    for snapshot_id in $snapshots; do
+        echo "Deleting EBS snapshot: $snapshot_id"
+        aws ec2 delete-snapshot --snapshot-id "$snapshot_id" --region "$REGION"
     done
 }
 
@@ -167,6 +177,30 @@ function delete_vpcs() {
         for sg_id in $sg_ids; do
             echo "Deleting security group: $sg_id"
             aws ec2 delete-security-group --group-id "$sg_id" --region "$REGION"
+        done
+
+        # Delete Network ACLs
+        echo "Deleting network ACLs in VPC: $vpc_id"
+        nacl_ids=$(aws ec2 describe-network-acls --filters Name=vpc-id,Values="$vpc_id" --query "NetworkAcls[*].NetworkAclId" --output text --region "$REGION")
+        for nacl_id in $nacl_ids; do
+            echo "Deleting network ACL: $nacl_id"
+            aws ec2 delete-network-acl --network-acl-id "$nacl_id" --region "$REGION"
+        done
+
+        # Delete DHCP option sets
+        echo "Deleting DHCP option sets in VPC: $vpc_id"
+        dhcp_option_sets=$(aws ec2 describe-dhcp-options --filters Name=vpc-id,Values="$vpc_id" --query "DhcpOptions[*].DhcpOptionsId" --output text --region "$REGION")
+        for dhcp_option_set_id in $dhcp_option_sets; do
+            echo "Deleting DHCP option set: $dhcp_option_set_id"
+            aws ec2 delete-dhcp-options --dhcp-options-id "$dhcp_option_set_id" --region "$REGION"
+        done
+
+        # Delete Elastic IPs
+        echo "Deleting Elastic IPs in VPC: $vpc_id"
+        eips=$(aws ec2 describe-addresses --query "Addresses[*].AllocationId" --output text --region "$REGION")
+        for eip_id in $eips; do
+            echo "Releasing Elastic IP: $eip_id"
+            aws ec2 release-address --allocation-id "$eip_id" --region "$REGION"
         done
 
         # Delete the VPC
