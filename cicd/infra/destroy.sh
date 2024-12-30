@@ -7,7 +7,7 @@
 REGION=$(aws configure get region)
 
 function delete_eks_node_groups() {
-    echo "Fetching EKS clusters..."
+    echo "Fetching EKS clusters for node groups list..."
     eks_clusters=$(aws eks list-clusters --query "clusters[*]" --output text --region "$REGION")
     for cluster in $eks_clusters; do
         echo "Fetching EKS node groups for cluster: $cluster"
