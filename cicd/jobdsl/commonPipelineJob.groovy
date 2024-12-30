@@ -1,18 +1,20 @@
-defineCommonPipelineJob = {
-    pipelineJob('eureka-server') {
-        definition {
-            cpsScm {
-                scm {
-                    git {
-                        remote {
-                            url('https://github.com/dominikcebula/aws-samples-spring-cloud-microservices-event-driven.git')
-                            credentials('jenkins-github-token')
+class Pipeline {
+    static void defineCommonPipelineJob() {
+        pipelineJob('eureka-server') {
+            definition {
+                cpsScm {
+                    scm {
+                        git {
+                            remote {
+                                url('https://github.com/dominikcebula/aws-samples-spring-cloud-microservices-event-driven.git')
+                                credentials('jenkins-github-token')
+                            }
+                            branch('*/main')
                         }
-                        branch('*/main')
                     }
+                    scriptPath('eureka-server/Jenkinsfile.groovy')
+                    lightweight()
                 }
-                scriptPath('eureka-server/Jenkinsfile.groovy')
-                lightweight()
             }
         }
     }
