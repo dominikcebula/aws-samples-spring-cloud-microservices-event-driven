@@ -14,7 +14,7 @@ spec:
   selector:
     statefulset.kubernetes.io/pod-name: eureka-server-0
   ports:
-    - port: 8761
+    - port: 80
       targetPort: 8761
       name: eureka-server
 ---
