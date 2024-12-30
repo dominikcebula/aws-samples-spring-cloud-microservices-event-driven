@@ -1,16 +1,20 @@
-pipelineJob('eureka-server') {
+evaluate(readFileFromWorkspace("${WORKSPACE}/cicd/jobdsl/commonPipelineJobDefinitions.groovy"))
+
+def serviceName = 'eureka-server'
+
+pipelineJob(serviceName) {
   definition {
     cpsScm {
       scm {
         git {
           remote {
-            url('https://github.com/dominikcebula/aws-samples-spring-cloud-microservices-event-driven.git')
-            credentials('jenkins-github-token')
+            url(GIT_URL)
+            credentials(GIT_CREDENTIALS_ID)
           }
-          branch('*/main')
+          branch(GIT_BRANCH)
         }
       }
-      scriptPath('eureka-server/Jenkinsfile.groovy')
+      scriptPath("${serviceName}/${PIPELINE_SCRIPT_NAME}")
       lightweight()
     }
   }
