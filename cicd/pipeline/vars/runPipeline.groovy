@@ -51,7 +51,7 @@ def call(Map pipelineParams) {
 
             stage('Deploy') {
                 container(name: 'kubectl') {
-                    new File("${WORKSPACE}/${pipelineParams.serviceName}/deployment").eachFileMatch(~/.*\.yaml/) { file ->
+                    new File("${env.WORKSPACE}/${pipelineParams.serviceName}/deployment").eachFileMatch(~/.*\.yaml/) { file ->
                         echo "Applying ${file.name}..."
                         sh "envsubst < ${file.path} | KUBECONFIG=/.kube/config kubectl apply -f -"
                         echo "Finished applying ${file.name}.\n"
