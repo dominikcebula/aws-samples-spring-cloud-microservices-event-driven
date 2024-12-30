@@ -17,29 +17,29 @@ def call(Map pipelineParams) {
 
             stage('Build') {
                 echo 'Building the project...'
-                sh 'mvn clean compile'
+                sh "mvn -f ${WORKSPACE}/${pipelineParams.serviceName}/pom.xml clean compile"
             }
 
             stage('Unit Test') {
                 echo 'Running unit tests...'
-                sh 'mvn test'
+                sh "mvn -f ${WORKSPACE}/${pipelineParams.serviceName}/pom.xml test"
             }
 
             stage('Integration Test') {
                 echo 'Running integration tests...'
-                sh 'mvn verify'
+                sh "mvn -f ${WORKSPACE}/${pipelineParams.serviceName}/pom.xml verify"
             }
 
             stage('Package') {
                 echo 'Packaging the application...'
-                sh 'mvn package'
+                sh "mvn -f ${WORKSPACE}/${pipelineParams.serviceName}/pom.xml package"
             }
 
             stage('Containerize') {
                 container(name: 'kaniko', shell: '/busybox/sh') {
                     echo 'Building and uploading docker image using kaniko...'
                     def ecrImageUrl = "${ECR_REPO_NAMESPACE_URL}/${pipelineParams.serviceName}:latest"
-                    sh "/kaniko/executor --dockerfile cicd/docker/Dockerfile --context `pwd`/eureka-server --destination ${ecrImageUrl}"
+                    sh "/kaniko/executor --dockerfile cicd/docker/Dockerfile --context ${WORKSPACE}/${pipelineParams.serviceName} --destination ${ecrImageUrl}"
                 }
             }
 
