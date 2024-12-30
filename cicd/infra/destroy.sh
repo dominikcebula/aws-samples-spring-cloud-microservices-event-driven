@@ -34,6 +34,18 @@ function delete_eks_clusters() {
     done
 }
 
+function delete_ec2_instances() {
+    echo "Fetching EC2 instances..."
+    instances=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].InstanceId" --output text --region "$REGION")
+    for instance_id in $instances; do
+        echo "Terminating EC2 instance: $instance_id"
+        aws ec2 terminate-instances --instance-ids "$instance_id" --output text --region "$REGION"
+    done
+    # Wait for EC2 instances to be terminated
+    echo "Waiting for EC2 instances to be terminated..."
+    aws ec2 wait instance-terminated --instance-ids "$instances" --region "$REGION"
+}
+
 function delete_load_balancers() {
     echo "Fetching load balancers..."
     load_balancers=$(aws elb describe-load-balancers --query "LoadBalancerDescriptions[*].LoadBalancerName" --output text --region "$REGION")
@@ -137,6 +149,7 @@ echo "Starting deletion process..."
 
 delete_eks_node_groups
 delete_eks_clusters
+delete_ec2_instances
 delete_load_balancers
 delete_ecr_repositories
 delete_ebs_volumes
