@@ -49,6 +49,19 @@ data:
             value: ${ECR_REPO_NAMESPACE_URL}
           - key: AWS_EKS_CLUSTER_NAME
             value: ${AWS_EKS_CLUSTER_NAME}
+  02-global-trusted-pipeline-libraries.yaml: |
+    unclassified:
+      globalLibraries:
+        libraries:
+          - name: "pipeline"
+            defaultVersion: "main"
+            retriever:
+              modernSCM:
+                libraryPath: "cicd/pipeline"
+                scm:
+                  git:
+                    remote: https://github.com/dominikcebula/aws-samples-spring-cloud-microservices-event-driven.git
+                    credentialsId: jenkins-github-token
 ---
 apiVersion: v1
 kind: ServiceAccount
