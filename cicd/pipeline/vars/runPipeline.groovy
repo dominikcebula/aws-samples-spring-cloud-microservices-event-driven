@@ -39,7 +39,7 @@ def call(Map pipelineParams) {
                 container(name: 'kaniko', shell: '/busybox/sh') {
                     echo 'Building and uploading docker image using kaniko...'
                     def ecrImageUrl = "${ECR_REPO_NAMESPACE_URL}/${pipelineParams.serviceName}:latest"
-                    sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination ${ecrImageUrl}"
+                    sh "/kaniko/executor --dockerfile cicd/docker/Dockerfile --context `pwd`/eureka-server --destination ${ecrImageUrl}"
                 }
             }
 
