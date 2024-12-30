@@ -51,16 +51,11 @@ def call(Map pipelineParams) {
 
             stage('Deploy') {
                 container(name: 'kubectl') {
-                    sh """
-                       #!/bin/bash
-
-                       for file in ./${pipelineParams.serviceName}/deployment/*.yaml
-                       do
-                           echo "Applying \${file}..."
-                           envsubst < \${file} | KUBECONFIG=/.kube/config kubectl apply -f -
-                           echo "Finished applying \$(basename \${file})...\n"
-                       done
-                       """
+                    new File("./${pipelineParams.serviceName}/deployment").eachFileMatch(~/.*\.yaml/) { file ->
+                        println "Applying ${file.name}..."
+                        sh "envsubst < ${file.path} | KUBECONFIG=/.kube/config kubectl apply -f -"
+                        println "Finished applying ${file.name}.\n"
+                    }
                 }
             }
         }
