@@ -1,3 +1,5 @@
+evaluate(new File("cicd/jobdsl/pipelineJob.groovy"))
+
 pipelineJob('eureka-server') {
   definition {
     cpsScm {
