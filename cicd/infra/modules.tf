@@ -2,6 +2,6 @@ module "eureka_server" {
   source = "./../../eureka-server/infra"
 }
 
-module "eureka_server" {
+module "config_server" {
   source = "./../../config-server/infra"
 }
