@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-admin
+spec:
+  type: LoadBalancer
+  selector:
+    app: spring-boot-admin
+  ports:
+    - port: 80
+      targetPort: 8080
+      name: spring-boot-admin
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-admin
+  template:
+    metadata:
+      labels:
+        app: spring-boot-admin
+    spec:
+      containers:
+        - name: spring-boot-admin
+          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/aws-samples-spring-cloud-microservices-event-driven/spring-boot-admin:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "256Mi"
+            limits:
+              cpu: "1500m"
+              memory: "256Mi"
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: aws
+            - name: EUREKA_SERVER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-config
+                  key: eureka_service_address
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5

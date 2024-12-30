@@ -1,0 +1,21 @@
+evaluate(readFileFromWorkspace("${WORKSPACE}/cicd/jobdsl/commonPipelineJobDefinitions.groovy"))
+
+def serviceName = 'spring-boot-admin'
+
+pipelineJob(serviceName) {
+  definition {
+    cpsScm {
+      scm {
+        git {
+          remote {
+            url(GIT_URL)
+            credentials(GIT_CREDENTIALS_ID)
+          }
+          branch(GIT_BRANCH)
+        }
+      }
+      scriptPath("${serviceName}/${PIPELINE_SCRIPT_NAME}")
+      lightweight()
+    }
+  }
+}

@@ -5,3 +5,7 @@ module "eureka_server" {
 module "config_server" {
   source = "./../../config-server/infra"
 }
+
+module "spring_boot_admin" {
+  source = "./../../spring-boot-admin/infra"
+}
