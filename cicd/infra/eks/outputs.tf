@@ -21,3 +21,13 @@ output "cluster_name" {
 output "oidc_provider" {
   value = module.eks.oidc_provider
 }
+
+output "vpc_id" {
+  description = "VPC id"
+  value       = module.vpc.vpc_id
+}
+
+output "private_subnet_ids" {
+  description = "Private Subnet IDs"
+  value       = module.vpc.private_subnets
+}
