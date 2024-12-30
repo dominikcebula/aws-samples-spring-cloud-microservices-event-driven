@@ -42,12 +42,12 @@ def call(Map pipelineParams) {
 //                    sh "/kaniko/executor --dockerfile Dockerfile --context `pwd`/eureka-server --destination ${ecrImageUrl}"
 //                }
 //            }
-//
-//            stage('Configure Kubernetes Client') {
-//                container(name: 'awscli') {
-//                    sh "aws eks update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME} --region ${AWS_REGION} --kubeconfig /.kube/config"
-//                }
-//            }
+
+            stage('Configure Kubernetes Client') {
+                container(name: 'awscli') {
+                    sh "aws eks update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME} --region ${AWS_REGION} --kubeconfig /.kube/config"
+                }
+            }
 
             stage('Deploy') {
                 container(name: 'kubectl') {
@@ -58,7 +58,7 @@ def call(Map pipelineParams) {
                        do
                            echo "Applying \${file}..."
                            envsubst < \${file} | KUBECONFIG=/.kube/config kubectl apply -f -
-                           echo "Finished applying \$(basename \${file})...\n"
+                           echo "Finished applying \$(basename \${file}).\n"
                        done
                        """
                 }
