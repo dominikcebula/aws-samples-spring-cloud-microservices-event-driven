@@ -1,4 +1,4 @@
-evaluate(new File("${WORKSPACE}/cicd/jobdsl/pipelineJob.groovy"))
+evaluate(readFile("${WORKSPACE}/cicd/jobdsl/pipelineJob.groovy"))
 
 pipelineJob('eureka-server') {
   definition {
