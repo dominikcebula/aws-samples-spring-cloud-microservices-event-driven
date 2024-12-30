@@ -56,7 +56,7 @@ def call(Map pipelineParams) {
 
                          for file in ${pipelineParams.serviceName}/deployment/*.yaml
                          do
-                             echo "Applying \${file}..."
+                             echo "Applying ${file}..."
                              envsubst < \${file} | KUBECONFIG=/.kube/config kubectl apply -f -
                              echo "Finished applying \$(basename \${file})...\n"
                          done
