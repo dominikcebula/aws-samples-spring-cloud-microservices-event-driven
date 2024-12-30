@@ -90,25 +90,11 @@ function delete_rds_resources() {
         aws rds delete-db-snapshot --db-snapshot-identifier "$snapshot_id" --region "$REGION"
     done
 
-    echo "Fetching RDS parameter groups..."
-    rds_parameter_groups=$(aws rds describe-db-parameter-groups --query "DBParameterGroups[*].DBParameterGroupName" --output text --region "$REGION")
-    for parameter_group in $rds_parameter_groups; do
-        echo "Deleting RDS parameter group: $parameter_group"
-        aws rds delete-db-parameter-group --db-parameter-group-name "$parameter_group" --region "$REGION"
-    done
-
     echo "Fetching RDS subnet groups..."
     rds_subnet_groups=$(aws rds describe-db-subnet-groups --query "DBSubnetGroups[*].DBSubnetGroupName" --output text --region "$REGION")
     for subnet_group in $rds_subnet_groups; do
         echo "Deleting RDS subnet group: $subnet_group"
         aws rds delete-db-subnet-group --db-subnet-group-name "$subnet_group" --region "$REGION"
-    done
-
-    echo "Fetching RDS option groups..."
-    rds_option_groups=$(aws rds describe-option-groups --query "OptionGroupsList[*].OptionGroupName" --output text --region "$REGION")
-    for option_group in $rds_option_groups; do
-        echo "Deleting RDS option group: $option_group"
-        aws rds delete-option-group --option-group-name "$option_group" --region "$REGION"
     done
 }
 
