@@ -34,10 +34,10 @@ spec:
           resources:
             requests:
               cpu: "500m"
-              memory: "128Mi"
+              memory: "256Mi"
             limits:
               cpu: "1500m"
-              memory: "128Mi"
+              memory: "256Mi"
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: aws
