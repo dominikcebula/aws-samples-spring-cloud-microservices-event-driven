@@ -27,7 +27,7 @@ spec:
               memory: "256Mi"
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: aws
+              value: native, aws
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
                 configMapKeyRef:
