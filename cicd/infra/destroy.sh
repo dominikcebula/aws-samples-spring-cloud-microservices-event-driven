@@ -64,6 +64,54 @@ function delete_ecr_repositories() {
     done
 }
 
+function delete_rds_resources() {
+    echo "Fetching RDS clusters..."
+    rds_clusters=$(aws rds describe-db-clusters --query "DBClusters[*].DBClusterIdentifier" --output text --region "$REGION")
+    for cluster_id in $rds_clusters; do
+        echo "Deleting RDS cluster: $cluster_id"
+        aws rds delete-db-cluster --db-cluster-identifier "$cluster_id" --skip-final-snapshot --region "$REGION"
+        echo "Waiting for RDS cluster: $cluster_id to be deleted..."
+        aws rds wait db-cluster-deleted --db-cluster-identifier "$cluster_id" --region "$REGION"
+    done
+
+    echo "Fetching RDS instances..."
+    rds_instances=$(aws rds describe-db-instances --query "DBInstances[*].DBInstanceIdentifier" --output text --region "$REGION")
+    for instance_id in $rds_instances; do
+        echo "Deleting RDS instance: $instance_id"
+        aws rds delete-db-instance --db-instance-identifier "$instance_id" --skip-final-snapshot --region "$REGION"
+        echo "Waiting for RDS instance: $instance_id to be deleted..."
+        aws rds wait db-instance-deleted --db-instance-identifier "$instance_id" --region "$REGION"
+    done
+
+    echo "Fetching RDS snapshots..."
+    rds_snapshots=$(aws rds describe-db-snapshots --query "DBSnapshots[*].DBSnapshotIdentifier" --output text --region "$REGION")
+    for snapshot_id in $rds_snapshots; do
+        echo "Deleting RDS snapshot: $snapshot_id"
+        aws rds delete-db-snapshot --db-snapshot-identifier "$snapshot_id" --region "$REGION"
+    done
+
+    echo "Fetching RDS parameter groups..."
+    rds_parameter_groups=$(aws rds describe-db-parameter-groups --query "DBParameterGroups[*].DBParameterGroupName" --output text --region "$REGION")
+    for parameter_group in $rds_parameter_groups; do
+        echo "Deleting RDS parameter group: $parameter_group"
+        aws rds delete-db-parameter-group --db-parameter-group-name "$parameter_group" --region "$REGION"
+    done
+
+    echo "Fetching RDS subnet groups..."
+    rds_subnet_groups=$(aws rds describe-db-subnet-groups --query "DBSubnetGroups[*].DBSubnetGroupName" --output text --region "$REGION")
+    for subnet_group in $rds_subnet_groups; do
+        echo "Deleting RDS subnet group: $subnet_group"
+        aws rds delete-db-subnet-group --db-subnet-group-name "$subnet_group" --region "$REGION"
+    done
+
+    echo "Fetching RDS option groups..."
+    rds_option_groups=$(aws rds describe-option-groups --query "OptionGroupsList[*].OptionGroupName" --output text --region "$REGION")
+    for option_group in $rds_option_groups; do
+        echo "Deleting RDS option group: $option_group"
+        aws rds delete-option-group --option-group-name "$option_group" --region "$REGION"
+    done
+}
+
 function delete_ebs_volumes() {
     echo "Fetching unused EBS volumes..."
     volumes=$(aws ec2 describe-volumes --query "Volumes[*].VolumeId" --output text --region "$REGION")
@@ -152,6 +200,7 @@ delete_eks_clusters
 delete_ec2_instances
 delete_load_balancers
 delete_ecr_repositories
+delete_rds_resources
 delete_ebs_volumes
 delete_enis
 delete_vpcs
