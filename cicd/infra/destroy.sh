@@ -52,10 +52,6 @@ function delete_ecr_repositories() {
     done
 }
 
-function destroy_terraform_resources() {
-  terraform destroy -auto-approve
-}
-
 function delete_ebs_volumes() {
     echo "Fetching unused EBS volumes..."
     volumes=$(aws ec2 describe-volumes --query "Volumes[*].VolumeId" --output text --region "$REGION")
@@ -131,6 +127,10 @@ function delete_vpcs() {
         echo "Deleting VPC: $vpc_id"
         aws ec2 delete-vpc --vpc-id "$vpc_id" --region "$REGION"
     done
+}
+
+function destroy_terraform_resources() {
+  terraform destroy -auto-approve
 }
 
 echo "Starting deletion process..."
