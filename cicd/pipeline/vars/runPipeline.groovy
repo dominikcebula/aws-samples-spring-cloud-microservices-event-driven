@@ -54,6 +54,8 @@ def call(Map pipelineParams) {
                     sh "ls -la ${WORKSPACE}"
                     sh "ls -la ${WORKSPACE}/${pipelineParams.serviceName}"
                     sh "ls -la ${WORKSPACE}/${pipelineParams.serviceName}/deployment"
+                    println new File("${WORKSPACE}/${pipelineParams.serviceName}/deployment").listFiles()
+                    println new File("${WORKSPACE}/${pipelineParams.serviceName}/deployment").eachFileMatch(~/.*\.yaml/)
 
                     new File("${WORKSPACE}/${pipelineParams.serviceName}/deployment").eachFileMatch(~/.*\.yaml/) { file ->
                         echo "Applying ${file.name}..."
