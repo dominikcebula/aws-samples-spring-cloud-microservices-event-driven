@@ -10,11 +10,11 @@ def call(Map pipelineParams) {
             emptyDirVolume(mountPath: '/.kube')
     ]) {
         node(POD_LABEL) {
-//            stage('Checkout') {
-//                echo 'Checking out source code...'
-//                checkout scm
-//            }
-//
+            stage('Checkout') {
+                echo 'Checking out source code...'
+                checkout scm
+            }
+
 //            stage('Build') {
 //                echo 'Building the project...'
 //                sh 'mvn clean compile'
@@ -51,7 +51,7 @@ def call(Map pipelineParams) {
 
             stage('Deploy') {
                 container(name: 'kubectl') {
-                    new File("${WORKSPACE}/${pipelineParams.serviceName}/deployment").eachFileMatch(~/.*\.yaml/) { file ->
+                    new File("${pipelineParams.serviceName}/deployment").eachFileMatch(~/.*\.yaml/) { file ->
                         println "Applying ${file.name}..."
                         sh "envsubst < ${file.path} | KUBECONFIG=/.kube/config kubectl apply -f -"
                         println "Finished applying ${file.name}.\n"
