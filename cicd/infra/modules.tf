@@ -10,6 +10,10 @@ module "spring_boot_admin" {
   source = "./../../spring-boot-admin/infra"
 }
 
+module "spring_cloud_gateway" {
+  source = "./../../spring-cloud-gateway/infra"
+}
+
 module "microservice_customers" {
   source = "./../../microservice-customers/infra"
 }
