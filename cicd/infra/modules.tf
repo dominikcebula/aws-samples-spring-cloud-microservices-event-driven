@@ -9,3 +9,7 @@ module "config_server" {
 module "spring_boot_admin" {
   source = "./../../spring-boot-admin/infra"
 }
+
+module "microservice_customers" {
+  source = "./../../microservice-customers/infra"
+}

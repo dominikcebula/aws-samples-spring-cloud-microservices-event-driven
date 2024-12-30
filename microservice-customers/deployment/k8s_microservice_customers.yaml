@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-customers
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: microservice-customers
+  template:
+    metadata:
+      labels:
+        app: microservice-customers
+    spec:
+      containers:
+        - name: microservice-customers
+          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/aws-samples-spring-cloud-microservices-event-driven/microservice-customers:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "128Mi"
+            limits:
+              cpu: "1500m"
+              memory: "128Mi"
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: aws
+            - name: EUREKA_SERVER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-config
+                  key: eureka_service_address
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
