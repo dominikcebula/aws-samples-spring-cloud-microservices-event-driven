@@ -139,9 +139,9 @@ delete_eks_node_groups
 delete_eks_clusters
 delete_load_balancers
 delete_ecr_repositories
-destroy_terraform_resources
 delete_ebs_volumes
 delete_enis
 delete_vpcs
+destroy_terraform_resources
 
 echo "Deletion process completed."
