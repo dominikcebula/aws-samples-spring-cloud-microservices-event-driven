@@ -58,7 +58,7 @@ def call(Map pipelineParams) {
                          do
                              echo "Applying \$(basename \${file})..."
                              envsubst < \${file} | KUBECONFIG=/.kube/config kubectl apply -f -
-                             echo "Finished applying Applying \$(basename \${file})...\n"
+                             echo "Finished applying \$(basename \${file})...\n"
                          done
                         """
                 }
