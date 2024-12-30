@@ -1,7 +1,3 @@
-println "importing commonPipelineJob.groovy"
-
 evaluate(readFileFromWorkspace("${WORKSPACE}/cicd/jobdsl/commonPipelineJob.groovy"))
 
-println "defining common pipeline job"
-
-defineCommonPipelineJob()
+defineCommonPipelineJob

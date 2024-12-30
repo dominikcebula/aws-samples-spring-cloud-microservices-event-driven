@@ -1,4 +1,4 @@
-def defineCommonPipelineJob() {
+defineCommonPipelineJob() {
     pipelineJob('eureka-server') {
         definition {
             cpsScm {
