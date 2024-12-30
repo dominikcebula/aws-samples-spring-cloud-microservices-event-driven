@@ -6,6 +6,34 @@
 
 REGION=$(aws configure get region)
 
+function delete_eks_node_groups() {
+    echo "Fetching EKS clusters..."
+    eks_clusters=$(aws eks list-clusters --query "clusters[*]" --output text --region "$REGION")
+    for cluster in $eks_clusters; do
+        echo "Fetching EKS node groups for cluster: $cluster"
+        node_groups=$(aws eks list-nodegroups --cluster-name "$cluster" --query "nodegroups[*]" --output text --region "$REGION")
+        for node_group in $node_groups; do
+            echo "Deleting EKS node group: $node_group in cluster: $cluster"
+            aws eks delete-nodegroup --cluster-name "$cluster" --nodegroup-name "$node_group" --region "$REGION"
+            # Wait for EKS node group deletion
+            echo "Waiting for EKS node group: $node_group in cluster: $cluster to be deleted..."
+            aws eks wait nodegroup-deleted --cluster-name "$cluster" --nodegroup-name "$node_group" --region "$REGION"
+        done
+    done
+}
+
+function delete_eks_clusters() {
+    echo "Fetching EKS clusters..."
+    eks_clusters=$(aws eks list-clusters --query "clusters[*]" --output text --region "$REGION")
+    for cluster in $eks_clusters; do
+        echo "Deleting EKS cluster: $cluster"
+        aws eks delete-cluster --name "$cluster" --region "$REGION"
+        # Wait for EKS cluster deletion
+        echo "Waiting for EKS cluster: $cluster to be deleted..."
+        aws eks wait cluster-deleted --name "$cluster" --region "$REGION"
+    done
+}
+
 function delete_load_balancers() {
     echo "Fetching load balancers..."
     load_balancers=$(aws elb describe-load-balancers --query "LoadBalancerDescriptions[*].LoadBalancerName" --output text --region "$REGION")
@@ -107,6 +135,8 @@ function delete_vpcs() {
 
 echo "Starting deletion process..."
 
+delete_eks_node_groups
+delete_eks_clusters
 delete_load_balancers
 delete_ecr_repositories
 destroy_terraform_resources
