@@ -1,5 +1,3 @@
-def test = 1
-
 def definePipelineJob() {
     pipelineJob('eureka-server') {
         definition {
