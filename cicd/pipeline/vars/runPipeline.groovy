@@ -51,7 +51,7 @@ def call(Map pipelineParams) {
 
             stage('Deploy') {
                 container(name: 'kubectl') {
-                    sh "KUBECONFIG=/.kube/config kubectl apply -f `pwd`/${pipelineParams.serviceName}/deployment/*.yaml"
+                    sh "for file in `pwd`/${pipelineParams.serviceName}/deployment/*.yaml; do envsubst < \$file | KUBECONFIG=/.kube/config kubectl apply -f -; done"
                 }
             }
         }
