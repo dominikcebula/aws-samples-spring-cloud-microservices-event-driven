@@ -14,7 +14,7 @@ function delete_eks_node_groups() {
         node_groups=$(aws eks list-nodegroups --cluster-name "$cluster" --query "nodegroups[*]" --output text --region "$REGION")
         for node_group in $node_groups; do
             echo "Deleting EKS node group: $node_group in cluster: $cluster"
-            aws eks delete-nodegroup --cluster-name "$cluster" --nodegroup-name "$node_group" --region "$REGION"
+            aws eks delete-nodegroup --cluster-name "$cluster" --nodegroup-name "$node_group" --output text --region "$REGION" --no-cli-pager
             # Wait for EKS node group deletion
             echo "Waiting for EKS node group: $node_group in cluster: $cluster to be deleted..."
             aws eks wait nodegroup-deleted --cluster-name "$cluster" --nodegroup-name "$node_group" --region "$REGION"
@@ -27,7 +27,7 @@ function delete_eks_clusters() {
     eks_clusters=$(aws eks list-clusters --query "clusters[*]" --output text --region "$REGION")
     for cluster in $eks_clusters; do
         echo "Deleting EKS cluster: $cluster"
-        aws eks delete-cluster --name "$cluster" --region "$REGION"
+        aws eks delete-cluster --name "$cluster" --output text --region "$REGION" --no-cli-pager
         # Wait for EKS cluster deletion
         echo "Waiting for EKS cluster: $cluster to be deleted..."
         aws eks wait cluster-deleted --name "$cluster" --region "$REGION"
