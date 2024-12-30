@@ -46,6 +46,12 @@ export JENKINS_GITHUB_TOKEN_PASSWORD
 envsubst < jenkins_instance.yaml.tpl > jenkins_instance.yaml
 deploy "Jenkins Instance" jenkins_instance.yaml
 
+echo -n "Waiting for Jenkins secret to be available..."
+until kubectl get secret jenkins-operator-credentials-master > /dev/null 2>&1; do
+  sleep 1
+done
+echo "done."
+
 echo -n "Jenkins User = "
 kubectl get secret jenkins-operator-credentials-master -o 'jsonpath={.data.user}' | base64 -d
 echo
