@@ -60,8 +60,10 @@ public class RdsIamDataSourceConfiguration {
         log.info("Generating RDS IAM token for region: " + region);
 
         try (RdsClient rdsClient = RdsClient.builder()
+                .credentialsProvider(DefaultCredentialsProvider.create())
                 .region(region)
                 .build()) {
+
             URI dbUri = parseJdbcURL(jdbcUrl);
 
             GenerateAuthenticationTokenRequest request = GenerateAuthenticationTokenRequest.builder()
