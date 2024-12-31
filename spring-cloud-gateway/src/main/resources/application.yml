@@ -16,3 +16,7 @@ spring:
             - Path=/customers/**
           filters:
             - RewritePath=/customers/(?<segment>.*),/$\{segment}
+
+eureka:
+  instance:
+    preferIpAddress: true

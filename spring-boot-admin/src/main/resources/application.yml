@@ -8,6 +8,7 @@ eureka:
     health-check-url-path: /actuator/health
     metadata-map:
       startup: ${random.int}
+    preferIpAddress: true
   client:
     registryFetchIntervalSeconds: 5
 

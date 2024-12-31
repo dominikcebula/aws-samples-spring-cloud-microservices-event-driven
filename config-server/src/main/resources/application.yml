@@ -11,3 +11,7 @@ spring:
       server:
         native:
           searchLocations: classpath:/config
+
+eureka:
+  instance:
+    preferIpAddress: true
