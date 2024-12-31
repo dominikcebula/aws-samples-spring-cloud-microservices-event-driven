@@ -47,10 +47,8 @@ resource "postgresql_grant" "app_user_connect" {
 }
 
 resource "aws_iam_policy" "db_app_user_policy" {
-  for_each = {for idx, instance in aws_rds_cluster_instance.aurora_cluster_instances : idx => instance}
-
-  name = "RdsDbAppUserConnectPolicy-${each.value.dbi_resource_id}"
-  description = "IAM policy for ${postgresql_role.app_user.name} to connect to RDS"
+  name        = "RdsDbAppUserConnectPolicy"
+  description = "IAM policy allowing connection to RDS DB using ${postgresql_role.app_user.name} account."
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -60,7 +58,7 @@ resource "aws_iam_policy" "db_app_user_policy" {
           "rds-db:connect"
         ]
         Resource = [
-          "arn:aws:rds-db:${var.region}:${var.aws_account_id}:dbuser:${each.value.dbi_resource_id}/${postgresql_role.app_user.name}"
+          "arn:aws:rds-db:${var.region}:${var.aws_account_id}:dbuser:*/${postgresql_role.app_user.name}"
         ]
       }
     ]
@@ -68,9 +66,7 @@ resource "aws_iam_policy" "db_app_user_policy" {
 }
 
 resource "aws_iam_policy_attachment" "db_app_user_policy_attachment" {
-  for_each = aws_iam_policy.db_app_user_policy
-
-  name       = each.value.name
+  name       = aws_iam_policy.db_app_user_policy.name
   roles = [var.role_app_runner_name]
-  policy_arn = each.value.arn
+  policy_arn = aws_iam_policy.db_app_user_policy.arn
 }
