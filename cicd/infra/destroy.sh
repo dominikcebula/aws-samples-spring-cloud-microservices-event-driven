@@ -66,22 +66,22 @@ function delete_ecr_repositories() {
 }
 
 function delete_rds_resources() {
-    echo "Fetching RDS clusters..."
-    rds_clusters=$(aws rds describe-db-clusters --query "DBClusters[*].DBClusterIdentifier" --output text --region "$REGION")
-    for cluster_id in $rds_clusters; do
-        echo "Deleting RDS cluster: $cluster_id"
-        aws rds delete-db-cluster --db-cluster-identifier "$cluster_id" --skip-final-snapshot --region "$REGION"
-        echo "Waiting for RDS cluster: $cluster_id to be deleted..."
-        aws rds wait db-cluster-deleted --db-cluster-identifier "$cluster_id" --region "$REGION"
-    done
-
     echo "Fetching RDS instances..."
-    rds_instances=$(aws rds describe-db-instances --query "DBInstances[*].DBInstanceIdentifier" --output text --region "$REGION")
+    rds_instances=$(aws rds describe-db-instances --query "DBInstances[*].DBInstanceIdentifier" --output text --region "$REGION" --no-cli-pager)
     for instance_id in $rds_instances; do
         echo "Deleting RDS instance: $instance_id"
         aws rds delete-db-instance --db-instance-identifier "$instance_id" --skip-final-snapshot --region "$REGION"
         echo "Waiting for RDS instance: $instance_id to be deleted..."
         aws rds wait db-instance-deleted --db-instance-identifier "$instance_id" --region "$REGION"
+    done
+
+    echo "Fetching RDS clusters..."
+    rds_clusters=$(aws rds describe-db-clusters --query "DBClusters[*].DBClusterIdentifier" --output text --region "$REGION" --no-cli-pager)
+    for cluster_id in $rds_clusters; do
+        echo "Deleting RDS cluster: $cluster_id"
+        aws rds delete-db-cluster --db-cluster-identifier "$cluster_id" --skip-final-snapshot --region "$REGION" --output text
+        echo "Waiting for RDS cluster: $cluster_id to be deleted..."
+        aws rds wait db-cluster-deleted --db-cluster-identifier "$cluster_id" --region "$REGION"
     done
 
     echo "Fetching RDS snapshots..."
