@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain;
 import software.amazon.awssdk.services.rds.RdsClient;
@@ -48,7 +49,7 @@ public class RdsIamDataSourceConfiguration {
     }
 
     private String getCallerIdentity() {
-        try (StsClient stsClient = StsClient.builder().build()) {
+        try (StsClient stsClient = StsClient.builder().credentialsProvider(DefaultCredentialsProvider.create()).build()) {
             return stsClient.getCallerIdentity().toString();
         }
     }
