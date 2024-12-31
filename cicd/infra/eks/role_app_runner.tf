@@ -1,5 +1,6 @@
 locals {
   app_runner_role_name = "app-runner"
+  app_runner_sa_name = "app-runner-sa"
 }
 
 resource "aws_iam_role" "app_runner" {
@@ -30,7 +31,7 @@ data "aws_iam_policy_document" "app_runner_assume_role_policy" {
     condition {
       test     = "StringEquals"
       variable = "${module.eks.oidc_provider}:sub"
-      values = ["system:serviceaccount:default:${local.app_runner_role_name}"]
+      values = ["system:serviceaccount:default:${local.app_runner_sa_name}"]
     }
     condition {
       test     = "StringEquals"

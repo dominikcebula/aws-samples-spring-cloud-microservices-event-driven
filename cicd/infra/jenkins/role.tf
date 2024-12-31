@@ -1,5 +1,6 @@
 locals {
   jenkins_cicd_role_name = "jenkins-cicd-role"
+  jenkins_cicd_sa_name = "jenkins-cicd-sa"
 }
 
 resource "aws_iam_role" "jenkins_cicd_role" {
@@ -30,7 +31,7 @@ data "aws_iam_policy_document" "eks_assume_role_policy" {
     condition {
       test     = "StringEquals"
       variable = "${var.eks_oidc_provider}:sub"
-      values = ["system:serviceaccount:default:${local.jenkins_cicd_role_name}"]
+      values = ["system:serviceaccount:default:${local.jenkins_cicd_sa_name}"]
     }
     condition {
       test     = "StringEquals"
