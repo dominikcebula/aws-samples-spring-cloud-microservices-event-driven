@@ -1,10 +1,3 @@
-data "aws_availability_zones" "available" {
-  filter {
-    name = "opt-in-status"
-    values = ["opt-in-not-required"]
-  }
-}
-
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "20.8.5"
@@ -23,8 +16,8 @@ module "eks" {
     }
   }
 
-  vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
+  vpc_id     = var.vpc_id
+  subnet_ids = var.subnet_ids
 
   eks_managed_node_group_defaults = {
     ami_type = "AL2_x86_64"

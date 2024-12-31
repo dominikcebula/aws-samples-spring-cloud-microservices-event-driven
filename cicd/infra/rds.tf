@@ -3,8 +3,8 @@ module "rds" {
 
   aws_account_id       = local.aws_account_id
   region               = var.region
-  db_vpc_id             = module.eks.vpc_id
-  db_private_subnet_ids = module.eks.private_subnet_ids
+  db_vpc_id     = module.vpc.vpc_id
+  db_subnet_ids = module.vpc.public_subnets
   role_app_runner_name = module.eks.role_app_runner_name
   my_public_ip         = data.http.my_public_ip.response_body
 }

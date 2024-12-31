@@ -22,16 +22,6 @@ output "oidc_provider" {
   value = module.eks.oidc_provider
 }
 
-output "vpc_id" {
-  description = "VPC id"
-  value       = module.vpc.vpc_id
-}
-
-output "private_subnet_ids" {
-  description = "Private Subnet IDs"
-  value       = module.vpc.private_subnets
-}
-
 output "role_app_runner_name" {
   description = "Name of the IAM role for Microservice App Runner"
   value       = aws_iam_role.app_runner.name

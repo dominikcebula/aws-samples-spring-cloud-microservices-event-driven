@@ -13,8 +13,8 @@ variable "db_vpc_id" {
   type        = string
 }
 
-variable "db_private_subnet_ids" {
-  description = "DB Private Subnet IDs"
+variable "db_subnet_ids" {
+  description = "DB Subnet IDs"
   type = list(string)
 }
 

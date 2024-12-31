@@ -32,7 +32,7 @@ resource "aws_security_group" "db_sg" {
 
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = "db-subnet-group"
-  subnet_ids = var.db_private_subnet_ids
+  subnet_ids = var.db_subnet_ids
 }
 
 data "aws_secretsmanager_secret_version" "postgres_password" {
