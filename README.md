@@ -8,10 +8,10 @@ This repository contains sample code showcasing Event-Driven Spring Cloud Micros
 
 * Microservices
 * Event Driven Architecture (EDA)
-* Java Memory Settings for Containers
 * Docker
 * Docker Compose
 * Kaniko Executor
+* Java Memory Settings for Containers
 * EKS
 * ECR
 * RDS Aurora PostgreSQL
