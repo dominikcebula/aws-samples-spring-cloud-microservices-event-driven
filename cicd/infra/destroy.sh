@@ -210,6 +210,8 @@ function delete_vpcs() {
 }
 
 function destroy_terraform_resources() {
+  #terraform state list |grep -E 'postgresql_(grant|role)' |xargs terraform state rm
+
   terraform destroy -auto-approve
 }
 
