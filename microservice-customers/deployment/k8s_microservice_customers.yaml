@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: microservice-customers
 spec:
-  serviceAccountName: app-runner-sa
   replicas: 2
   selector:
     matchLabels:
@@ -13,6 +12,7 @@ spec:
       labels:
         app: microservice-customers
     spec:
+      serviceAccountName: app-runner-sa
       containers:
         - name: microservice-customers
           image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/aws-samples-spring-cloud-microservices-event-driven/microservice-customers:latest
