@@ -70,7 +70,7 @@ function delete_rds_resources() {
     rds_instances=$(aws rds describe-db-instances --query "DBInstances[*].DBInstanceIdentifier" --output text --region "$REGION" --no-cli-pager)
     for instance_id in $rds_instances; do
         echo "Deleting RDS instance: $instance_id"
-        aws rds delete-db-instance --db-instance-identifier "$instance_id" --skip-final-snapshot --region "$REGION"
+        aws rds delete-db-instance --db-instance-identifier "$instance_id" --skip-final-snapshot --region "$REGION" --output text --no-cli-pager
         echo "Waiting for RDS instance: $instance_id to be deleted..."
         aws rds wait db-instance-deleted --db-instance-identifier "$instance_id" --region "$REGION"
     done
@@ -79,7 +79,7 @@ function delete_rds_resources() {
     rds_clusters=$(aws rds describe-db-clusters --query "DBClusters[*].DBClusterIdentifier" --output text --region "$REGION" --no-cli-pager)
     for cluster_id in $rds_clusters; do
         echo "Deleting RDS cluster: $cluster_id"
-        aws rds delete-db-cluster --db-cluster-identifier "$cluster_id" --skip-final-snapshot --region "$REGION" --output text
+        aws rds delete-db-cluster --db-cluster-identifier "$cluster_id" --skip-final-snapshot --region "$REGION" --output text --no-cli-pager
         echo "Waiting for RDS cluster: $cluster_id to be deleted..."
         aws rds wait db-cluster-deleted --db-cluster-identifier "$cluster_id" --region "$REGION"
     done
@@ -88,14 +88,14 @@ function delete_rds_resources() {
     rds_snapshots=$(aws rds describe-db-snapshots --query "DBSnapshots[*].DBSnapshotIdentifier" --output text --region "$REGION")
     for snapshot_id in $rds_snapshots; do
         echo "Deleting RDS snapshot: $snapshot_id"
-        aws rds delete-db-snapshot --db-snapshot-identifier "$snapshot_id" --region "$REGION"
+        aws rds delete-db-snapshot --db-snapshot-identifier "$snapshot_id" --region "$REGION" --output text --no-cli-pager
     done
 
     echo "Fetching RDS subnet groups..."
     rds_subnet_groups=$(aws rds describe-db-subnet-groups --query "DBSubnetGroups[*].DBSubnetGroupName" --output text --region "$REGION")
     for subnet_group in $rds_subnet_groups; do
         echo "Deleting RDS subnet group: $subnet_group"
-        aws rds delete-db-subnet-group --db-subnet-group-name "$subnet_group" --region "$REGION"
+        aws rds delete-db-subnet-group --db-subnet-group-name "$subnet_group" --region "$REGION" --output text --no-cli-pager
     done
 }
 
