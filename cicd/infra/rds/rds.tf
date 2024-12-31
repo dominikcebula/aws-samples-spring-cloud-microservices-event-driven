@@ -9,7 +9,7 @@ resource "aws_rds_cluster" "aurora_cluster" {
   backup_retention_period             = 1
   skip_final_snapshot                 = true
   db_subnet_group_name                = aws_db_subnet_group.db_subnet_group.name
-  vpc_security_group_ids = [aws_security_group.db_sg.id]
+  vpc_security_group_ids = [aws_security_group.rds_sg.id]
   iam_database_authentication_enabled = true
 }
 
@@ -24,12 +24,6 @@ resource "aws_rds_cluster_instance" "aurora_cluster_instances" {
   db_subnet_group_name = aws_rds_cluster.aurora_cluster.db_subnet_group_name
 }
 
-resource "aws_security_group" "db_sg" {
-  name        = "db-sg"
-  vpc_id      = var.db_vpc_id
-  description = "DB security group"
-}
-
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = "db-subnet-group"
   subnet_ids = var.db_subnet_ids
@@ -40,7 +34,9 @@ data "aws_secretsmanager_secret_version" "postgres_password" {
 }
 
 resource "aws_security_group" "rds_sg" {
-  name_prefix = "rds-"
+  description = "DB security group"
+
+  name_prefix = "rds-db-"
 
   vpc_id = var.db_vpc_id
 
@@ -48,10 +44,6 @@ resource "aws_security_group" "rds_sg" {
     from_port = 5432
     to_port   = 5432
     protocol  = "tcp"
-    cidr_blocks = ["${var.my_public_ip}/32"]
-  }
-
-  tags = {
-    Name = "RDS SG"
+    cidr_blocks = concat(var.db_allow_access_from_subnets_cidr_blocks, ["${var.my_public_ip}/32"])
   }
 }

@@ -18,6 +18,11 @@ variable "db_subnet_ids" {
   type = list(string)
 }
 
+variable "db_allow_access_from_subnets_cidr_blocks" {
+  description = "List of subnet CIDR blocks which should be allowed to access db"
+  type = list(string)
+}
+
 variable "role_app_runner_name" {
   description = "Name of the IAM role for Microservice App Runner"
   type        = string

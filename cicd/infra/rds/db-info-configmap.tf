@@ -1,6 +1,6 @@
-resource "terraform_data" "jenkins_instance" {
+resource "terraform_data" "db_info_configmap" {
   provisioner "local-exec" {
-    command     = "envsubst < ${path.module}/db-info-configmap.yaml.tpl | kubectl apply -f -"
+    command = "envsubst < db-info-configmap.yaml.tpl | kubectl apply -f -"
     working_dir = path.module
 
     environment = {
