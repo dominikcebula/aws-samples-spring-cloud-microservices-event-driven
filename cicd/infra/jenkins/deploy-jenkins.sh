@@ -52,6 +52,9 @@ until kubectl get secret jenkins-operator-credentials-master > /dev/null 2>&1; d
 done
 echo "done."
 
+echo -n "Jenkins URL = "
+kubectl get svc jenkins-operator-http-master -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+echo
 echo -n "Jenkins User = "
 kubectl get secret jenkins-operator-credentials-master -o 'jsonpath={.data.user}' | base64 -d
 echo
