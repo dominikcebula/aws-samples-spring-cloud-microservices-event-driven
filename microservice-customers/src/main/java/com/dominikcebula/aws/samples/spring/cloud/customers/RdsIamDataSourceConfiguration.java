@@ -10,6 +10,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain;
 import software.amazon.awssdk.services.rds.RdsClient;
 import software.amazon.awssdk.services.rds.model.GenerateAuthenticationTokenRequest;
+import software.amazon.awssdk.services.sts.StsClient;
 
 import javax.sql.DataSource;
 import java.net.URI;
@@ -29,6 +30,8 @@ public class RdsIamDataSourceConfiguration {
     public DataSource dataSource() throws SQLException {
         log.info("Creating RDS IAM DataSource");
 
+        log.info("STS Caller Identity: " + getCallerIdentity());
+
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
         dataSource.setUrl(jdbcUrl);
@@ -42,6 +45,12 @@ public class RdsIamDataSourceConfiguration {
         log.info("RDS IAM DataSource created");
 
         return dataSource;
+    }
+
+    private String getCallerIdentity() {
+        try (StsClient stsClient = StsClient.builder().build()) {
+            return stsClient.getCallerIdentity().toString();
+        }
     }
 
     private String generateAuthToken() {
