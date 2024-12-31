@@ -189,7 +189,7 @@ function delete_vpcs() {
 
         # Delete DHCP option sets
         echo "Deleting DHCP option sets in VPC: $vpc_id"
-        dhcp_option_sets=$(aws ec2 describe-dhcp-options --filters Name=vpc-id,Values="$vpc_id" --query "DhcpOptions[*].DhcpOptionsId" --output text --region "$REGION")
+        dhcp_option_sets=$(aws ec2 describe-dhcp-options --query "DhcpOptions[*].DhcpOptionsId" --output text --region "$REGION")
         for dhcp_option_set_id in $dhcp_option_sets; do
             echo "Deleting DHCP option set: $dhcp_option_set_id"
             aws ec2 delete-dhcp-options --dhcp-options-id "$dhcp_option_set_id" --region "$REGION"
