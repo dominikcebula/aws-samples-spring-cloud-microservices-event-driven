@@ -6,4 +6,4 @@ WORKDIR /app
 
 COPY target/*.jar app.jar
 
-ENTRYPOINT java ${JAVA_MEM_OPTS} -jar app.jar
+ENTRYPOINT java -XX:+PrintCommandLineFlags ${JAVA_MEM_OPTS} -jar app.jar
