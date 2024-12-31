@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: microservice-customers
 spec:
+  serviceAccountName: app-runner-sa
   replicas: 2
   selector:
     matchLabels:
@@ -33,6 +34,26 @@ spec:
                 configMapKeyRef:
                   name: eureka-config
                   key: eureka_service_address
+            - name: RDS_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-info-cm
+                  key: RDS_HOSTNAME
+            - name: RDS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: db-info-cm
+                  key: RDS_PORT
+            - name: RDS_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-info-cm
+                  key: RDS_DB_NAME
+            - name: RDS_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-info-cm
+                  key: RDS_USERNAME
           livenessProbe:
             httpGet:
               path: /actuator/health

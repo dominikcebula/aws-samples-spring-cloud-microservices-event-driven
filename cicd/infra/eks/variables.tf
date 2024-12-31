@@ -1,3 +1,8 @@
+variable "aws_account_id" {
+  description = "AWS Account ID"
+  type        = string
+}
+
 variable "eks_region" {
   description = "AWS EKS region"
   type        = string

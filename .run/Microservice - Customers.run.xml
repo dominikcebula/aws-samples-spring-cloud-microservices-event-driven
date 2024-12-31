@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
     <configuration default="false" name="Microservice - Customers" type="Application" factoryName="Application">
         <envs>
-            <env name="SPRING_PROFILES_ACTIVE" value="local"/>
+            <env name="SPRING_PROFILES_ACTIVE" value="aws"/>
         </envs>
         <option name="MAIN_CLASS_NAME" value="com.dominikcebula.aws.samples.spring.cloud.customers.Application"/>
         <module name="microservice-customers"/>

@@ -2,3 +2,9 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_SERVER_ADDRESS}
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}?ssl=true&sslmode=require
+    username: ${RDS_USERNAME}
+    driver-class-name: org.postgresql.Driver
