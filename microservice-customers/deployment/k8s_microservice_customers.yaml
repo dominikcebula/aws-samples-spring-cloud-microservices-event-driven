@@ -27,6 +27,8 @@ spec:
               cpu: "1500m"
               memory: "256Mi"
           env:
+            - name: logging.level.root
+              value: DEBUG
             - name: SPRING_PROFILES_ACTIVE
               value: aws
             - name: EUREKA_SERVER_ADDRESS
