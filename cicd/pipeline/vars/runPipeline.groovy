@@ -1,5 +1,5 @@
 def call(Map pipelineParams) {
-    podTemplate(agentContainer: 'maven', agentInjection: true, serviceAccount: 'jenkins-cicd-sa', containers: [
+    podTemplate(name: 'build-${pipelineParams.serviceName}-${BUILD_ID}', agentContainer: 'maven', agentInjection: true, serviceAccount: 'jenkins-cicd-sa', containers: [
             containerTemplate(name: 'maven', image: 'maven:3.9-eclipse-temurin-21'),
             containerTemplate(name: 'kaniko', image: "gcr.io/kaniko-project/executor:debug", command: '/busybox/cat', ttyEnabled: true),
             containerTemplate(name: 'awscli', image: 'amazon/aws-cli:2.22.26', command: 'cat', ttyEnabled: true),
