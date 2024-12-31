@@ -4,3 +4,7 @@ server:
 spring:
   application:
     name: eureka-server
+
+eureka:
+  instance:
+    preferIpAddress: true
