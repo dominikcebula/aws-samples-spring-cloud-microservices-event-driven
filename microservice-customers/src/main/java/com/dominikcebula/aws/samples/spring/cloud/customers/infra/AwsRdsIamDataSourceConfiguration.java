@@ -20,7 +20,7 @@ import java.sql.SQLException;
 @Configuration
 @Profile("aws")
 @Log
-public class RdsIamDataSourceConfiguration {
+public class AwsRdsIamDataSourceConfiguration {
     @Value("${spring.datasource.url}")
     private String jdbcUrl;
 
