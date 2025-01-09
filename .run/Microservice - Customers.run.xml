@@ -1,14 +1,14 @@
 <component name="ProjectRunConfigurationManager">
     <configuration default="false" name="Microservice - Customers" type="Application" factoryName="Application">
         <envs>
-            <env name="SPRING_PROFILES_ACTIVE" value="aws"/>
+            <env name="SPRING_PROFILES_ACTIVE" value="local"/>
         </envs>
         <option name="MAIN_CLASS_NAME" value="com.dominikcebula.aws.samples.spring.cloud.customers.Application"/>
         <module name="microservice-customers"/>
         <option name="VM_PARAMETERS" value="-Xmx64m"/>
         <extension name="coverage">
             <pattern>
-                <option name="PATTERN" value="com.dominikcebula.aws.samples.spring.cloud.customers.*"/>
+                <option name="PATTERN" value="com.dominikcebula.aws.samples.spring.cloud.customers.web.*"/>
                 <option name="ENABLED" value="true"/>
             </pattern>
         </extension>

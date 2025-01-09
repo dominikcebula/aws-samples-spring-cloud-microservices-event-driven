@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/appdb
+    url: jdbc:postgresql://localhost:5432/appdb?currentSchema=${app.db.schema}
     username: appuser
     password: apppassword
 

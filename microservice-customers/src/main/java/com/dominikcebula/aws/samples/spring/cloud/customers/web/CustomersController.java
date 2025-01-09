@@ -1,4 +1,4 @@
-package com.dominikcebula.aws.samples.spring.cloud.customers;
+package com.dominikcebula.aws.samples.spring.cloud.customers.web;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

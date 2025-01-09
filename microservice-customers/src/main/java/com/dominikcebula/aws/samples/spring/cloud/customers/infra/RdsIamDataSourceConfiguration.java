@@ -1,4 +1,4 @@
-package com.dominikcebula.aws.samples.spring.cloud.customers;
+package com.dominikcebula.aws.samples.spring.cloud.customers.infra;
 
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;

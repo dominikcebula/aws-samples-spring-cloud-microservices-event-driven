@@ -7,5 +7,78 @@ databaseChangeLog:
             tableName: customers
             columns:
               - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
                   name: firstName
-                  type: varchar
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: lastName
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phone
+                  type: VARCHAR(255)
+              - column:
+                  name: homeAddress_id
+                  type: BIGINT
+              - column:
+                  name: deliveryAddress_id
+                  type: BIGINT
+        - createTable:
+            tableName: addresses
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: street
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: state
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: zipCode
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: country
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: customers
+            baseColumnNames: homeAddress_id
+            constraintName: fk_customers_homeAddress
+            referencedTableName: addresses
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: customers
+            baseColumnNames: deliveryAddress_id
+            constraintName: fk_customers_deliveryAddress
+            referencedTableName: addresses
+            referencedColumnNames: id
