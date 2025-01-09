@@ -20,7 +20,7 @@ public class CustomersController {
     @Autowired
     private CustomerService customerService;
 
-    @GetMapping
+    @GetMapping("/customers")
     public List<CustomerDTO> getAllCustomers() {
         return customerService.getAllCustomers();
     }

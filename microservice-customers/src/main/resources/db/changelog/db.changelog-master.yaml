@@ -13,12 +13,12 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: firstName
+                  name: first_name
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
               - column:
-                  name: lastName
+                  name: last_name
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
@@ -31,10 +31,10 @@ databaseChangeLog:
                   name: phone
                   type: VARCHAR(255)
               - column:
-                  name: homeAddress_id
+                  name: home_address_id
                   type: BIGINT
               - column:
-                  name: deliveryAddress_id
+                  name: delivery_address_id
                   type: BIGINT
         - createTable:
             tableName: addresses
@@ -61,7 +61,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: zipCode
+                  name: zip_code
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
@@ -72,13 +72,13 @@ databaseChangeLog:
                     nullable: false
         - addForeignKeyConstraint:
             baseTableName: customers
-            baseColumnNames: homeAddress_id
-            constraintName: fk_customers_homeAddress
+            baseColumnNames: home_address_id
+            constraintName: fk_customers_home_address
             referencedTableName: addresses
             referencedColumnNames: id
         - addForeignKeyConstraint:
             baseTableName: customers
-            baseColumnNames: deliveryAddress_id
-            constraintName: fk_customers_deliveryAddress
+            baseColumnNames: delivery_address_id
+            constraintName: fk_customers_delivery_address
             referencedTableName: addresses
             referencedColumnNames: id
