@@ -123,6 +123,19 @@ class CustomersControllerIntegrationTest {
     }
 
     @Test
+    void shouldNotRetrieveNonExistingCustomer() {
+        // when
+        ResponseEntity<CustomerDTO> response = restTemplate.exchange(getCustomersUrl() + "/999", HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {
+                });
+
+        // then
+        assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
     @DirtiesContext
     void shouldUpdateOneCustomer() {
         // given
