@@ -148,6 +148,40 @@ class CustomersControllerIntegrationTest {
 
     @Test
     void shouldNotUpdateNonExistingCustomer() {
+        // given
+        CustomerDTO customerToUpdate = CUSTOMERS.get(3);
+
+        // when
+        ResponseEntity<?> response = restTemplate.exchange(getCustomersUrl() + "/999", HttpMethod.PUT, new HttpEntity<>(customerToUpdate), new ParameterizedTypeReference<>() {
+        });
+
+        // then
+        assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldDeleteOneCustomer() {
+        // given
+        customersSavedInDatabase();
+        CustomerDTO customerToDelete = CUSTOMERS.get(3);
+
+        // when
+        ResponseEntity<?> response = restTemplate.exchange(getCustomersUrl() + "/" + customerToDelete.getId(), HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<>() {
+                });
+
+        // then
+        assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(customerRepository.findAll())
+                .containsOnly(CUSTOMERS.get(0), CUSTOMERS.get(1), CUSTOMERS.get(2), CUSTOMERS.get(4));
+    }
+
+    @Test
+    void shouldNotDeleteNonExistingCustomer() {
         // when
         ResponseEntity<Object> response = restTemplate.exchange(getCustomersUrl() + "/999", HttpMethod.DELETE, null, new ParameterizedTypeReference<>() {
         });
