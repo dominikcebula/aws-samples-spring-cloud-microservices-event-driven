@@ -2,6 +2,7 @@ package com.dominikcebula.aws.samples.spring.cloud.customers.web;
 
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.CustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.service.CustomerService;
+import com.dominikcebula.aws.samples.spring.cloud.customers.service.CustomerService.SearchCustomerQuery;
 import com.dominikcebula.aws.samples.spring.cloud.customers.service.CustomerService.UpdateCustomerResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +31,13 @@ public class CustomersController {
         return customerService.getCustomerById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/customers/search")
+    public ResponseEntity<List<CustomerDTO>> searchCustomers(@RequestBody SearchCustomerQuery searchCustomerQuery) {
+        return ResponseEntity
+                .ok()
+                .body(customerService.searchCustomers(searchCustomerQuery));
     }
 
     @PostMapping("/customers")

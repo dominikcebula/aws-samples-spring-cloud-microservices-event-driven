@@ -24,6 +24,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
+import static com.dominikcebula.aws.samples.spring.cloud.customers.service.CustomerService.SearchCustomerQuery;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
@@ -134,6 +135,49 @@ class CustomersControllerIntegrationTest {
         // then
         assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void shouldSearchCustomerByName() {
+        // given
+        List<CustomerDTO> customersSavedInDatabase = customersSavedInDatabase();
+        CustomerDTO customerToSearch = customersSavedInDatabase.get(2);
+        SearchCustomerQuery searchCustomerQuery = SearchCustomerQuery.builder()
+                .firstName(customerToSearch.getFirstName())
+                .build();
+
+        // when
+        ResponseEntity<List<CustomerDTO>> response = restTemplate.exchange(getCustomersUrl() + "/search", HttpMethod.POST,
+                new HttpEntity<>(searchCustomerQuery),
+                new ParameterizedTypeReference<>() {
+                });
+
+        // then
+        assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody())
+                .containsOnly(customerToSearch);
+    }
+
+    @Test
+    void shouldSearchCustomerByPhone() {
+        // given
+        List<CustomerDTO> customersSavedInDatabase = customersSavedInDatabase();
+        SearchCustomerQuery searchCustomerQuery = SearchCustomerQuery.builder()
+                .phone("67")
+                .build();
+
+        // when
+        ResponseEntity<List<CustomerDTO>> response = restTemplate.exchange(getCustomersUrl() + "/search", HttpMethod.POST,
+                new HttpEntity<>(searchCustomerQuery),
+                new ParameterizedTypeReference<>() {
+                });
+
+        // then
+        assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody())
+                .containsOnly(customersSavedInDatabase.get(1), customersSavedInDatabase.get(2), customersSavedInDatabase.get(4));
     }
 
     @Test

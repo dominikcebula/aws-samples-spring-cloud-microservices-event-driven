@@ -1,20 +1,26 @@
 package com.dominikcebula.aws.samples.spring.cloud.customers.service;
 
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.CustomerDTO;
+import com.dominikcebula.aws.samples.spring.cloud.customers.model.QCustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.repository.CustomerRepository;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.querydsl.jpa.impl.JPAQuery;
+import jakarta.persistence.EntityManager;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+import static com.dominikcebula.aws.samples.spring.cloud.customers.utils.PredicateUtils.condition;
+import static com.querydsl.core.types.ExpressionUtils.allOf;
+
 @Service
 public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     public List<CustomerDTO> getAllCustomers() {
         return customerRepository.findAll();
@@ -22,6 +28,18 @@ public class CustomerService {
 
     public Optional<CustomerDTO> getCustomerById(Long id) {
         return customerRepository.findById(id);
+    }
+
+    public List<CustomerDTO> searchCustomers(SearchCustomerQuery searchCustomerQuery) {
+        return new JPAQuery<Void>(entityManager)
+                .select(QCustomerDTO.customerDTO)
+                .from(QCustomerDTO.customerDTO)
+                .where(allOf(
+                        condition(searchCustomerQuery.firstName, QCustomerDTO.customerDTO.firstName::containsIgnoreCase),
+                        condition(searchCustomerQuery.lastName, QCustomerDTO.customerDTO.lastName::containsIgnoreCase),
+                        condition(searchCustomerQuery.email, QCustomerDTO.customerDTO.email::containsIgnoreCase),
+                        condition(searchCustomerQuery.phone, QCustomerDTO.customerDTO.phone::containsIgnoreCase)
+                )).fetch();
     }
 
     public CustomerDTO createCustomer(CustomerDTO customer) {
@@ -43,6 +61,17 @@ public class CustomerService {
             return DeleteCustomerResult.DELETED;
         } else
             return DeleteCustomerResult.NOT_FOUND;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class SearchCustomerQuery {
+        private String firstName;
+        private String lastName;
+        private String email;
+        private String phone;
     }
 
     @RequiredArgsConstructor
