@@ -86,3 +86,7 @@ databaseChangeLog:
             sequenceName: customers_seq
             startValue: 1
             incrementBy: 1
+        - createSequence:
+            sequenceName: addresses_seq
+            startValue: 1
+            incrementBy: 1

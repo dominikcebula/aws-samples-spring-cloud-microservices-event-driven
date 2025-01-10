@@ -1,8 +1,10 @@
 package com.dominikcebula.aws.samples.spring.cloud.customers.web;
 
+import com.dominikcebula.aws.samples.spring.cloud.customers.model.AddressDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.CustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.repository.CustomerRepository;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +15,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -42,7 +43,10 @@ class CustomersControllerIntegrationTest {
     @Container
     private static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres:17");
 
-    private static final List<CustomerDTO> CUSTOMERS = createCustomers();
+    @AfterEach
+    void tearDown() {
+        customerRepository.deleteAll();
+    }
 
     @Test
     void shouldReturnEmptyCustomersList() {
@@ -58,7 +62,6 @@ class CustomersControllerIntegrationTest {
     }
 
     @Test
-    @DirtiesContext
     void shouldSaveCustomer() {
         // given
         CustomerDTO customerDTO = new CustomerDTO();
@@ -82,10 +85,9 @@ class CustomersControllerIntegrationTest {
     }
 
     @Test
-    @DirtiesContext
     void shouldRetrieveCustomers() {
         // given
-        customersSavedInDatabase();
+        List<CustomerDTO> customersSavedInDatabase = customersSavedInDatabase();
 
         // when
         ResponseEntity<List<CustomerDTO>> response = restTemplate.exchange(getCustomersUrl(), HttpMethod.GET,
@@ -97,17 +99,16 @@ class CustomersControllerIntegrationTest {
         assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.OK);
         assertThat(response.getBody())
-                .hasSize(CUSTOMERS.size());
+                .hasSize(customersSavedInDatabase.size());
         assertThat(response.getBody())
-                .containsOnly(CUSTOMERS.toArray(new CustomerDTO[0]));
+                .containsOnly(customersSavedInDatabase.toArray(new CustomerDTO[0]));
     }
 
     @Test
-    @DirtiesContext
     void shouldRetrieveOneCustomer() {
         // given
-        customersSavedInDatabase();
-        CustomerDTO customerToRetrieve = CUSTOMERS.get(2);
+        List<CustomerDTO> customersSavedInDatabase = customersSavedInDatabase();
+        CustomerDTO customerToRetrieve = customersSavedInDatabase.get(2);
 
         // when
         ResponseEntity<CustomerDTO> response = restTemplate.exchange(getCustomersUrl() + "/" + customerToRetrieve.getId(), HttpMethod.GET,
@@ -136,11 +137,10 @@ class CustomersControllerIntegrationTest {
     }
 
     @Test
-    @DirtiesContext
     void shouldUpdateOneCustomer() {
         // given
-        customersSavedInDatabase();
-        CustomerDTO customerToUpdate = CUSTOMERS.get(3);
+        List<CustomerDTO> customersSavedInDatabase = customersSavedInDatabase();
+        CustomerDTO customerToUpdate = customersSavedInDatabase.get(3);
         customerToUpdate.setFirstName("Greg");
         customerToUpdate.setLastName("Brown");
 
@@ -156,13 +156,19 @@ class CustomersControllerIntegrationTest {
         assertThat(response.getBody())
                 .isEqualTo(customerToUpdate);
         assertThat(customerRepository.findAll())
-                .containsOnly(CUSTOMERS.get(0), CUSTOMERS.get(1), CUSTOMERS.get(2), customerToUpdate, CUSTOMERS.get(4));
+                .containsOnly(
+                        customersSavedInDatabase.get(0),
+                        customersSavedInDatabase.get(1),
+                        customersSavedInDatabase.get(2),
+                        customerToUpdate,
+                        customersSavedInDatabase.get(4));
     }
 
     @Test
     void shouldNotUpdateNonExistingCustomer() {
         // given
-        CustomerDTO customerToUpdate = CUSTOMERS.get(3);
+        List<CustomerDTO> customersSavedInDatabase = customersSavedInDatabase();
+        CustomerDTO customerToUpdate = customersSavedInDatabase.get(3);
 
         // when
         ResponseEntity<?> response = restTemplate.exchange(getCustomersUrl() + "/999", HttpMethod.PUT, new HttpEntity<>(customerToUpdate), new ParameterizedTypeReference<>() {
@@ -174,11 +180,10 @@ class CustomersControllerIntegrationTest {
     }
 
     @Test
-    @DirtiesContext
     void shouldDeleteOneCustomer() {
         // given
-        customersSavedInDatabase();
-        CustomerDTO customerToDelete = CUSTOMERS.get(3);
+        List<CustomerDTO> customersSavedInDatabase = customersSavedInDatabase();
+        CustomerDTO customerToDelete = customersSavedInDatabase.get(3);
 
         // when
         ResponseEntity<?> response = restTemplate.exchange(getCustomersUrl() + "/" + customerToDelete.getId(), HttpMethod.DELETE,
@@ -190,7 +195,10 @@ class CustomersControllerIntegrationTest {
         assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.NO_CONTENT);
         assertThat(customerRepository.findAll())
-                .containsOnly(CUSTOMERS.get(0), CUSTOMERS.get(1), CUSTOMERS.get(2), CUSTOMERS.get(4));
+                .containsOnly(customersSavedInDatabase.get(0),
+                        customersSavedInDatabase.get(1),
+                        customersSavedInDatabase.get(2),
+                        customersSavedInDatabase.get(4));
     }
 
     @Test
@@ -219,18 +227,34 @@ class CustomersControllerIntegrationTest {
         registry.add("spring.datasource.password", POSTGRESQL_CONTAINER::getPassword);
     }
 
-    private static List<CustomerDTO> createCustomers() {
-        return List.of(
-                createCustomer(1L, "alice@example.com", "Alice", "Smith", "123-456-7890"),
-                createCustomer(2L, "bob@example.com", "Bob", "Johnson", "234-567-8901"),
-                createCustomer(3L, "carol@example.com", "Carol", "Williams", "345-678-9012"),
-                createCustomer(4L, "dave@example.com", "Dave", "Brown", "456-789-0123"),
-                createCustomer(5L, "eve@example.com", "Eve", "Jones", "567-890-1234"));
+    private List<CustomerDTO> customersSavedInDatabase() {
+        return customerRepository.saveAll(createCustomers());
     }
 
-    private static CustomerDTO createCustomer(Long id, String email, String firstName, String lastName, String phone) {
+    private static List<CustomerDTO> createCustomers() {
+        return List.of(
+                createCustomer("alice@example.com", "Alice", "Smith", "123-456-7890"),
+                createCustomer("bob@example.com", "Bob", "Johnson", "234-567-8901",
+                        createAddress("123 Main St", "Springfield", "IL", "12345", "USA"),
+                        createAddress("234 Elm St", "Springfield", "IL", "23456", "USA")
+                ),
+                createCustomer("carol@example.com", "Carol", "Williams", "345-678-9012"),
+                createCustomer("dave@example.com", "Dave", "Brown", "456-789-0123",
+                        createAddress("345 Oak St", "Springfield", "IL", "34567", "USA"),
+                        createAddress("456 Pine St", "Springfield", "IL", "45678", "USA")
+                ),
+                createCustomer("eve@example.com", "Eve", "Jones", "567-890-1234"));
+    }
+
+    private static CustomerDTO createCustomer(String email, String firstName, String lastName, String phone, AddressDTO homeAddress, AddressDTO deliveryAddress) {
+        CustomerDTO customerDTO = createCustomer(email, firstName, lastName, phone);
+        customerDTO.setHomeAddress(homeAddress);
+        customerDTO.setDeliveryAddress(deliveryAddress);
+        return customerDTO;
+    }
+
+    private static CustomerDTO createCustomer(String email, String firstName, String lastName, String phone) {
         CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setId(id);
         customerDTO.setEmail(email);
         customerDTO.setFirstName(firstName);
         customerDTO.setLastName(lastName);
@@ -238,7 +262,13 @@ class CustomersControllerIntegrationTest {
         return customerDTO;
     }
 
-    private void customersSavedInDatabase() {
-        customerRepository.saveAll(CUSTOMERS);
+    private static AddressDTO createAddress(String street, String city, String state, String zipCode, String country) {
+        AddressDTO addressDTO = new AddressDTO();
+        addressDTO.setStreet(street);
+        addressDTO.setCity(city);
+        addressDTO.setState(state);
+        addressDTO.setZipCode(zipCode);
+        addressDTO.setCountry(country);
+        return addressDTO;
     }
 }
