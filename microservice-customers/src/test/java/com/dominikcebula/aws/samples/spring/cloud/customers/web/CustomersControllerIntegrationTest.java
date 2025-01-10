@@ -29,7 +29,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @Testcontainers
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@ActiveProfiles({"test", "local"})
+@ActiveProfiles("local")
 class CustomersControllerIntegrationTest {
     @LocalServerPort
     private int port;
