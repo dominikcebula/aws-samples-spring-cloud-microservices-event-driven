@@ -82,3 +82,7 @@ databaseChangeLog:
             constraintName: fk_customers_delivery_address
             referencedTableName: addresses
             referencedColumnNames: id
+        - createSequence:
+            sequenceName: customers_seq
+            startValue: 1
+            incrementBy: 1

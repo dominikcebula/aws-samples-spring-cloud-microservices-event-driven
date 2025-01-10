@@ -26,7 +26,7 @@ public class CustomersController {
     }
 
     @GetMapping("/customers/{id}")
-    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable Long id) {
+    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable("id") Long id) {
         return customerService.getCustomerById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -42,7 +42,7 @@ public class CustomersController {
     }
 
     @PutMapping("/customers/{id}")
-    public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable Long id, @RequestBody CustomerDTO customer) {
+    public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable("id") Long id, @RequestBody CustomerDTO customer) {
         UpdateCustomerResultData updateCustomerResultData = customerService.updateCustomer(id, customer);
 
         if (updateCustomerResultData.getUpdateCustomerResult() == UpdateCustomerResult.UPDATED)
@@ -52,7 +52,7 @@ public class CustomersController {
     }
 
     @DeleteMapping("/customers/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCustomer(@PathVariable("id") Long id) {
         DeleteCustomerResult deleteCustomerResult = customerService.deleteCustomer(id);
 
         if (deleteCustomerResult == DeleteCustomerResult.DELETED)

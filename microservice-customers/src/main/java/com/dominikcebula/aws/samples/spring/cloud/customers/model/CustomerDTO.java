@@ -3,12 +3,15 @@ package com.dominikcebula.aws.samples.spring.cloud.customers.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import static jakarta.persistence.GenerationType.SEQUENCE;
+
 @Entity
 @Table(name = "customers")
 @Data
 public class CustomerDTO {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "customers_seq", sequenceName = "customers_seq", allocationSize = 1)
+    @GeneratedValue(strategy = SEQUENCE, generator = "customers_seq")
     private Long id;
 
     private String firstName;
