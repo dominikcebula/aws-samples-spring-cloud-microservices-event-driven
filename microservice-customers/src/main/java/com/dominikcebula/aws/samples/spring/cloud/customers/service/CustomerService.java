@@ -1,5 +1,6 @@
 package com.dominikcebula.aws.samples.spring.cloud.customers.service;
 
+import com.dominikcebula.aws.samples.spring.cloud.customers.events.CustomerCreatedEvent;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.CustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.QCustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.repository.CustomerRepository;
@@ -7,7 +8,9 @@ import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +24,8 @@ public class CustomerService {
     private CustomerRepository customerRepository;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     public List<CustomerDTO> getAllCustomers() {
         return customerRepository.findAll();
@@ -42,10 +47,14 @@ public class CustomerService {
                 )).fetch();
     }
 
+    @Transactional
     public CustomerDTO createCustomer(CustomerDTO customer) {
-        return customerRepository.save(customer);
+        CustomerDTO createdCustomer = customerRepository.save(customer);
+        eventPublisher.publishEvent(new CustomerCreatedEvent(createdCustomer));
+        return createdCustomer;
     }
 
+    @Transactional
     public UpdateCustomerResultData updateCustomer(Long id, CustomerDTO customer) {
         if (customerRepository.existsById(id)) {
             customer.setId(id);
@@ -55,6 +64,7 @@ public class CustomerService {
             return new UpdateCustomerResultData(UpdateCustomerResult.NOT_FOUND);
     }
 
+    @Transactional
     public DeleteCustomerResult deleteCustomer(Long id) {
         if (customerRepository.existsById(id)) {
             customerRepository.deleteById(id);

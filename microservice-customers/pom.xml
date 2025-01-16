@@ -18,8 +18,20 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.idealo.spring</groupId>
+            <artifactId>spring-cloud-stream-binder-sns</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.idealo.spring</groupId>
+            <artifactId>spring-cloud-stream-binder-sqs</artifactId>
         </dependency>
         <dependency>
             <groupId>com.querydsl</groupId>
@@ -93,6 +105,11 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>localstack</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -11,6 +11,14 @@ spring:
       discovery:
         enabled: true
         serviceId: config-server
+    stream:
+      binders:
+        sns:
+          type: sns
+      bindings:
+        customerEvents-out-0:
+          binder: sns
+          destination: customer-events-topic
   jpa:
     properties:
       hibernate:
