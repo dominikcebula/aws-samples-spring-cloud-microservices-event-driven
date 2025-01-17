@@ -17,3 +17,7 @@ module "spring_cloud_gateway" {
 module "microservice_customers" {
   source = "./../../microservice-customers/infra"
 }
+
+module "microservice_shipment" {
+  source = "./../../microservice-shipment/infra"
+}
