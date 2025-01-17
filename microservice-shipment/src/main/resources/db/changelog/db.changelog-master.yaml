@@ -4,7 +4,7 @@ databaseChangeLog:
       author: dominikcebula
       changes:
         - createTable:
-            tableName: delivery_addresses
+            tableName: shipment_addresses
             columns:
               - column:
                   name: id
@@ -18,6 +18,24 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phone
+                  type: VARCHAR(255)
               - column:
                   name: street
                   type: VARCHAR(255)
@@ -44,6 +62,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
         - createSequence:
-            sequenceName: delivery_addresses_seq
+            sequenceName: shipment_addresses_seq
             startValue: 1
             incrementBy: 1

@@ -14,6 +14,7 @@ public class ShipmentAddressDTO {
     @GeneratedValue(strategy = SEQUENCE, generator = "shipment_addresses_seq")
     private Long id;
 
+    private Long customerId;
     private String firstName;
     private String lastName;
     private String email;
