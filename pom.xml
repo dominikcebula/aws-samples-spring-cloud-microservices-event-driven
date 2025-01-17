@@ -25,6 +25,7 @@
         <module>spring-boot-admin</module>
 
         <module>microservice-customers</module>
+        <module>microservice-shipment</module>
     </modules>
 
     <dependencyManagement>

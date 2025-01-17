@@ -1,4 +1,4 @@
-package com.dominikcebula.aws.samples.spring.cloud.customers.utils;
+package com.dominikcebula.aws.samples.spring.cloud.shipment.utils;
 
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;

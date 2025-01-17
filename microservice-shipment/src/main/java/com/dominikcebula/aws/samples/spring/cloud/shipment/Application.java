@@ -1,4 +1,4 @@
-package com.dominikcebula.aws.samples.spring.cloud.customers;
+package com.dominikcebula.aws.samples.spring.cloud.shipment;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,13 +1,13 @@
 spring:
   application:
-    name: customers
+    name: shipment
   liquibase:
     default-schema: ${app.db.schema}
   config:
     import: "optional:configserver:"
   cloud:
     config:
-      name: customers, common
+      name: shipment, common
       discovery:
         enabled: true
         serviceId: config-server
@@ -16,9 +16,9 @@ spring:
         sns:
           type: sns
       bindings:
-        customerEvents-out-0:
+        customerEvents-in-0:
           binder: sns
-          destination: customer-events-topic
+          destination: customer-events-to-shipment-service
   jpa:
     properties:
       hibernate:
