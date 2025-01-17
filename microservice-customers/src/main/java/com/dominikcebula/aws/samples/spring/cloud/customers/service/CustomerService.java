@@ -1,6 +1,6 @@
 package com.dominikcebula.aws.samples.spring.cloud.customers.service;
 
-import com.dominikcebula.aws.samples.spring.cloud.customers.events.CustomerCreatedEvent;
+import com.dominikcebula.aws.samples.spring.cloud.customers.events.CustomerCreatedEventFactory;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.CustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.QCustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.repository.CustomerRepository;
@@ -24,6 +24,8 @@ public class CustomerService {
     private CustomerRepository customerRepository;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private CustomerCreatedEventFactory customerCreatedEventFactory;
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
@@ -50,7 +52,7 @@ public class CustomerService {
     @Transactional
     public CustomerDTO createCustomer(CustomerDTO customer) {
         CustomerDTO createdCustomer = customerRepository.save(customer);
-        eventPublisher.publishEvent(new CustomerCreatedEvent(createdCustomer));
+        eventPublisher.publishEvent(customerCreatedEventFactory.createCustomerCreatedEvent(createdCustomer));
         return createdCustomer;
     }
 

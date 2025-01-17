@@ -26,14 +26,15 @@
 
         <module>microservice-customers</module>
         <module>microservice-shipment</module>
+        <module>shared-model</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>4.5.14</version>
+                <groupId>com.dominikcebula.aws.samples.spring.cloud.eda</groupId>
+                <artifactId>shared-model</artifactId>
+                <version>1.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
@@ -70,6 +71,11 @@
                 <artifactId>querydsl-jpa</artifactId>
                 <classifier>jakarta</classifier>
                 <version>${querydsl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.modelmapper</groupId>
+                <artifactId>modelmapper</artifactId>
+                <version>3.2.2</version>
             </dependency>
 
             <dependency>

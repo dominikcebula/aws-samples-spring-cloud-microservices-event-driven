@@ -1,9 +1,9 @@
 package com.dominikcebula.aws.samples.spring.cloud.customers.web;
 
-import com.dominikcebula.aws.samples.spring.cloud.customers.events.CustomerCreatedEvent;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.AddressDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.CustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.repository.CustomerRepository;
+import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerCreatedEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -361,13 +361,14 @@ class CustomersControllerIntegrationTest {
     @SneakyThrows
     private void assertThatEventWasPublished(CustomerDTO customerDTO) {
         await()
-                .atMost(5, TimeUnit.SECONDS)
+                .atMost(10, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
-                    CustomerCreatedEvent receivedCustomerCreatedEvent = receiveOneEvent(getCustomerEventsQueueUrl(), CustomerCreatedEvent.class);
+                    CustomerCreatedEvent retrievedCustomerCreatedEvent = retrieveOneEvent(getCustomerEventsQueueUrl(), CustomerCreatedEvent.class);
 
-                    assertThat(receivedCustomerCreatedEvent.getTimestamp())
+                    assertThat(retrievedCustomerCreatedEvent.getTimestamp())
                             .isNotNull();
-                    assertThat(receivedCustomerCreatedEvent.getCustomerDTO())
+                    assertThat(retrievedCustomerCreatedEvent.getCustomerEventData())
+                            .usingRecursiveComparison()
                             .isEqualTo(customerDTO);
                 });
     }
@@ -376,8 +377,8 @@ class CustomersControllerIntegrationTest {
         return amazonSQS.getQueueUrl(GetQueueUrlRequest.builder().queueName("customer-events").build()).get().queueUrl();
     }
 
-    private <T> T receiveOneEvent(String queueUrl, Class<T> valueType) throws InterruptedException, ExecutionException, JsonProcessingException {
-        List<Message> messages = amazonSQS.receiveMessage(ReceiveMessageRequest.builder().queueUrl(queueUrl).build()).get().messages();
+    private <T> T retrieveOneEvent(String queueUrl, Class<T> valueType) throws InterruptedException, ExecutionException, JsonProcessingException {
+        List<Message> messages = amazonSQS.receiveMessage(ReceiveMessageRequest.builder().queueUrl(queueUrl).waitTimeSeconds(10).build()).get().messages();
         assertThat(messages)
                 .hasSize(1);
 
