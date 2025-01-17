@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-shipment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: microservice-shipment
+  template:
+    metadata:
+      labels:
+        app: microservice-shipment
+    spec:
+      serviceAccountName: app-runner-sa
+      containers:
+        - name: microservice-shipment
+          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/aws-samples-spring-cloud-microservices-event-driven/microservice-shipment:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "730Mi"
+            limits:
+              cpu: "1500m"
+              memory: "730Mi"
+          env:
+            - name: JAVA_MEM_OPTS
+              value: "-Xms256m -Xmx256m -Xss1m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:CompressedClassSpaceSize=64m -XX:+TieredCompilation -XX:+SegmentedCodeCache -XX:NonNMethodCodeHeapSize=8m -XX:ProfiledCodeHeapSize=48m -XX:NonProfiledCodeHeapSize=48m -XX:ReservedCodeCacheSize=104m"
+            - name: SPRING_PROFILES_ACTIVE
+              value: aws
+            - name: EUREKA_SERVER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-config
+                  key: eureka_service_address
+            - name: RDS_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-info-cm
+                  key: RDS_HOSTNAME
+            - name: RDS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: db-info-cm
+                  key: RDS_PORT
+            - name: RDS_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-info-cm
+                  key: RDS_DB_NAME
+            - name: RDS_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-info-cm
+                  key: RDS_USERNAME
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5

@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: customers
+  liquibase:
+    default-schema: ${app.db.schema}
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      name: customers, common
+      discovery:
+        enabled: true
+        serviceId: config-server
+    stream:
+      binders:
+        sns:
+          type: sns
+      bindings:
+        customerEvents-out-0:
+          binder: sns
+          destination: customer-events-topic
+  jpa:
+    properties:
+      hibernate:
+        default_schema: ${app.db.schema}
+
+app:
+  db:
+    schema: customers
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka/}
