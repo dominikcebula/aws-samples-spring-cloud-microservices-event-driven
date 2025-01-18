@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,8 +24,6 @@ public class ShipmentAddressService {
     private ShipmentAddressRepository shipmentAddressRepository;
     @Autowired
     private EntityManager entityManager;
-    @Autowired
-    private ApplicationEventPublisher eventPublisher;
 
     public List<ShipmentAddressDTO> getAllShipmentAddresses() {
         return shipmentAddressRepository.findAll();
