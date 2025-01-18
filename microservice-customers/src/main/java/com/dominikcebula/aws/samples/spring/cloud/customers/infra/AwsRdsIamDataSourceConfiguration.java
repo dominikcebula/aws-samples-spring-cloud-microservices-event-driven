@@ -14,7 +14,6 @@ import software.amazon.awssdk.services.rds.model.GenerateAuthenticationTokenRequ
 
 import javax.sql.DataSource;
 import java.net.URI;
-import java.sql.SQLException;
 
 @Configuration
 @Profile("aws")
@@ -27,7 +26,7 @@ public class AwsRdsIamDataSourceConfiguration {
     private String username;
 
     @Bean
-    public DataSource dataSource() throws SQLException {
+    public DataSource dataSource() {
         log.info("Creating RDS IAM DataSource");
 
         DriverManagerDataSource dataSource = new DriverManagerDataSource();

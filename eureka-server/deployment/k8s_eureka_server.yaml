@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: eureka-config
 data:
-  eureka_service_address: http://eureka-server-0.eureka-server:8761/eureka,http://eureka-server-1.eureka-server:8761/eureka
+  eureka_service_address: "http://eureka-server-0.eureka-server:8761/eureka,http://eureka-server-1.eureka-server:8761/eureka"
 ---
 apiVersion: v1
 kind: Service
