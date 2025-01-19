@@ -27,8 +27,7 @@ import org.springframework.test.context.DynamicPropertySource;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEventType.CREATED;
-import static com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEventType.DELETED;
+import static com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEventType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -73,7 +72,23 @@ class CustomerEventConsumerIntegrationTest {
         publishEvent(customerCreatedEvent);
 
         // then
-        assertShipmentAddressSaved(customerCreatedEvent);
+        assertShipmentAddressData(customerCreatedEvent);
+    }
+
+    @Test
+    void shouldProcessCustomerUpdatedEvent() {
+        // given
+        CustomerEventData customerEventData = createCustomerEventData();
+        customerEventData.setFirstName("Bob");
+        customerEventData.getDeliveryAddress().setCountry("Poland");
+        createShipmentAddressInDb();
+        CustomerEvent customerUpdatedEvent = new CustomerEvent(UPDATED, customerEventData);
+
+        // when
+        publishEvent(customerUpdatedEvent);
+
+        // then
+        assertShipmentAddressData(customerUpdatedEvent);
     }
 
     @Test
@@ -92,7 +107,7 @@ class CustomerEventConsumerIntegrationTest {
 
     private CustomerEventData createCustomerEventData() {
         return new CustomerEventData(
-                100L,
+                10L,
                 "John",
                 "Doe",
                 "John.Doe@mail.com",
@@ -104,7 +119,7 @@ class CustomerEventConsumerIntegrationTest {
 
     private ShipmentAddressDTO createShipmentAddressInDb() {
         ShipmentAddressDTO shipmentAddressDTO = new ShipmentAddressDTO(
-                102L, 101L,
+                102L, 10L,
                 "John", "Doe", "John.Doe@mail.com", "+123456789",
                 "234 Elm St", "Springfield", "IL", "23456", "USA"
         );
@@ -116,7 +131,7 @@ class CustomerEventConsumerIntegrationTest {
         streamBridge.send("customerEvents-out-0", event);
     }
 
-    private void assertShipmentAddressSaved(CustomerEvent customerEvent) {
+    private void assertShipmentAddressData(CustomerEvent customerEvent) {
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             CustomerEventData customerEventData = customerEvent.getCustomerEventData();
             ResponseEntity<ShipmentAddressDTO> response = getShipmentAddressById(customerEventData.getDeliveryAddress().getAddressId());

@@ -6,6 +6,7 @@ import com.dominikcebula.aws.samples.spring.cloud.shipment.repository.ShipmentAd
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -13,6 +14,7 @@ public class CustomerCreatedEventConsumer {
     private final ModelMapper modelMapper;
     private final ShipmentAddressRepository shipmentAddressRepository;
 
+    @Transactional
     public void consume(CustomerEvent customerEvent) {
         ShipmentAddressDTO shipmentAddressDTO = new ShipmentAddressDTO();
         modelMapper.map(customerEvent.getCustomerEventData(), shipmentAddressDTO);
