@@ -33,6 +33,8 @@ public class ShipmentAddressService {
                 .select(QShipmentAddressDTO.shipmentAddressDTO)
                 .from(QShipmentAddressDTO.shipmentAddressDTO)
                 .where(allOf(
+                        condition(searchShipmentAddressQuery.customerId, QShipmentAddressDTO.shipmentAddressDTO.customerId::eq),
+                        condition(searchShipmentAddressQuery.addressId, QShipmentAddressDTO.shipmentAddressDTO.addressId::eq),
                         condition(searchShipmentAddressQuery.firstName, QShipmentAddressDTO.shipmentAddressDTO.firstName::containsIgnoreCase),
                         condition(searchShipmentAddressQuery.lastName, QShipmentAddressDTO.shipmentAddressDTO.lastName::containsIgnoreCase),
                         condition(searchShipmentAddressQuery.email, QShipmentAddressDTO.shipmentAddressDTO.email::containsIgnoreCase),
@@ -50,6 +52,8 @@ public class ShipmentAddressService {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class SearchShipmentAddressQuery {
+        private Long customerId;
+        private Long addressId;
         private String firstName;
         private String lastName;
         private String email;

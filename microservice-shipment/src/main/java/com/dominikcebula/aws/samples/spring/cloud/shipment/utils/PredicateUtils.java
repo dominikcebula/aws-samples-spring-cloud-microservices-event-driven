@@ -12,6 +12,13 @@ public class PredicateUtils {
     private PredicateUtils() {
     }
 
+    public static Predicate condition(Long value, Function<Long, BooleanExpression> condition) {
+        return ofNullable(value)
+                .map(condition)
+                .orElse(null);
+
+    }
+
     public static Predicate condition(String value, Function<String, BooleanExpression> condition) {
         return ofNullable(value)
                 .filter(StringUtils::isNotBlank)
