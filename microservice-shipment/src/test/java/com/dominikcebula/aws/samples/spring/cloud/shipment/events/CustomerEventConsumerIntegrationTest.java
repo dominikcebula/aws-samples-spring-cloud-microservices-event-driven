@@ -4,10 +4,12 @@ import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEvent;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.data.AddressEventData;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.data.CustomerEventData;
 import com.dominikcebula.aws.samples.spring.cloud.shipment.model.ShipmentAddressDTO;
+import com.dominikcebula.aws.samples.spring.cloud.shipment.repository.ShipmentAddressRepository;
 import com.dominikcebula.aws.samples.spring.cloud.testing.LocalStackContainerSupport;
 import com.dominikcebula.aws.samples.spring.cloud.testing.PostgreSQLContainerSupport;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import java.util.concurrent.TimeUnit;
 
 import static com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEventType.CREATED;
+import static com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEventType.DELETED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -40,6 +43,8 @@ class CustomerEventConsumerIntegrationTest {
     private int port;
     @Autowired
     private TestRestTemplate restTemplate;
+    @Autowired
+    private ShipmentAddressRepository shipmentAddressRepository;
 
     @BeforeAll
     static void beforeAll() {
@@ -51,6 +56,11 @@ class CustomerEventConsumerIntegrationTest {
     static void afterAll() {
         LocalStackContainerSupport.stop();
         PostgreSQLContainerSupport.stop();
+    }
+
+    @AfterEach
+    void afterEach() {
+        shipmentAddressRepository.deleteAll();
     }
 
     @Test
@@ -66,6 +76,20 @@ class CustomerEventConsumerIntegrationTest {
         assertShipmentAddressSaved(customerCreatedEvent);
     }
 
+    @Test
+    void shouldProcessCustomerDeletedEvent() {
+        // given
+        CustomerEventData customerEventData = createCustomerEventData();
+        ShipmentAddressDTO shipmentAddressInDb = createShipmentAddressInDb();
+        CustomerEvent customerCreatedEvent = new CustomerEvent(DELETED, customerEventData);
+
+        // when
+        publishEvent(customerCreatedEvent);
+
+        // then
+        assertShipmentAddressDeleted(shipmentAddressInDb);
+    }
+
     private CustomerEventData createCustomerEventData() {
         return new CustomerEventData(
                 100L,
@@ -76,6 +100,16 @@ class CustomerEventConsumerIntegrationTest {
                 new AddressEventData(101L, "123 Main St", "Springfield", "IL", "12345", "USA"),
                 new AddressEventData(102L, "234 Elm St", "Springfield", "IL", "23456", "USA")
         );
+    }
+
+    private ShipmentAddressDTO createShipmentAddressInDb() {
+        ShipmentAddressDTO shipmentAddressDTO = new ShipmentAddressDTO(
+                102L, 101L,
+                "John", "Doe", "John.Doe@mail.com", "+123456789",
+                "234 Elm St", "Springfield", "IL", "23456", "USA"
+        );
+
+        return shipmentAddressRepository.save(shipmentAddressDTO);
     }
 
     private void publishEvent(CustomerEvent event) {
@@ -93,6 +127,17 @@ class CustomerEventConsumerIntegrationTest {
             assertThat(retrievedShipmentAddress)
                     .isNotNull();
             assertShipmentAddressMatchesEventData(retrievedShipmentAddress, customerEventData);
+        });
+    }
+
+    private void assertShipmentAddressDeleted(ShipmentAddressDTO shipmentAddressDTO) {
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            ResponseEntity<ShipmentAddressDTO> response = getShipmentAddressById(shipmentAddressDTO.getId());
+
+            assertThat(shipmentAddressRepository.findById(shipmentAddressDTO.getId()))
+                    .isEmpty();
+            assertThat(response.getStatusCode())
+                    .isEqualTo(HttpStatus.NOT_FOUND);
         });
     }
 

@@ -3,10 +3,14 @@ package com.dominikcebula.aws.samples.spring.cloud.shipment.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "shipment_addresses")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class ShipmentAddressDTO {
     @Id

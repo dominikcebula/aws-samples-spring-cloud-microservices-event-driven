@@ -10,11 +10,14 @@ import java.util.function.Consumer;
 public class CustomerEventConsumer implements Consumer<CustomerEvent> {
     @Autowired
     private CustomerCreatedEventConsumer customerCreatedEventConsumer;
+    @Autowired
+    private CustomerDeletedEventConsumer customerDeletedEventConsumer;
 
     @Override
     public void accept(CustomerEvent customerEvent) {
         switch (customerEvent.getEventType()) {
             case CREATED -> customerCreatedEventConsumer.consume(customerEvent);
+            case DELETED -> customerDeletedEventConsumer.consume(customerEvent);
             default -> throw new IllegalArgumentException("Unable to find event consumer for " + customerEvent);
         }
     }
