@@ -3,7 +3,7 @@ package com.dominikcebula.aws.samples.spring.cloud.shipment.web;
 
 import com.dominikcebula.aws.samples.spring.cloud.shipment.model.ShipmentAddressDTO;
 import com.dominikcebula.aws.samples.spring.cloud.shipment.repository.ShipmentAddressRepository;
-import com.dominikcebula.aws.samples.spring.cloud.shipment.testing.PostgreSQLContainerSupport;
+import com.dominikcebula.aws.samples.spring.cloud.testing.PostgreSQLContainerSupport;
 import org.assertj.core.api.Assertions;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;

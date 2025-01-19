@@ -4,10 +4,13 @@ import com.dominikcebula.aws.samples.spring.cloud.customers.model.AddressDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.CustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.repository.CustomerRepository;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEvent;
+import com.dominikcebula.aws.samples.spring.cloud.testing.LocalStackContainerSupport;
+import com.dominikcebula.aws.samples.spring.cloud.testing.PostgreSQLContainerSupport;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,11 +26,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.containers.localstack.LocalStackContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 import software.amazon.awssdk.services.sqs.model.GetQueueUrlRequest;
 import software.amazon.awssdk.services.sqs.model.Message;
@@ -38,13 +36,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.dominikcebula.aws.samples.spring.cloud.customers.service.CustomerService.SearchCustomerQuery;
+import static com.dominikcebula.aws.samples.spring.cloud.testing.LocalStackContainerSupport.QUEUE_CUSTOMER_EVENTS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import static org.testcontainers.containers.localstack.LocalStackContainer.Service.SNS;
-import static org.testcontainers.containers.localstack.LocalStackContainer.Service.SQS;
 
-@Testcontainers
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("local")
 class CustomersControllerIntegrationTest {
@@ -62,17 +58,16 @@ class CustomersControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Container
-    private static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres:17");
-    @Container
-    private static final LocalStackContainer LOCAL_STACK_CONTAINER = new LocalStackContainer(DockerImageName.parse("localstack/localstack:4.0.3"))
-            .withServices(SNS, SQS);
-
     @BeforeAll
-    static void beforeAll() throws Exception {
-        LOCAL_STACK_CONTAINER.execInContainer("awslocal", "sns", "create-topic", "--name", "customer-events-topic");
-        LOCAL_STACK_CONTAINER.execInContainer("awslocal", "sqs", "create-queue", "--queue-name", "customer-events");
-        LOCAL_STACK_CONTAINER.execInContainer("awslocal", "sns", "subscribe", "--topic-arn", "arn:aws:sns:us-east-1:000000000000:customer-events-topic", "--protocol", "sqs", "--notification-endpoint", "arn:aws:sqs:us-east-1:000000000000:customer-events");
+    static void beforeAll() {
+        PostgreSQLContainerSupport.start();
+        LocalStackContainerSupport.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        LocalStackContainerSupport.stop();
+        PostgreSQLContainerSupport.stop();
     }
 
     @AfterEach
@@ -302,15 +297,8 @@ class CustomersControllerIntegrationTest {
 
     @DynamicPropertySource
     private static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
-        registry.add("spring.datasource.username", POSTGRESQL_CONTAINER::getUsername);
-        registry.add("spring.datasource.password", POSTGRESQL_CONTAINER::getPassword);
-
-        registry.add("spring.cloud.aws.region.static", LOCAL_STACK_CONTAINER::getRegion);
-        registry.add("spring.cloud.aws.sns.endpoint", () -> LOCAL_STACK_CONTAINER.getEndpointOverride(SNS));
-        registry.add("spring.cloud.aws.sns.region", LOCAL_STACK_CONTAINER::getRegion);
-        registry.add("spring.cloud.aws.sqs.endpoint", () -> LOCAL_STACK_CONTAINER.getEndpointOverride(SQS));
-        registry.add("spring.cloud.aws.sqs.region", LOCAL_STACK_CONTAINER::getRegion);
+        PostgreSQLContainerSupport.registerProperties(registry);
+        LocalStackContainerSupport.registerProperties(registry);
     }
 
     private List<CustomerDTO> customersSavedInDatabase() {
@@ -374,7 +362,7 @@ class CustomersControllerIntegrationTest {
     }
 
     private String getCustomerEventsQueueUrl() throws InterruptedException, ExecutionException {
-        return amazonSQS.getQueueUrl(GetQueueUrlRequest.builder().queueName("customer-events").build()).get().queueUrl();
+        return amazonSQS.getQueueUrl(GetQueueUrlRequest.builder().queueName(QUEUE_CUSTOMER_EVENTS).build()).get().queueUrl();
     }
 
     private <T> T retrieveOneEvent(String queueUrl, Class<T> valueType) throws InterruptedException, ExecutionException, JsonProcessingException {
