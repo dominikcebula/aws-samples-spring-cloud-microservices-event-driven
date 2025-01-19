@@ -17,6 +17,10 @@
             <groupId>com.dominikcebula.aws.samples.spring.cloud.eda</groupId>
             <artifactId>shared-model-lib</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.dominikcebula.aws.samples.spring.cloud.eda</groupId>
+            <artifactId>shared-infra-aws-lib</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -82,18 +86,6 @@
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>rds</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>auth</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>sts</artifactId>
         </dependency>
 
         <dependency>
