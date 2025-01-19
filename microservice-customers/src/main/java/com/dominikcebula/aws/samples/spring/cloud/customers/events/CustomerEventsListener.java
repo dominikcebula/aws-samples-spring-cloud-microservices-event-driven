@@ -1,14 +1,14 @@
 package com.dominikcebula.aws.samples.spring.cloud.customers.events;
 
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEvent;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class CustomerEventsListener {
-    @Autowired
-    private EventSender eventSender;
+    private final EventSender eventSender;
 
     @EventListener
     public void onCustomerCreatedEvent(CustomerEvent event) {

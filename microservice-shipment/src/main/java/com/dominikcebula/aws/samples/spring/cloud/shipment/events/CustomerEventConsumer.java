@@ -1,17 +1,16 @@
 package com.dominikcebula.aws.samples.spring.cloud.shipment.events;
 
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEvent;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
 
 @Component
+@RequiredArgsConstructor
 public class CustomerEventConsumer implements Consumer<CustomerEvent> {
-    @Autowired
-    private CustomerCreatedEventConsumer customerCreatedEventConsumer;
-    @Autowired
-    private CustomerDeletedEventConsumer customerDeletedEventConsumer;
+    private final CustomerCreatedEventConsumer customerCreatedEventConsumer;
+    private final CustomerDeletedEventConsumer customerDeletedEventConsumer;
 
     @Override
     public void accept(CustomerEvent customerEvent) {

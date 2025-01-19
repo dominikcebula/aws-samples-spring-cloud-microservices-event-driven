@@ -3,7 +3,7 @@ package com.dominikcebula.aws.samples.spring.cloud.shipment.web;
 import com.dominikcebula.aws.samples.spring.cloud.shipment.model.ShipmentAddressDTO;
 import com.dominikcebula.aws.samples.spring.cloud.shipment.service.ShipmentAddressService;
 import com.dominikcebula.aws.samples.spring.cloud.shipment.service.ShipmentAddressService.SearchShipmentAddressQuery;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,9 +11,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
+@RequiredArgsConstructor
 public class ShipmentAddressController {
-    @Autowired
-    private ShipmentAddressService shipmentAddressService;
+    private final ShipmentAddressService shipmentAddressService;
 
     @GetMapping("/shipment/addresses")
     public List<ShipmentAddressDTO> getAllShipmentAddresses() {

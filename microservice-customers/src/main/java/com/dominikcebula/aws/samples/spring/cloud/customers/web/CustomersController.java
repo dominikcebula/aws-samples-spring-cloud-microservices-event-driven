@@ -4,7 +4,7 @@ import com.dominikcebula.aws.samples.spring.cloud.customers.model.CustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.service.CustomerService;
 import com.dominikcebula.aws.samples.spring.cloud.customers.service.CustomerService.SearchCustomerQuery;
 import com.dominikcebula.aws.samples.spring.cloud.customers.service.CustomerService.UpdateCustomerResultData;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +17,9 @@ import static com.dominikcebula.aws.samples.spring.cloud.customers.service.Custo
 
 @RestController
 @RequestMapping("/api/v1")
+@RequiredArgsConstructor
 public class CustomersController {
-    @Autowired
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
     @GetMapping("/customers")
     public List<CustomerDTO> getAllCustomers() {

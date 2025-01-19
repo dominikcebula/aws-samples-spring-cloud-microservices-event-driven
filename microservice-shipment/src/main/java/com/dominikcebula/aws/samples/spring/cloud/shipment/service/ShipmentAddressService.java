@@ -5,11 +5,7 @@ import com.dominikcebula.aws.samples.spring.cloud.shipment.model.ShipmentAddress
 import com.dominikcebula.aws.samples.spring.cloud.shipment.repository.ShipmentAddressRepository;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,11 +15,10 @@ import static com.dominikcebula.aws.samples.spring.cloud.shipment.utils.Predicat
 import static com.querydsl.core.types.ExpressionUtils.allOf;
 
 @Service
+@RequiredArgsConstructor
 public class ShipmentAddressService {
-    @Autowired
-    private ShipmentAddressRepository shipmentAddressRepository;
-    @Autowired
-    private EntityManager entityManager;
+    private final ShipmentAddressRepository shipmentAddressRepository;
+    private final EntityManager entityManager;
 
     public List<ShipmentAddressDTO> getAllShipmentAddresses() {
         return shipmentAddressRepository.findAll();

@@ -7,7 +7,6 @@ import com.dominikcebula.aws.samples.spring.cloud.customers.repository.CustomerR
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,15 +18,12 @@ import static com.dominikcebula.aws.samples.spring.cloud.customers.utils.Predica
 import static com.querydsl.core.types.ExpressionUtils.allOf;
 
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
-    @Autowired
-    private CustomerRepository customerRepository;
-    @Autowired
-    private EntityManager entityManager;
-    @Autowired
-    private CustomerCreatedEventFactory customerCreatedEventFactory;
-    @Autowired
-    private ApplicationEventPublisher eventPublisher;
+    private final CustomerRepository customerRepository;
+    private final EntityManager entityManager;
+    private final CustomerCreatedEventFactory customerCreatedEventFactory;
+    private final ApplicationEventPublisher eventPublisher;
 
     public List<CustomerDTO> getAllCustomers() {
         return customerRepository.findAll();
