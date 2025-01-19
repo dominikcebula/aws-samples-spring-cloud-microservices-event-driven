@@ -10,6 +10,8 @@ This repository contains sample code showcasing Event-Driven Spring Cloud Micros
 * Event Driven Architecture (EDA)
 * Docker
 * Docker Compose
+* Testcontainers
+* Localstack
 * Kaniko Executor
 * Java Memory Settings for Containers
 * EKS
@@ -22,11 +24,19 @@ This repository contains sample code showcasing Event-Driven Spring Cloud Micros
   * Jenkins Job DSL (Seed Jobs)
 * Infrastructure as a Code (IaaC) using Terraform
 * Spring Boot
+* Spring Cloud Stream
+  * Spring Cloud Stream Binder for SNS
+  * Spring Cloud Stream Binder for SQS
 * Spring Cloud
   * Spring Cloud Eureka
   * Spring Cloud Config Server
   * Spring Cloud Gateway
   * Spring Boot Admin
+* JPA
+* QueryDSL
+* ModelMapper
+* Liquibase
+* Pre-Liquibase
 
 ## Q&A on implementation choices
 
