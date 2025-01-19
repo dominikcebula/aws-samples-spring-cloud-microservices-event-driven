@@ -28,7 +28,7 @@ This repository contains sample code showcasing Event-Driven Spring Cloud Micros
   * Spring Cloud Gateway
   * Spring Boot Admin
 
-## Q&A
+## Q&A on implementation choices
 
 ### Why Domain Driven Design (DDD) / Rich Domain Business Model was not used?
 
