@@ -1,17 +1,15 @@
 package com.dominikcebula.aws.samples.spring.cloud.shipment.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
-
-import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity
 @Table(name = "shipment_addresses")
 @Data
 public class ShipmentAddressDTO {
     @Id
-    @SequenceGenerator(name = "shipment_addresses_seq", sequenceName = "shipment_addresses_seq", allocationSize = 1)
-    @GeneratedValue(strategy = SEQUENCE, generator = "shipment_addresses_seq")
     private Long id;
 
     private Long customerId;

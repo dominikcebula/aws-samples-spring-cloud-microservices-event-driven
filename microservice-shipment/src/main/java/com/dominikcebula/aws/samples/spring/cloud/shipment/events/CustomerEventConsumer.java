@@ -1,14 +1,21 @@
 package com.dominikcebula.aws.samples.spring.cloud.shipment.events;
 
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
 
 @Component
 public class CustomerEventConsumer implements Consumer<CustomerEvent> {
+    @Autowired
+    private CustomerCreatedEventConsumer customerCreatedEventConsumer;
+
     @Override
     public void accept(CustomerEvent customerEvent) {
-        System.out.println("Customer created: " + customerEvent);
+        switch (customerEvent.getEventType()) {
+            case CREATED -> customerCreatedEventConsumer.consume(customerEvent);
+            default -> throw new IllegalArgumentException("Unable to find event consumer for " + customerEvent);
+        }
     }
 }
