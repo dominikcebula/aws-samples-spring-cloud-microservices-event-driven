@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: shipment_addresses
             columns:
               - column:
-                  name: id
+                  name: address_id
                   type: BIGINT
                   constraints:
                     primaryKey: true
@@ -16,7 +16,6 @@ databaseChangeLog:
                   name: customer_id
                   type: BIGINT
                   constraints:
-                    primaryKey: true
                     nullable: false
               - column:
                   name: first_name
@@ -61,3 +60,7 @@ databaseChangeLog:
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
+        - addUniqueConstraint:
+            constraintName: shipment_addresses_unq
+            tableName: shipment_addresses
+            columnNames: address_id, customer_id

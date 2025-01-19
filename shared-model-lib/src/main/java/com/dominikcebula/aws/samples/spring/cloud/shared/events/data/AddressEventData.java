@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddressEventData {
-    private Long id;
+    private Long addressId;
     private String street;
     private String city;
     private String state;

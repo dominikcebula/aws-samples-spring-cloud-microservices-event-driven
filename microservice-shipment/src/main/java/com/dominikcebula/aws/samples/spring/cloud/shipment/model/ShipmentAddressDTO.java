@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class ShipmentAddressDTO {
     @Id
-    private Long id;
-
+    private Long addressId;
     private Long customerId;
+
     private String firstName;
     private String lastName;
     private String email;

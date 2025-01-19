@@ -96,7 +96,7 @@ class ShipmentAddressControllerIntegrationTest {
         ShipmentAddressDTO shipmentAddressToRetrieve = shipmentAddressesSavedInDatabase.get(2);
 
         // when
-        ResponseEntity<ShipmentAddressDTO> response = restTemplate.exchange(getShipmentAddressesUrl() + "/" + shipmentAddressToRetrieve.getId(), HttpMethod.GET,
+        ResponseEntity<ShipmentAddressDTO> response = restTemplate.exchange(getShipmentAddressesUrl() + "/" + shipmentAddressToRetrieve.getAddressId(), HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {
                 });
@@ -194,10 +194,10 @@ class ShipmentAddressControllerIntegrationTest {
         );
     }
 
-    private static ShipmentAddressDTO createShipmentAddress(Long id, Long customerId, String email, String firstName, String lastName, String phone,
+    private static ShipmentAddressDTO createShipmentAddress(Long addressId, Long customerId, String email, String firstName, String lastName, String phone,
                                                             String street, String city, String state, String zipCode, String country) {
         ShipmentAddressDTO shipmentAddressDTO = new ShipmentAddressDTO();
-        shipmentAddressDTO.setId(id);
+        shipmentAddressDTO.setAddressId(addressId);
         shipmentAddressDTO.setCustomerId(customerId);
         shipmentAddressDTO.setEmail(email);
         shipmentAddressDTO.setFirstName(firstName);

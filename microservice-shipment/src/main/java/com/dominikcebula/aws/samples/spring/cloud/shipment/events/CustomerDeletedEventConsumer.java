@@ -11,6 +11,6 @@ public class CustomerDeletedEventConsumer {
     private final ShipmentAddressRepository shipmentAddressRepository;
 
     public void consume(CustomerEvent customerEvent) {
-        shipmentAddressRepository.deleteById(customerEvent.getCustomerEventData().getDeliveryAddress().getId());
+        shipmentAddressRepository.deleteById(customerEvent.getCustomerEventData().getDeliveryAddress().getAddressId());
     }
 }

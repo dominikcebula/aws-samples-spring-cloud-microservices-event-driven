@@ -119,7 +119,7 @@ class CustomerEventConsumerIntegrationTest {
     private void assertShipmentAddressSaved(CustomerEvent customerEvent) {
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             CustomerEventData customerEventData = customerEvent.getCustomerEventData();
-            ResponseEntity<ShipmentAddressDTO> response = getShipmentAddressById(customerEventData.getDeliveryAddress().getId());
+            ResponseEntity<ShipmentAddressDTO> response = getShipmentAddressById(customerEventData.getDeliveryAddress().getAddressId());
             ShipmentAddressDTO retrievedShipmentAddress = response.getBody();
 
             assertThat(response.getStatusCode())
@@ -132,9 +132,9 @@ class CustomerEventConsumerIntegrationTest {
 
     private void assertShipmentAddressDeleted(ShipmentAddressDTO shipmentAddressDTO) {
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-            ResponseEntity<ShipmentAddressDTO> response = getShipmentAddressById(shipmentAddressDTO.getId());
+            ResponseEntity<ShipmentAddressDTO> response = getShipmentAddressById(shipmentAddressDTO.getAddressId());
 
-            assertThat(shipmentAddressRepository.findById(shipmentAddressDTO.getId()))
+            assertThat(shipmentAddressRepository.findById(shipmentAddressDTO.getAddressId()))
                     .isEmpty();
             assertThat(response.getStatusCode())
                     .isEqualTo(HttpStatus.NOT_FOUND);
@@ -142,8 +142,8 @@ class CustomerEventConsumerIntegrationTest {
     }
 
     private static void assertShipmentAddressMatchesEventData(ShipmentAddressDTO retrievedShipmentAddress, CustomerEventData customerEventData) {
-        assertThat(retrievedShipmentAddress.getId())
-                .isEqualTo(customerEventData.getDeliveryAddress().getId());
+        assertThat(retrievedShipmentAddress.getAddressId())
+                .isEqualTo(customerEventData.getDeliveryAddress().getAddressId());
         assertThat(retrievedShipmentAddress.getCustomerId())
                 .isEqualTo(customerEventData.getCustomerId());
         assertThat(retrievedShipmentAddress)
