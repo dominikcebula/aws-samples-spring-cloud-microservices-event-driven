@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>com.dominikcebula.aws.samples.spring.cloud.eda</groupId>
-            <artifactId>shared-model</artifactId>
+            <artifactId>shared-model-lib</artifactId>
         </dependency>
 
         <dependency>
