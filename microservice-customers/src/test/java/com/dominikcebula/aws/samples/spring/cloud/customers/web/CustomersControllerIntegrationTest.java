@@ -4,6 +4,7 @@ import com.dominikcebula.aws.samples.spring.cloud.customers.model.AddressDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.CustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.repository.CustomerRepository;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEvent;
+import com.dominikcebula.aws.samples.spring.cloud.shared.events.data.CustomerEventData;
 import com.dominikcebula.aws.samples.spring.cloud.testing.LocalStackContainerSupport;
 import com.dominikcebula.aws.samples.spring.cloud.testing.PostgreSQLContainerSupport;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,7 +37,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.dominikcebula.aws.samples.spring.cloud.customers.service.CustomerService.SearchCustomerQuery;
-import static com.dominikcebula.aws.samples.spring.cloud.testing.LocalStackContainerSupport.QUEUE_CUSTOMER_EVENTS;
+import static com.dominikcebula.aws.samples.spring.cloud.testing.LocalStackContainerSupport.QUEUE_CUSTOMER_EVENTS_TO_TEST_CONSUMER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -352,17 +353,21 @@ class CustomersControllerIntegrationTest {
                 .atMost(10, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
                     CustomerEvent retrievedCustomerEvent = retrieveOneEvent(getCustomerEventsQueueUrl(), CustomerEvent.class);
+                    CustomerEventData retrievedCustomerEventData = retrievedCustomerEvent.getCustomerEventData();
 
                     assertThat(retrievedCustomerEvent.getTimestamp())
                             .isNotNull();
-                    assertThat(retrievedCustomerEvent.getCustomerEventData())
+                    assertThat(retrievedCustomerEvent.getCustomerEventData().getCustomerId())
+                            .isEqualTo(customerDTO.getId());
+                    assertThat(retrievedCustomerEventData)
                             .usingRecursiveComparison()
+                            .ignoringFields("customerId")
                             .isEqualTo(customerDTO);
                 });
     }
 
     private String getCustomerEventsQueueUrl() throws InterruptedException, ExecutionException {
-        return amazonSQS.getQueueUrl(GetQueueUrlRequest.builder().queueName(QUEUE_CUSTOMER_EVENTS).build()).get().queueUrl();
+        return amazonSQS.getQueueUrl(GetQueueUrlRequest.builder().queueName(QUEUE_CUSTOMER_EVENTS_TO_TEST_CONSUMER).build()).get().queueUrl();
     }
 
     private <T> T retrieveOneEvent(String queueUrl, Class<T> valueType) throws InterruptedException, ExecutionException, JsonProcessingException {

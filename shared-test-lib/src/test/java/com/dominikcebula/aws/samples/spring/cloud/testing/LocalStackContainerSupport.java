@@ -15,7 +15,7 @@ public class LocalStackContainerSupport {
             .withServices(SNS, SQS);
 
     public static final String TOPIC_CUSTOMER_EVENTS = "customer-events-topic";
-    public static final String QUEUE_CUSTOMER_EVENTS = "customer-events-to-test-consumer";
+    public static final String QUEUE_CUSTOMER_EVENTS_TO_TEST_CONSUMER = "customer-events-to-test-consumer";
     public static final String QUEUE_CUSTOMER_EVENTS_TO_SHIPMENT_SERVICE = "customer-events-to-shipment-service";
 
     @SneakyThrows
@@ -24,7 +24,7 @@ public class LocalStackContainerSupport {
 
         createTopic(TOPIC_CUSTOMER_EVENTS);
         createAndSubscribeQueue(TOPIC_CUSTOMER_EVENTS, QUEUE_CUSTOMER_EVENTS_TO_SHIPMENT_SERVICE);
-        createAndSubscribeQueue(TOPIC_CUSTOMER_EVENTS, QUEUE_CUSTOMER_EVENTS);
+        createAndSubscribeQueue(TOPIC_CUSTOMER_EVENTS, QUEUE_CUSTOMER_EVENTS_TO_TEST_CONSUMER);
     }
 
     public static void stop() {

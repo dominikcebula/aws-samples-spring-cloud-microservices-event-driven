@@ -183,20 +183,21 @@ class ShipmentAddressControllerIntegrationTest {
 
     private static List<ShipmentAddressDTO> createShipmentAddresses() {
         return List.of(
-                createShipmentAddress(100L, "alice@example.com", "Alice", "Smith", "123-456-7890",
+                createShipmentAddress(10L, 100L, "alice@example.com", "Alice", "Smith", "123-456-7890",
                         "123 Main St", "Springfield", "IL", "12345", "USA"),
-                createShipmentAddress(200L, "bob@example.com", "Bob", "Johnson", "234-567-8901",
+                createShipmentAddress(20L, 200L, "bob@example.com", "Bob", "Johnson", "234-567-8901",
                         "234 Elm St", "Springfield", "IL", "23456", "USA"),
-                createShipmentAddress(300L, "carol@example.com", "Carol", "Williams", "345-678-9012",
+                createShipmentAddress(30L, 300L, "carol@example.com", "Carol", "Williams", "345-678-9012",
                         "345 Oak St", "Springfield", "IL", "34567", "USA"),
-                createShipmentAddress(400L, "dave@example.com", "Dave", "Brown", "456-789-0123",
+                createShipmentAddress(40L, 400L, "dave@example.com", "Dave", "Brown", "456-789-0123",
                         "456 Pine St", "Springfield", "IL", "45678", "USA")
         );
     }
 
-    private static ShipmentAddressDTO createShipmentAddress(Long customerId, String email, String firstName, String lastName, String phone,
+    private static ShipmentAddressDTO createShipmentAddress(Long id, Long customerId, String email, String firstName, String lastName, String phone,
                                                             String street, String city, String state, String zipCode, String country) {
         ShipmentAddressDTO shipmentAddressDTO = new ShipmentAddressDTO();
+        shipmentAddressDTO.setId(id);
         shipmentAddressDTO.setCustomerId(customerId);
         shipmentAddressDTO.setEmail(email);
         shipmentAddressDTO.setFirstName(firstName);
