@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    stream:
+      binders:
+        sns:
+          type: sns
+      bindings:
+        customerEvents-out-0:
+          binder: sns
+          destination: customer-events-topic

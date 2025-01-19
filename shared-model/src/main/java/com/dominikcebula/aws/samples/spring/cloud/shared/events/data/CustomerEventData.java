@@ -1,8 +1,12 @@
 package com.dominikcebula.aws.samples.spring.cloud.shared.events.data;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CustomerEventData {
     private Long id;
 

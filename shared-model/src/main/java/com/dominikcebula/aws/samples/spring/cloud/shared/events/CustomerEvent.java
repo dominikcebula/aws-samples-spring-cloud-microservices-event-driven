@@ -10,11 +10,13 @@ import java.time.ZonedDateTime;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class CustomerCreatedEvent extends Event {
+public class CustomerEvent extends Event {
+    private CustomerEventType eventType;
     private CustomerEventData customerEventData;
 
-    public CustomerCreatedEvent(CustomerEventData customerEventData) {
+    public CustomerEvent(CustomerEventType eventType, CustomerEventData customerEventData) {
         super(ZonedDateTime.now());
+        this.eventType = eventType;
         this.customerEventData = customerEventData;
     }
 }

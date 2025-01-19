@@ -13,11 +13,11 @@ spring:
         serviceId: config-server
     stream:
       binders:
-        sns:
-          type: sns
+        sqs:
+          type: sqs
       bindings:
-        customerEvents-in-0:
-          binder: sns
+        customerEventConsumer-in-0:
+          binder: sqs
           destination: customer-events-to-shipment-service
   jpa:
     properties:

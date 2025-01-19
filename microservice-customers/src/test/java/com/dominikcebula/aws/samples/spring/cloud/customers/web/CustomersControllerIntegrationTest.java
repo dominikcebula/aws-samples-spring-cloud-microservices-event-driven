@@ -3,7 +3,7 @@ package com.dominikcebula.aws.samples.spring.cloud.customers.web;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.AddressDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.CustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.repository.CustomerRepository;
-import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerCreatedEvent;
+import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -363,11 +363,11 @@ class CustomersControllerIntegrationTest {
         await()
                 .atMost(10, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
-                    CustomerCreatedEvent retrievedCustomerCreatedEvent = retrieveOneEvent(getCustomerEventsQueueUrl(), CustomerCreatedEvent.class);
+                    CustomerEvent retrievedCustomerEvent = retrieveOneEvent(getCustomerEventsQueueUrl(), CustomerEvent.class);
 
-                    assertThat(retrievedCustomerCreatedEvent.getTimestamp())
+                    assertThat(retrievedCustomerEvent.getTimestamp())
                             .isNotNull();
-                    assertThat(retrievedCustomerCreatedEvent.getCustomerEventData())
+                    assertThat(retrievedCustomerEvent.getCustomerEventData())
                             .usingRecursiveComparison()
                             .isEqualTo(customerDTO);
                 });

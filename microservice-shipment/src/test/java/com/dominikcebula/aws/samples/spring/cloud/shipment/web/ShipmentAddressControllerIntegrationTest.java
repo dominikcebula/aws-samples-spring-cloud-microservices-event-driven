@@ -3,9 +3,12 @@ package com.dominikcebula.aws.samples.spring.cloud.shipment.web;
 
 import com.dominikcebula.aws.samples.spring.cloud.shipment.model.ShipmentAddressDTO;
 import com.dominikcebula.aws.samples.spring.cloud.shipment.repository.ShipmentAddressRepository;
+import com.dominikcebula.aws.samples.spring.cloud.shipment.testing.PostgreSQLContainerSupport;
 import org.assertj.core.api.Assertions;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,9 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
@@ -29,7 +29,6 @@ import static com.dominikcebula.aws.samples.spring.cloud.shipment.service.Shipme
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
-@Testcontainers
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("local")
 class ShipmentAddressControllerIntegrationTest {
@@ -42,8 +41,15 @@ class ShipmentAddressControllerIntegrationTest {
     @Autowired
     private ShipmentAddressRepository shipmentAddressRepository;
 
-    @Container
-    private static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres:17");
+    @BeforeAll
+    static void beforeAll() {
+        PostgreSQLContainerSupport.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        PostgreSQLContainerSupport.stop();
+    }
 
     @AfterEach
     void tearDown() {
@@ -168,9 +174,7 @@ class ShipmentAddressControllerIntegrationTest {
 
     @DynamicPropertySource
     private static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
-        registry.add("spring.datasource.username", POSTGRESQL_CONTAINER::getUsername);
-        registry.add("spring.datasource.password", POSTGRESQL_CONTAINER::getPassword);
+        PostgreSQLContainerSupport.registerProperties(registry);
     }
 
     private List<ShipmentAddressDTO> shipmentAddressesSavedInDatabase() {
