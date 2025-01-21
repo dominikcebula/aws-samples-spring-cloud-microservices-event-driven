@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CustomerCreatedEventFactory {
+public class CustomerEventsFactory {
     private final ModelMapper modelMapper;
 
     public CustomerCreatedEvent createCustomerCreatedEvent(CustomerDTO customer) {
