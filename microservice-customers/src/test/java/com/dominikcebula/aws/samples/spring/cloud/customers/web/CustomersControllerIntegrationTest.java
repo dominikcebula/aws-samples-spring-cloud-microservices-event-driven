@@ -3,7 +3,7 @@ package com.dominikcebula.aws.samples.spring.cloud.customers.web;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.AddressDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.CustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.repository.CustomerRepository;
-import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEvent;
+import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerCreatedEvent;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.data.CustomerEventData;
 import com.dominikcebula.aws.samples.spring.cloud.testing.LocalStackContainerSupport;
 import com.dominikcebula.aws.samples.spring.cloud.testing.PostgreSQLContainerSupport;
@@ -352,7 +352,7 @@ class CustomersControllerIntegrationTest {
         await()
                 .atMost(10, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
-                    CustomerEvent retrievedCustomerEvent = retrieveOneEvent(getCustomerEventsQueueUrl(), CustomerEvent.class);
+                    CustomerCreatedEvent retrievedCustomerEvent = retrieveOneEvent(getCustomerEventsQueueUrl(), CustomerCreatedEvent.class);
                     CustomerEventData retrievedCustomerEventData = retrievedCustomerEvent.getCustomerEventData();
 
                     assertThat(retrievedCustomerEvent.getTimestamp())

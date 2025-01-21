@@ -1,6 +1,6 @@
 package com.dominikcebula.aws.samples.spring.cloud.shipment.events;
 
-import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEvent;
+import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerCreatedEvent;
 import com.dominikcebula.aws.samples.spring.cloud.shipment.model.ShipmentAddressDTO;
 import com.dominikcebula.aws.samples.spring.cloud.shipment.repository.ShipmentAddressRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +15,10 @@ public class CustomerCreatedEventConsumer {
     private final ShipmentAddressRepository shipmentAddressRepository;
 
     @Transactional
-    public void consume(CustomerEvent customerEvent) {
+    public void consume(CustomerCreatedEvent customerCreatedEvent) {
         ShipmentAddressDTO shipmentAddressDTO = new ShipmentAddressDTO();
-        modelMapper.map(customerEvent.getCustomerEventData(), shipmentAddressDTO);
-        modelMapper.map(customerEvent.getCustomerEventData().getDeliveryAddress(), shipmentAddressDTO);
+        modelMapper.map(customerCreatedEvent.getCustomerEventData(), shipmentAddressDTO);
+        modelMapper.map(customerCreatedEvent.getCustomerEventData().getDeliveryAddress(), shipmentAddressDTO);
 
         shipmentAddressRepository.save(shipmentAddressDTO);
     }

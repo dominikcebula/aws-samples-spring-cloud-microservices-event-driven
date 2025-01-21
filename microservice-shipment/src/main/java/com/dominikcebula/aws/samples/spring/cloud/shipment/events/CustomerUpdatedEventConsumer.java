@@ -1,6 +1,6 @@
 package com.dominikcebula.aws.samples.spring.cloud.shipment.events;
 
-import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEvent;
+import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerUpdatedEvent;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.data.AddressEventData;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.data.CustomerEventData;
 import com.dominikcebula.aws.samples.spring.cloud.shipment.model.ShipmentAddressDTO;
@@ -17,8 +17,8 @@ public class CustomerUpdatedEventConsumer {
     private final ShipmentAddressRepository shipmentAddressRepository;
 
     @Transactional
-    public void consume(CustomerEvent customerEvent) {
-        CustomerEventData customerEventData = customerEvent.getCustomerEventData();
+    public void consume(CustomerUpdatedEvent customerUpdatedEvent) {
+        CustomerEventData customerEventData = customerUpdatedEvent.getNewCustomerData();
         AddressEventData deliveryAddressEventData = customerEventData.getDeliveryAddress();
 
         ShipmentAddressDTO shipmentAddressDTO = shipmentAddressRepository.findById(deliveryAddressEventData.getAddressId())

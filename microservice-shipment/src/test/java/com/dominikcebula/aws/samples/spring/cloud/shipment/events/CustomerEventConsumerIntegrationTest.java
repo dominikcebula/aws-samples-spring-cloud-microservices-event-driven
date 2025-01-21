@@ -1,6 +1,9 @@
 package com.dominikcebula.aws.samples.spring.cloud.shipment.events;
 
+import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerCreatedEvent;
+import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerDeletedEvent;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEvent;
+import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerUpdatedEvent;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.data.AddressEventData;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.data.CustomerEventData;
 import com.dominikcebula.aws.samples.spring.cloud.shipment.model.ShipmentAddressDTO;
@@ -27,7 +30,6 @@ import org.springframework.test.context.DynamicPropertySource;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerEventType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -66,29 +68,30 @@ class CustomerEventConsumerIntegrationTest {
     void shouldProcessCustomerCreatedEvent() {
         // given
         CustomerEventData customerEventData = createCustomerEventData();
-        CustomerEvent customerCreatedEvent = new CustomerEvent(CREATED, customerEventData);
+        CustomerCreatedEvent customerCreatedEvent = new CustomerCreatedEvent(customerEventData);
 
         // when
         publishEvent(customerCreatedEvent);
 
         // then
-        assertShipmentAddressData(customerCreatedEvent);
+        assertShipmentAddressData(customerCreatedEvent.getCustomerEventData());
     }
 
     @Test
     void shouldProcessCustomerUpdatedEvent() {
         // given
-        CustomerEventData customerEventData = createCustomerEventData();
-        customerEventData.setFirstName("Bob");
-        customerEventData.getDeliveryAddress().setCountry("Poland");
+        CustomerEventData existingCustomerEventData = createCustomerEventData();
+        CustomerEventData updatedCustomerEventData = createCustomerEventData();
+        updatedCustomerEventData.setFirstName("Bob");
+        updatedCustomerEventData.getDeliveryAddress().setCountry("Poland");
         createShipmentAddressInDb();
-        CustomerEvent customerUpdatedEvent = new CustomerEvent(UPDATED, customerEventData);
+        CustomerUpdatedEvent customerUpdatedEvent = new CustomerUpdatedEvent(existingCustomerEventData, updatedCustomerEventData);
 
         // when
         publishEvent(customerUpdatedEvent);
 
         // then
-        assertShipmentAddressData(customerUpdatedEvent);
+        assertShipmentAddressData(updatedCustomerEventData);
     }
 
     @Test
@@ -96,10 +99,10 @@ class CustomerEventConsumerIntegrationTest {
         // given
         CustomerEventData customerEventData = createCustomerEventData();
         ShipmentAddressDTO shipmentAddressInDb = createShipmentAddressInDb();
-        CustomerEvent customerCreatedEvent = new CustomerEvent(DELETED, customerEventData);
+        CustomerDeletedEvent customerDeletedEvent = new CustomerDeletedEvent(customerEventData);
 
         // when
-        publishEvent(customerCreatedEvent);
+        publishEvent(customerDeletedEvent);
 
         // then
         assertShipmentAddressDeleted(shipmentAddressInDb);
@@ -131,9 +134,8 @@ class CustomerEventConsumerIntegrationTest {
         streamBridge.send("customerEvents-out-0", event);
     }
 
-    private void assertShipmentAddressData(CustomerEvent customerEvent) {
+    private void assertShipmentAddressData(CustomerEventData customerEventData) {
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-            CustomerEventData customerEventData = customerEvent.getCustomerEventData();
             ResponseEntity<ShipmentAddressDTO> response = getShipmentAddressById(customerEventData.getDeliveryAddress().getAddressId());
             ShipmentAddressDTO retrievedShipmentAddress = response.getBody();
 
