@@ -53,22 +53,27 @@ public class CustomerService {
     }
 
     @Transactional
-    public UpdateCustomerResultData updateCustomer(Long id, CustomerDTO customer) {
-        if (customerRepository.existsById(id)) {
-            customer.setId(id);
-            CustomerDTO savedCustomer = customerRepository.save(customer);
-            return new UpdateCustomerResultData(UpdateCustomerResult.UPDATED, savedCustomer);
-        } else
-            return new UpdateCustomerResultData(UpdateCustomerResult.NOT_FOUND);
+    public UpdateCustomerResultData updateCustomer(Long id, CustomerDTO customerUpdateData) {
+        return customerRepository.findById(id)
+                .map(foundCustomer -> {
+                    CustomerDTO oldCustomer = new CustomerDTO(foundCustomer);
+                    customerUpdateData.setId(foundCustomer.getId());
+                    CustomerDTO savedCustomer = customerRepository.save(customerUpdateData);
+                    eventPublisher.publishEvent(customerEventsFactory.createCustomerUpdatedEvent(oldCustomer, savedCustomer));
+                    return new UpdateCustomerResultData(UpdateCustomerResult.UPDATED, savedCustomer);
+                })
+                .orElse(new UpdateCustomerResultData(UpdateCustomerResult.NOT_FOUND));
     }
 
     @Transactional
     public DeleteCustomerResult deleteCustomer(Long id) {
-        if (customerRepository.existsById(id)) {
-            customerRepository.deleteById(id);
-            return DeleteCustomerResult.DELETED;
-        } else
-            return DeleteCustomerResult.NOT_FOUND;
+        return customerRepository.findById(id)
+                .map(customer -> {
+                    customerRepository.deleteById(customer.getId());
+                    eventPublisher.publishEvent(customerEventsFactory.createCustomerDeletedEvent(customer));
+                    return DeleteCustomerResult.DELETED;
+                })
+                .orElse(DeleteCustomerResult.NOT_FOUND);
     }
 
     @Data

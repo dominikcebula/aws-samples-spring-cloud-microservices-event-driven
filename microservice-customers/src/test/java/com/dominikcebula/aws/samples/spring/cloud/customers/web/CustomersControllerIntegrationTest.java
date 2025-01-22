@@ -4,6 +4,7 @@ import com.dominikcebula.aws.samples.spring.cloud.customers.model.AddressDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.CustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.repository.CustomerRepository;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerCreatedEvent;
+import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerUpdatedEvent;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.data.CustomerEventData;
 import com.dominikcebula.aws.samples.spring.cloud.testing.LocalStackContainerSupport;
 import com.dominikcebula.aws.samples.spring.cloud.testing.PostgreSQLContainerSupport;
@@ -37,6 +38,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.dominikcebula.aws.samples.spring.cloud.customers.service.CustomerService.SearchCustomerQuery;
+import static com.dominikcebula.aws.samples.spring.cloud.customers.testing.CustomerDTOTestUtils.copyOfWithId;
+import static com.dominikcebula.aws.samples.spring.cloud.customers.testing.CustomerDTOTestUtils.copyOfWithoutId;
 import static com.dominikcebula.aws.samples.spring.cloud.testing.LocalStackContainerSupport.QUEUE_CUSTOMER_EVENTS_TO_TEST_CONSUMER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -92,11 +95,10 @@ class CustomersControllerIntegrationTest {
     @Test
     void shouldSaveCustomer() {
         // given
-        CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setEmail("John.Doe@mail.com");
-        customerDTO.setFirstName("John");
-        customerDTO.setLastName("Doe");
-        customerDTO.setPhone("123-456-7890");
+        CustomerDTO customerDTO = createCustomer("bob@example.com", "Bob", "Johnson", "234-567-8901",
+                createAddress("123 Main St", "Springfield", "IL", "12345", "USA"),
+                createAddress("234 Elm St", "Springfield", "IL", "23456", "USA")
+        );
 
         // when
         ResponseEntity<CustomerDTO> response = restTemplate.postForEntity(getCustomersUrl(), customerDTO, CustomerDTO.class);
@@ -112,9 +114,9 @@ class CustomersControllerIntegrationTest {
                 .isNotNull();
         assertThat(response.getBody())
                 .usingRecursiveComparison()
-                .ignoringFields("id")
+                .ignoringFields("id", "homeAddress.id", "deliveryAddress.id")
                 .isEqualTo(customerDTO);
-        assertThatEventWasPublished(response.getBody());
+        assertThatCustomerCreatedEventWasPublished(response.getBody());
     }
 
     @Test
@@ -217,12 +219,13 @@ class CustomersControllerIntegrationTest {
         // given
         List<CustomerDTO> customersSavedInDatabase = customersSavedInDatabase();
         CustomerDTO customerToUpdate = customersSavedInDatabase.get(3);
-        customerToUpdate.setFirstName("Greg");
-        customerToUpdate.setLastName("Brown");
+        CustomerDTO customerUpdateData = copyOfWithoutId(customerToUpdate);
+        customerUpdateData.setFirstName("Greg");
+        customerUpdateData.setLastName("Brown");
 
         // when
         ResponseEntity<CustomerDTO> response = restTemplate.exchange(getCustomersUrl() + "/" + customerToUpdate.getId(), HttpMethod.PUT,
-                new HttpEntity<>(customerToUpdate),
+                new HttpEntity<>(customerUpdateData),
                 new ParameterizedTypeReference<>() {
                 });
 
@@ -230,14 +233,21 @@ class CustomersControllerIntegrationTest {
         assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.OK);
         assertThat(response.getBody())
-                .isEqualTo(customerToUpdate);
+                .isNotNull();
+        assertThat(response.getBody().getId())
+                .isEqualTo(customerToUpdate.getId());
+        assertThat(response.getBody())
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(customerUpdateData);
         assertThat(customerRepository.findAll())
                 .containsOnly(
                         customersSavedInDatabase.get(0),
                         customersSavedInDatabase.get(1),
                         customersSavedInDatabase.get(2),
-                        customerToUpdate,
+                        copyOfWithId(customerToUpdate.getId(), customerUpdateData),
                         customersSavedInDatabase.get(4));
+        assertThatCustomerUpdatedEventWasPublished(customerToUpdate, response.getBody());
     }
 
     @Test
@@ -348,22 +358,44 @@ class CustomersControllerIntegrationTest {
     }
 
     @SneakyThrows
-    private void assertThatEventWasPublished(CustomerDTO customerDTO) {
+    private void assertThatCustomerCreatedEventWasPublished(CustomerDTO customerDTO) {
         await()
                 .atMost(10, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
                     CustomerCreatedEvent retrievedCustomerEvent = retrieveOneEvent(getCustomerEventsQueueUrl(), CustomerCreatedEvent.class);
                     CustomerEventData retrievedCustomerEventData = retrievedCustomerEvent.getCustomerEventData();
 
-                    assertThat(retrievedCustomerEvent.getTimestamp())
-                            .isNotNull();
-                    assertThat(retrievedCustomerEvent.getCustomerEventData().getCustomerId())
-                            .isEqualTo(customerDTO.getId());
-                    assertThat(retrievedCustomerEventData)
-                            .usingRecursiveComparison()
-                            .ignoringFields("customerId")
-                            .isEqualTo(customerDTO);
+                    assertThat(retrievedCustomerEvent.getTimestamp()).isNotNull();
+                    assertEventDataMatches(retrievedCustomerEventData, customerDTO);
                 });
+    }
+
+    @SneakyThrows
+    private void assertThatCustomerUpdatedEventWasPublished(CustomerDTO customerToUpdate, CustomerDTO updatedCustomer) {
+        await()
+                .atMost(10, TimeUnit.SECONDS)
+                .untilAsserted(() -> {
+                    CustomerUpdatedEvent retrievedCustomerEvent = retrieveOneEvent(getCustomerEventsQueueUrl(), CustomerUpdatedEvent.class);
+                    CustomerEventData oldCustomerEventData = retrievedCustomerEvent.getOldCustomerData();
+                    CustomerEventData newCustomerEventData = retrievedCustomerEvent.getNewCustomerData();
+
+                    assertThat(retrievedCustomerEvent.getTimestamp()).isNotNull();
+                    assertEventDataMatches(oldCustomerEventData, customerToUpdate);
+                    assertEventDataMatches(newCustomerEventData, updatedCustomer);
+                });
+    }
+
+    private void assertEventDataMatches(CustomerEventData customerEventData, CustomerDTO customerData) {
+        assertThat(customerEventData.getCustomerId())
+                .isEqualTo(customerData.getId());
+        assertThat(customerEventData)
+                .usingRecursiveComparison()
+                .ignoringFields("customerId", "homeAddress.addressId", "deliveryAddress.addressId")
+                .isEqualTo(customerData);
+        assertThat(customerEventData.getHomeAddress().getAddressId())
+                .isEqualTo(customerData.getHomeAddress().getId());
+        assertThat(customerEventData.getDeliveryAddress().getAddressId())
+                .isEqualTo(customerData.getDeliveryAddress().getId());
     }
 
     private String getCustomerEventsQueueUrl() throws InterruptedException, ExecutionException {
