@@ -399,7 +399,7 @@ class CustomersControllerIntegrationTest {
                 });
     }
 
-    private void assertThatCustomerDeletedEventWasPublished(CustomerDTO customerToDelete) throws InterruptedException {
+    private void assertThatCustomerDeletedEventWasPublished(CustomerDTO customerToDelete) {
         await()
                 .atMost(10, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
