@@ -4,6 +4,7 @@ import com.dominikcebula.aws.samples.spring.cloud.customers.model.AddressDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.model.CustomerDTO;
 import com.dominikcebula.aws.samples.spring.cloud.customers.repository.CustomerRepository;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerCreatedEvent;
+import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerDeletedEvent;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerUpdatedEvent;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.data.CustomerEventData;
 import com.dominikcebula.aws.samples.spring.cloud.testing.LocalStackContainerSupport;
@@ -18,8 +19,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -43,6 +46,7 @@ import static com.dominikcebula.aws.samples.spring.cloud.customers.testing.Custo
 import static com.dominikcebula.aws.samples.spring.cloud.testing.LocalStackContainerSupport.QUEUE_CUSTOMER_EVENTS_TO_TEST_CONSUMER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+import static org.mockito.Mockito.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -61,6 +65,8 @@ class CustomersControllerIntegrationTest {
     private SqsAsyncClient amazonSQS;
     @Autowired
     private ObjectMapper objectMapper;
+    @SpyBean
+    private StreamBridge streamBridge;
 
     @BeforeAll
     static void beforeAll() {
@@ -90,6 +96,7 @@ class CustomersControllerIntegrationTest {
         // then
         assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.OK);
+        assertNoEventsPublished();
     }
 
     @Test
@@ -137,6 +144,7 @@ class CustomersControllerIntegrationTest {
                 .hasSize(customersSavedInDatabase.size());
         assertThat(response.getBody())
                 .containsOnly(customersSavedInDatabase.toArray(new CustomerDTO[0]));
+        assertNoEventsPublished();
     }
 
     @Test
@@ -156,6 +164,7 @@ class CustomersControllerIntegrationTest {
                 .isEqualTo(HttpStatus.OK);
         assertThat(response.getBody())
                 .isEqualTo(customerToRetrieve);
+        assertNoEventsPublished();
     }
 
     @Test
@@ -169,6 +178,7 @@ class CustomersControllerIntegrationTest {
         // then
         assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.NOT_FOUND);
+        assertNoEventsPublished();
     }
 
     @Test
@@ -191,6 +201,7 @@ class CustomersControllerIntegrationTest {
                 .isEqualTo(HttpStatus.OK);
         assertThat(response.getBody())
                 .containsOnly(customerToSearch);
+        assertNoEventsPublished();
     }
 
     @Test
@@ -212,6 +223,7 @@ class CustomersControllerIntegrationTest {
                 .isEqualTo(HttpStatus.OK);
         assertThat(response.getBody())
                 .containsOnly(customersSavedInDatabase.get(1), customersSavedInDatabase.get(2), customersSavedInDatabase.get(4));
+        assertNoEventsPublished();
     }
 
     @Test
@@ -263,10 +275,11 @@ class CustomersControllerIntegrationTest {
         // then
         assertThat(response.getStatusCode())
                 .isEqualTo(HttpStatus.NOT_FOUND);
+        assertNoEventsPublished();
     }
 
     @Test
-    void shouldDeleteOneCustomer() {
+    void shouldDeleteOneCustomer() throws InterruptedException {
         // given
         List<CustomerDTO> customersSavedInDatabase = customersSavedInDatabase();
         CustomerDTO customerToDelete = customersSavedInDatabase.get(3);
@@ -285,6 +298,7 @@ class CustomersControllerIntegrationTest {
                         customersSavedInDatabase.get(1),
                         customersSavedInDatabase.get(2),
                         customersSavedInDatabase.get(4));
+        assertThatCustomerDeletedEventWasPublished(customerToDelete);
     }
 
     @Test
@@ -385,6 +399,18 @@ class CustomersControllerIntegrationTest {
                 });
     }
 
+    private void assertThatCustomerDeletedEventWasPublished(CustomerDTO customerToDelete) throws InterruptedException {
+        await()
+                .atMost(10, TimeUnit.SECONDS)
+                .untilAsserted(() -> {
+                    CustomerDeletedEvent retrievedCustomerEvent = retrieveOneEvent(getCustomerEventsQueueUrl(), CustomerDeletedEvent.class);
+                    CustomerEventData customerEventData = retrievedCustomerEvent.getCustomerEventData();
+
+                    assertThat(retrievedCustomerEvent.getTimestamp()).isNotNull();
+                    assertEventDataMatches(customerEventData, customerToDelete);
+                });
+    }
+
     private void assertEventDataMatches(CustomerEventData customerEventData, CustomerDTO customerData) {
         assertThat(customerEventData.getCustomerId())
                 .isEqualTo(customerData.getId());
@@ -409,5 +435,10 @@ class CustomersControllerIntegrationTest {
 
         String messageBody = objectMapper.readTree(messages.getFirst().body()).get("Message").asText();
         return objectMapper.readValue(messageBody, valueType);
+    }
+
+    private void assertNoEventsPublished() {
+        verify(streamBridge, atMostOnce()).afterSingletonsInstantiated();
+        verifyNoMoreInteractions(streamBridge);
     }
 }
