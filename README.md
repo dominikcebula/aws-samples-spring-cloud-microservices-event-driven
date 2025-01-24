@@ -42,6 +42,10 @@ This repository contains sample code showcasing Event-Driven Spring Cloud Micros
 
 ![diagram.drawio.png](docs/diagram.drawio.png)
 
+## CI/CD
+
+TBD
+
 ## Q&A on implementation choices
 
 ### Why Domain Driven Design (DDD) / Rich Domain Business Model was not used?
