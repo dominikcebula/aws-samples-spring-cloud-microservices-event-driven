@@ -1,4 +1,4 @@
-# aws-samples-spring-cloud-microservices-event-driven
+# AWS Spring Cloud Microservices - Event Driven Architecture (EDA) Sample
 
 ## Intro
 
@@ -37,6 +37,10 @@ This repository contains sample code showcasing Event-Driven Spring Cloud Micros
 * ModelMapper
 * Liquibase
 * Pre-Liquibase
+
+## Architecture
+
+![diagram.drawio.png](docs/diagram.drawio.png)
 
 ## Q&A on implementation choices
 
