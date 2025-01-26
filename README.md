@@ -1,8 +1,34 @@
 # AWS Spring Cloud Microservices - Event Driven Architecture (EDA) Sample
 
+# Overview
+
 ## Intro
 
-This repository contains sample code showcasing Event-Driven Spring Cloud Microservices deployed to AWS.
+This repository contains sample code demonstrating Microservices implemented using an Event-Driven Architecture and
+Spring Cloud Microservices.
+
+The rationale behind the design choices is detailed in the
+section [Q&A on implementation choices](#qa-on-implementation-choices).
+
+The solution is deployable to AWS, with the following technologies utilized:
+
+- Terraform for Infrastructure as Code (IaC).
+- Amazon EKS for container orchestration.
+- Amazon RDS Aurora PostgreSQL for data storage.
+- CI/CD pipelines implemented using Jenkins, featuring auto-discoverable pipelines created through seed jobs.
+- The Event-Driven Architecture (EDA) is built using Spring Cloud Streams, integrated with SNS Topics and SQS Queues.
+
+The solution is locally executable using:
+
+- Docker Compose
+- Localstack Docker Image
+- PostgreSQL Docker Image
+
+Additional components include:
+
+- API Gateway implemented with Spring Cloud Gateway.
+- Distributed Configuration managed via Spring Cloud Config Server.
+- Service Discovery enabled through Spring Cloud Eureka.
 
 ## Concepts, Tools, Components
 
@@ -46,6 +72,10 @@ This repository contains sample code showcasing Event-Driven Spring Cloud Micros
 
 TBD
 
+## Tests
+
+TBD
+
 ## Q&A on implementation choices
 
 ### Why Domain Driven Design (DDD) / Rich Domain Business Model was not used?
@@ -72,7 +102,21 @@ TBD
 
 TBD
 
-## REST API Example Requests
+# Usage
+
+## Building
+
+TBD
+
+## Running
+
+TBD
+
+## Executing Tests
+
+TBD
+
+## REST API Examples
 
 ### Create Customers
 
