@@ -1,5 +1,19 @@
 # AWS Spring Cloud Microservices - Event Driven Architecture (EDA) Sample
 
+- [Overview](#Overview)
+  - [Intro](#Intro)
+  - [Concepts, Tools, Components](#concepts-tools-components)
+  - [Architecture](#architecture)
+  - [CI/CD](#cicd)
+  - [Tests](#tests)
+  - [Q&A on design choices](#qa-on-design-choices)
+- [Usage](#usage)
+  - [Building](#building)
+  - [Running](#running)
+  - [Executing Tests](#executing-tests)
+  - [REST API Examples](#rest-api-examples)
+- [Author](#author)
+
 # Overview
 
 ## Intro
@@ -76,7 +90,7 @@ TBD
 
 TBD
 
-## Q&A on implementation choices
+## Q&A on design choices
 
 ### Why Domain Driven Design (DDD) / Rich Domain Business Model was not used?
 
@@ -228,7 +242,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
   }' http://localhost:8080/customers/api/v1/customers
 ```
 
-## Author
+# Author
 
 Dominik Cebula
 
