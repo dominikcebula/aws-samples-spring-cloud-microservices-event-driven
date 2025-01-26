@@ -22,7 +22,7 @@ This repository contains sample code demonstrating Microservices implemented usi
 Spring Cloud Microservices.
 
 The rationale behind the design choices is detailed in the
-section [Q&A on implementation choices](#qa-on-implementation-choices).
+section [Q&A on design choices](#qa-on-design-choices).
 
 The solution is deployable to AWS, with the following technologies utilized:
 
