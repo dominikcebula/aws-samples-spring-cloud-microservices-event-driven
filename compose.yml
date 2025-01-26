@@ -1,9 +1,20 @@
 services:
   db:
-    image: postgres:17
+    image: postgres:15.4
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_DB=appdb
       - POSTGRES_USER=appuser
       - POSTGRES_PASSWORD=apppassword
+
+  localstack:
+    image: localstack/localstack:4.0.3
+    environment:
+      - SERVICES=sqs,sns
+    ports:
+      - "127.0.0.1:4566:4566"
+      - "127.0.0.1:4510-4559:4510-4559"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./compose-localstack-init.sh:/etc/localstack/init/ready.d/compose-localstack-init.sh"

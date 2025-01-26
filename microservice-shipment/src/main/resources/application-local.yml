@@ -1,12 +1,25 @@
 server:
   port: 8092
 
+localstack:
+  endpoint: http://127.0.0.1:4566
+  region: us-east-1
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/appdb
     username: appuser
     password: apppassword
-
+  cloud:
+    aws:
+      region:
+        static: ${localstack.region}
+      sns:
+        endpoint: ${localstack.endpoint}
+        region: ${localstack.region}
+      sqs:
+        endpoint: ${localstack.endpoint}
+        region: ${localstack.region}
 eureka:
   client:
     serviceUrl:
