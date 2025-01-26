@@ -72,6 +72,118 @@ TBD
 
 TBD
 
+## REST API Example Requests
+
+### Create Customers
+
+```shell
+curl -X POST -H "Content-Type: application/json" -d'{
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "phone": "123-456-7890",
+    "homeAddress": {
+      "street": "123 Maple Street",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62704",
+      "country": "USA"
+    },
+    "deliveryAddress": {
+      "street": "456 Elm Avenue",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62711",
+      "country": "USA"
+    }
+  }' http://localhost:8080/customers/api/v1/customers
+  
+curl -X POST -H "Content-Type: application/json" -d '{
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "jane.smith@example.com",
+    "phone": "987-654-3210",
+    "homeAddress": {
+      "street": "789 Pine Lane",
+      "city": "Denver",
+      "state": "CO",
+      "zipCode": "80203",
+      "country": "USA"
+    },
+    "deliveryAddress": {
+      "street": "1010 Aspen Drive",
+      "city": "Boulder",
+      "state": "CO",
+      "zipCode": "80301",
+      "country": "USA"
+    }
+  }' http://localhost:8080/customers/api/v1/customers
+  
+curl -X POST -H "Content-Type: application/json" -d '{
+    "firstName": "Emily",
+    "lastName": "Johnson",
+    "email": "emily.johnson@example.com",
+    "phone": "555-123-4567",
+    "homeAddress": {
+      "street": "456 Oak Street",
+      "city": "Seattle",
+      "state": "WA",
+      "zipCode": "98101",
+      "country": "USA"
+    },
+    "deliveryAddress": {
+      "street": "789 Birch Boulevard",
+      "city": "Tacoma",
+      "state": "WA",
+      "zipCode": "98402",
+      "country": "USA"
+    }
+  }' http://localhost:8080/customers/api/v1/customers
+
+
+curl -X POST -H "Content-Type: application/json" -d '{
+    "firstName": "Michael",
+    "lastName": "Brown",
+    "email": "michael.brown@example.com",
+    "phone": "800-555-6789",
+    "homeAddress": {
+      "street": "222 Cherry Avenue",
+      "city": "San Diego",
+      "state": "CA",
+      "zipCode": "92101",
+      "country": "USA"
+    },
+    "deliveryAddress": {
+      "street": "333 Redwood Way",
+      "city": "Los Angeles",
+      "state": "CA",
+      "zipCode": "90001",
+      "country": "USA"
+    }
+  }' http://localhost:8080/customers/api/v1/customers
+
+curl -X POST -H "Content-Type: application/json" -d '{
+    "firstName": "Sarah",
+    "lastName": "Taylor",
+    "email": "sarah.taylor@example.com",
+    "phone": "900-321-7654",
+    "homeAddress": {
+      "street": "789 Walnut Road",
+      "city": "Austin",
+      "state": "TX",
+      "zipCode": "78701",
+      "country": "USA"
+    },
+    "deliveryAddress": {
+      "street": "555 Cypress Avenue",
+      "city": "Dallas",
+      "state": "TX",
+      "zipCode": "75201",
+      "country": "USA"
+    }
+  }' http://localhost:8080/customers/api/v1/customers
+```
+
 ## Author
 
 Dominik Cebula

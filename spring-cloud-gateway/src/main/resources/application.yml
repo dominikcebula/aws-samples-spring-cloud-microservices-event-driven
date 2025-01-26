@@ -16,6 +16,12 @@ spring:
             - Path=/customers/**
           filters:
             - RewritePath=/customers/(?<segment>.*),/$\{segment}
+        - id: shipment
+          uri: lb://shipment
+          predicates:
+            - Path=/shipment/**
+          filters:
+            - RewritePath=/shipment/(?<segment>.*),/$\{segment}
 
 eureka:
   instance:
