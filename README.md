@@ -84,7 +84,7 @@ Additional components include:
 
 ## CI/CD
 
-TBD
+![cicd.drawio.png](docs/cicd.drawio.png)
 
 ## Tests
 
