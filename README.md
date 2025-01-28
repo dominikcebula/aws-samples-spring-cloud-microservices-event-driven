@@ -80,7 +80,7 @@ Additional components include:
 
 ## Architecture
 
-![diagram.drawio.png](docs/diagram.drawio.png)
+![diagram.drawio.png](docs/architecture.drawio.png)
 
 ## CI/CD
 
