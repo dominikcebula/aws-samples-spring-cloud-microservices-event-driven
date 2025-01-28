@@ -242,6 +242,58 @@ curl -X POST -H "Content-Type: application/json" -d '{
   }' http://localhost:8080/customers/api/v1/customers
 ```
 
+### List all customers
+
+```shell
+curl -X GET -H "Content-Type: application/json" http://localhost:8080/customers/api/v1/customers
+```
+
+### Get Customer by ID
+
+```shell
+curl -X GET -H "Content-Type: application/json" http://localhost:8080/customers/api/v1/customers/1
+```
+
+### Search Customers
+
+```shell
+curl -X POST -H "Content-Type: application/json" -d '{
+    "firstName": "Sarah",
+    "lastName": "Taylor"
+  }' http://localhost:8080/customers/api/v1/customers/search
+```
+
+### Update Customer
+
+```shell
+curl -X PUT -H "Content-Type: application/json" -d '{
+    "firstName": "Emily",
+    "lastName": "Clark",
+    "email": "emily.clark@example.com",
+    "phone": "987-654-3210",
+    "homeAddress": {
+      "street": "123 Pine Street",
+      "city": "Denver",
+      "state": "CO",
+      "zipCode": "80203",
+      "country": "USA"
+    },
+    "deliveryAddress": {
+      "street": "456 Elm Avenue",
+      "city": "Boulder",
+      "state": "CO",
+      "zipCode": "80301",
+      "country": "USA"
+    }
+  }' http://localhost:8080/customers/api/v1/customers/1
+```
+
+### Delete Customer
+
+```shell
+curl -X DELETE http://localhost:8080/customers/api/v1/customers/1
+```
+
 # Author
 
 Dominik Cebula
