@@ -294,6 +294,27 @@ curl -X PUT -H "Content-Type: application/json" -d '{
 curl -X DELETE http://localhost:8080/customers/api/v1/customers/1
 ```
 
+### List all addresses
+
+```shell
+curl -X GET http://localhost:8080/shipment/api/v1//shipment/addresses
+```
+
+### Get address by ID
+
+```shell
+curl -X GET http://localhost:8080/shipment/api/v1/shipment/addresses/1
+```
+
+### Search for address
+
+```shell
+curl -X POST -H "Content-Type: application/json" -d '{
+  "firstName": "Emily",
+  "lastName": "Johnson"
+}' http://localhost:8080/shipment/api/v1/shipment/addresses/search
+```
+
 # Author
 
 Dominik Cebula
