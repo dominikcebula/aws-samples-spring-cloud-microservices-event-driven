@@ -125,15 +125,32 @@ TBD
 
 ## Building
 
-TBD
+```shell
+mvn clean install -DskipTests
+```
 
 ## Running
 
-TBD
+Execute Foundation Services using defined IntelliJ Run Configurations:
+
+* Eureka
+* Config Server
+* API Gateway
+* Spring Boot Admin
+* Docker Compose Services
+
+Then execute Microservices:
+
+* Microservice - Customers
+* Microservice - Shipment
+
+Having Foundation and Application Microservices executed, you can execute [REST API Examples](#rest-api-examples).
 
 ## Executing Tests
 
-TBD
+```shell
+mvn verify
+```
 
 ## REST API Examples
 
