@@ -1,3 +1,5 @@
+[![CI Pipeline](https://github.com/dominikcebula/aws-samples-spring-cloud-microservices-event-driven/actions/workflows/maven.yml/badge.svg)](https://github.com/dominikcebula/aws-samples-spring-cloud-microservices-event-driven/actions/workflows/maven.yml)
+
 # AWS Spring Cloud Microservices - Event Driven Architecture (EDA) Sample
 
 - [Overview](#Overview)
