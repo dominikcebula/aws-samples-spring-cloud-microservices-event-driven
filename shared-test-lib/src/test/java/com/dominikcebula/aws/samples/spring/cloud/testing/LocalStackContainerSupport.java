@@ -4,6 +4,8 @@ import lombok.SneakyThrows;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
 
 import java.io.IOException;
 
@@ -37,6 +39,10 @@ public class LocalStackContainerSupport {
         registry.add("spring.cloud.aws.sns.region", LOCAL_STACK_CONTAINER::getRegion);
         registry.add("spring.cloud.aws.sqs.endpoint", () -> LOCAL_STACK_CONTAINER.getEndpointOverride(SQS));
         registry.add("spring.cloud.aws.sqs.region", LOCAL_STACK_CONTAINER::getRegion);
+    }
+
+    public static AwsCredentials getAwsCredentials() {
+        return AwsBasicCredentials.create(LOCAL_STACK_CONTAINER.getAccessKey(), LOCAL_STACK_CONTAINER.getSecretKey());
     }
 
     private static void createTopic(String topicName) throws IOException, InterruptedException {

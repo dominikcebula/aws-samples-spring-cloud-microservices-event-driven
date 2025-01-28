@@ -8,6 +8,7 @@ import com.dominikcebula.aws.samples.spring.cloud.shared.events.data.AddressEven
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.data.CustomerEventData;
 import com.dominikcebula.aws.samples.spring.cloud.shipment.model.ShipmentAddressDTO;
 import com.dominikcebula.aws.samples.spring.cloud.shipment.repository.ShipmentAddressRepository;
+import com.dominikcebula.aws.samples.spring.cloud.testing.DefaultLocalStackCredentialsConfiguration;
 import com.dominikcebula.aws.samples.spring.cloud.testing.LocalStackContainerSupport;
 import com.dominikcebula.aws.samples.spring.cloud.testing.PostgreSQLContainerSupport;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ActiveProfiles({"local", "test"})
+@Import(DefaultLocalStackCredentialsConfiguration.class)
 class CustomerEventConsumerIntegrationTest {
     @Autowired
     private StreamBridge streamBridge;

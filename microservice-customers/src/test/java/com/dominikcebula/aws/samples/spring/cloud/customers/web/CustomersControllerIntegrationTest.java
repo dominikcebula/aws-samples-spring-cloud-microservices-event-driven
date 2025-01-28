@@ -7,6 +7,7 @@ import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerCreatedE
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerDeletedEvent;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.CustomerUpdatedEvent;
 import com.dominikcebula.aws.samples.spring.cloud.shared.events.data.CustomerEventData;
+import com.dominikcebula.aws.samples.spring.cloud.testing.DefaultLocalStackCredentialsConfiguration;
 import com.dominikcebula.aws.samples.spring.cloud.testing.LocalStackContainerSupport;
 import com.dominikcebula.aws.samples.spring.cloud.testing.PostgreSQLContainerSupport;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,6 +24,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -51,6 +53,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("local")
+@Import(DefaultLocalStackCredentialsConfiguration.class)
 class CustomersControllerIntegrationTest {
     @LocalServerPort
     private int port;
