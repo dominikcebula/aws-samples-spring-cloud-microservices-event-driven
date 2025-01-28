@@ -84,6 +84,11 @@ Additional components include:
 
 ## CI/CD
 
+CI/CD pipeline is implemented using Jenkins running on top of EKS
+with [Jenkins Operator](https://jenkinsci.github.io/kubernetes-operator/). Jenkins jobs are automatically created
+using  [Job DSL](https://plugins.jenkins.io/job-dsl/) plugin. Pipeline definition is
+shared using [Jenkins Shared Library](https://www.jenkins.io/doc/book/pipeline/shared-libraries/).
+
 ![cicd.drawio.png](docs/cicd.drawio.png)
 
 ## Tests
