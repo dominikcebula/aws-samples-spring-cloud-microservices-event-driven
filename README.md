@@ -134,13 +134,13 @@ TBD
 
 # Usage
 
-## Building
+## Build
 
 ```shell
 mvn clean install -DskipTests
 ```
 
-## Running
+## Run
 
 Execute Foundation Services using defined IntelliJ Run Configurations:
 
@@ -157,7 +157,7 @@ Then execute Microservices:
 
 Having Foundation and Application Microservices executed, you can execute [REST API Examples](#rest-api-examples).
 
-## Executing Tests
+## Tests execution
 
 ```shell
 mvn verify
