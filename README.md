@@ -139,11 +139,12 @@ often still large enough to further organize code by business concern.
 
 ### Why Spring Config was used instead of Kubernetes ConfigMaps?
 
-TBD
+Kubernetes ConfigMaps could be used as well, the only reason was to refresh knowledge around Spring Config.
 
 ### Why Eureka was used for Service Discovery instead of relying on Kubernetes Services or Istio Service Mesh?
 
-TBD
+Kubernetes Services or Istio Service Mesh could be used as well, Eureka was used only to refresh knowledge around Spring
+Config.
 
 # Usage
 
