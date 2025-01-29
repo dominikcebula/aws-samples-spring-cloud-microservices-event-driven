@@ -30,9 +30,10 @@ The solution is deployable to AWS, with the following technologies utilized:
 
 - Terraform for Infrastructure as Code (IaC).
 - Amazon EKS for container orchestration.
+- Amazon ECR for container image registry.
 - Amazon RDS Aurora PostgreSQL for data storage.
+- Event-Driven Architecture (EDA) built using Spring Cloud Streams, integrated with SNS Topics and SQS Queues.
 - CI/CD pipelines implemented using Jenkins, featuring auto-discoverable pipelines created through seed jobs.
-- The Event-Driven Architecture (EDA) is built using Spring Cloud Streams, integrated with SNS Topics and SQS Queues.
 
 The solution is locally executable using:
 
