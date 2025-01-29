@@ -8,11 +8,11 @@
   - [Architecture](#architecture)
   - [CI/CD](#cicd)
   - [Tests](#tests)
-  - [Q&A on design choices](#qa-on-design-choices)
+  - [Design choices](#design-choices)
 - [Usage](#usage)
-  - [Building](#building)
-  - [Running](#running)
-  - [Executing Tests](#executing-tests)
+  - [Build](#build)
+  - [Run](#run)
+  - [Tests execution](#tests-execution)
   - [REST API Examples](#rest-api-examples)
 - [Author](#author)
 
@@ -24,7 +24,7 @@ This repository contains sample code demonstrating Microservices implemented usi
 Spring Cloud Microservices.
 
 The rationale behind the design choices is detailed in the
-section [Q&A on design choices](#qa-on-design-choices).
+section [Design choices](#design-choices).
 
 The solution is deployable to AWS, with the following technologies utilized:
 
@@ -106,19 +106,27 @@ in the project are integration tests. The reasons for this are:
 
 ![Testing Trophy](https://symflower.com/en/company/blog/2023/what-is-the-testing-trophy/images/02-testing-trophy.png)
 
-## Q&A on design choices
+## Design choices
 
 ### Why Domain Driven Design (DDD) / Rich Domain Business Model was not used?
 
-TBD
+Microservices implemented under this repository do not contain complex business logic, they are mostly simple CRUD
+Microservices, because of that simpler code organization and solution with DTOs and Anemic Model was used.
 
-### Why single model instead of multiple domain, persistence and DTO model was used?
+### Why single model instead of separate data model for application, domain, and persistence layer was used?
 
-TBD
+Usage of separate data model for application, domain, and persistence layer is beneficial for complex domains as it
+allows for better testing in separation. Additionally, it is a pre-requisite for Hexagonal Architecture.
+
+The downside is a need to map data between different models. Changes are also harder to introduce as addition of fields
+needs to be reflected in different models.
+
+Because current business logic complexity of introduced Microservices is not high, single data model was used.
 
 ### Why Hexagonal Architecture was not used?
 
-TBD
+Microservices implemented under this repository do not contain complex business logic, they are mostly simple CRUD
+Microservices, because of that simpler code organization was used.
 
 ### Why packages are organized by technical concern?
 
