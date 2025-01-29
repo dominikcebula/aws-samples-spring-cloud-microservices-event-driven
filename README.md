@@ -33,6 +33,9 @@ The solution is deployable to AWS, with the following technologies utilized:
 - Amazon ECR for container image registry.
 - Amazon RDS Aurora PostgreSQL for data storage.
 - Event-Driven Architecture (EDA) built using Spring Cloud Streams, integrated with SNS Topics and SQS Queues.
+- API Gateway implemented with Spring Cloud Gateway.
+- Distributed Configuration using Spring Cloud Config Server.
+- Service Discovery using Spring Cloud Eureka.
 - CI/CD pipelines implemented using Jenkins, featuring auto-discoverable pipelines created through seed jobs.
 
 The solution is locally executable using:
@@ -40,12 +43,6 @@ The solution is locally executable using:
 - Docker Compose
 - Localstack Docker Image
 - PostgreSQL Docker Image
-
-Additional components include:
-
-- API Gateway implemented with Spring Cloud Gateway.
-- Distributed Configuration managed via Spring Cloud Config Server.
-- Service Discovery enabled through Spring Cloud Eureka.
 
 ## Concepts, Tools, Components
 
