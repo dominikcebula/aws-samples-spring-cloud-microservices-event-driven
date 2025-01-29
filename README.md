@@ -95,7 +95,16 @@ shared using [Jenkins Shared Library](https://www.jenkins.io/doc/book/pipeline/s
 
 ## Tests
 
-TBD
+Tests are
+following [Testing Trophy](https://symflower.com/en/company/blog/2023/what-is-the-testing-trophy/)
+approach to achieve balance between release confidence, refactorability and test execution speed. Most cases implemented
+in the project are integration tests. The reasons for this are:
+
+* better release confidence
+* less coupling with implementation details which gives refactorability support
+* good enough execution speed
+
+![Testing Trophy](https://symflower.com/en/company/blog/2023/what-is-the-testing-trophy/images/02-testing-trophy.png)
 
 ## Q&A on design choices
 
