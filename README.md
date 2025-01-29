@@ -130,7 +130,12 @@ Microservices, because of that simpler code organization was used.
 
 ### Why packages are organized by technical concern?
 
-TBD
+Problem is decomposed by business concern into Microservices, and then code under each Microservice is decomposed by
+technical concern because under each Microservice single business domain is so simple that there were no opportunities
+to decompose it further.
+
+Mind that in larger projects even after decomposing problem into Microservices, sub-problems under each Microservice are
+often still large enough to further organize code by business concern.
 
 ### Why Spring Config was used instead of Kubernetes ConfigMaps?
 
