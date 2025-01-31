@@ -19,5 +19,6 @@ module "microservice_customers" {
 }
 
 module "microservice_shipment" {
-  source = "./../../microservice-shipment/infra"
+  source                    = "./../../microservice-shipment/infra"
+  customer_events_topic_arn = module.microservice_customers.customer_events_topic_arn
 }

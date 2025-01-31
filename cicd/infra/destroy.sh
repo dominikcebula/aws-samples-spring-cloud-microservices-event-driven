@@ -210,6 +210,35 @@ function delete_vpcs() {
     done
 }
 
+function delete_sqs_queues() {
+    echo "Fetching SQS queues..."
+    queues=$(aws sqs list-queues --query "QueueUrls[*]" ${AWS_CLI_FLAGS})
+    for queue_url in $queues; do
+        echo "Deleting SQS queue: $queue_url"
+        aws sqs delete-queue --queue-url "$queue_url" ${AWS_CLI_FLAGS}
+    done
+}
+
+function delete_sns_subscriptions() {
+    echo "Fetching SNS subscriptions..."
+    subscriptions=$(aws sns list-subscriptions --query "Subscriptions[*].SubscriptionArn" ${AWS_CLI_FLAGS})
+    for subscription_arn in $subscriptions; do
+        if [ "$subscription_arn" != "PendingConfirmation" ]; then
+            echo "Deleting SNS subscription: $subscription_arn"
+            aws sns unsubscribe --subscription-arn "$subscription_arn" ${AWS_CLI_FLAGS}
+        fi
+    done
+}
+
+function delete_sns_topics() {
+    echo "Fetching SNS topics..."
+    topics=$(aws sns list-topics --query "Topics[*].TopicArn" ${AWS_CLI_FLAGS})
+    for topic_arn in $topics; do
+        echo "Deleting SNS topic: $topic_arn"
+        aws sns delete-topic --topic-arn "$topic_arn" ${AWS_CLI_FLAGS}
+    done
+}
+
 function destroy_terraform_resources() {
   terraform destroy -auto-approve
 }
@@ -225,6 +254,9 @@ delete_rds_resources
 delete_ebs_volumes
 delete_enis
 delete_vpcs
+delete_sqs_queues
+delete_sns_subscriptions
+delete_sns_topics
 destroy_terraform_resources
 
 echo "Deletion process completed."
