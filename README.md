@@ -342,7 +342,7 @@ curl -X DELETE http://localhost:8080/customers/api/v1/customers/1
 ### List all addresses
 
 ```shell
-curl -X GET http://localhost:8080/shipment/api/v1//shipment/addresses
+curl -X GET http://localhost:8080/shipment/api/v1/shipment/addresses
 ```
 
 ### Get address by ID
