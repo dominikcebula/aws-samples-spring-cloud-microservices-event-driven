@@ -1,10 +1,11 @@
 resource "terraform_data" "jenkins_instance" {
   provisioner "local-exec" {
-    command     = "envsubst < sa_app_runner.yaml.tpl | kubectl apply -f -"
+    command = "envsubst < kube_sa_template.tpl | kubectl apply -f -"
     working_dir = path.module
 
     environment = {
-      AWS_ACCOUNT_ID = var.aws_account_id
+      AWS_ACCOUNT_ID       = var.aws_account_id
+      SERVICE_ACCOUNT_NAME = local.service_account_role_name
     }
   }
 

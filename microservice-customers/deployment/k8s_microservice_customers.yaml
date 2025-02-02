@@ -12,7 +12,7 @@ spec:
       labels:
         app: microservice-customers
     spec:
-      serviceAccountName: app-runner-sa
+      serviceAccountName: microservice-customers-sa
       containers:
         - name: microservice-customers
           image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/aws-samples-spring-cloud-microservices-event-driven/microservice-customers:latest

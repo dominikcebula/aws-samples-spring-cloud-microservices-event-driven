@@ -22,7 +22,7 @@ output "oidc_provider" {
   value = module.eks.oidc_provider
 }
 
-output "role_app_runner_name" {
-  description = "Name of the IAM role for Microservice App Runner"
-  value       = aws_iam_role.app_runner.name
+output "service_accounts_roles" {
+  description = "Name of the IAM roles for Microservice Runners Service Accounts"
+  value = toset(module.service_accounts[*].service_account_role_name)
 }

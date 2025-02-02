@@ -23,9 +23,9 @@ variable "db_allow_access_from_subnets_cidr_blocks" {
   type = list(string)
 }
 
-variable "role_app_runner_name" {
-  description = "Name of the IAM role for Microservice App Runner"
-  type        = string
+variable "service_accounts_roles" {
+  description = "Name of the IAM roles for Service Accounts under which Microservices execute"
+  type = set(string)
 }
 
 variable "my_public_ip" {

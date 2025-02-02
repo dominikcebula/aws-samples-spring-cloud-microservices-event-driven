@@ -12,7 +12,7 @@ spec:
       labels:
         app: microservice-shipment
     spec:
-      serviceAccountName: app-runner-sa
+      serviceAccountName: microservice-shipment-sa
       containers:
         - name: microservice-shipment
           image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/aws-samples-spring-cloud-microservices-event-driven/microservice-shipment:latest

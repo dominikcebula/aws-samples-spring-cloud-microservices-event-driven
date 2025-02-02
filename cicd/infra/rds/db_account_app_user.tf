@@ -67,6 +67,6 @@ resource "aws_iam_policy" "db_app_user_policy" {
 
 resource "aws_iam_policy_attachment" "db_app_user_policy_attachment" {
   name       = aws_iam_policy.db_app_user_policy.name
-  roles = [var.role_app_runner_name]
+  roles = var.service_accounts_roles
   policy_arn = aws_iam_policy.db_app_user_policy.arn
 }
