@@ -26,3 +26,8 @@ output "service_accounts_roles" {
   description = "Name of the IAM roles for Microservice Runners Service Accounts"
   value = toset(module.service_accounts[*].service_account_role_name)
 }
+
+output "service_accounts_arn_map" {
+  description = "Name of the IAM roles for Microservice Runners Service Accounts"
+  value = zipmap(module.service_accounts[*].service_account_role_name, module.service_accounts[*].service_account_role_arn)
+}

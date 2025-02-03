@@ -17,7 +17,7 @@ data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "sqs_policy_document" {
   statement {
-    sid = "__owner_statement"
+    sid = "allow-all-sqs-operations-from-owner"
 
     effect = "Allow"
 
@@ -31,13 +31,13 @@ data "aws_iam_policy_document" "sqs_policy_document" {
   }
 
   statement {
-    sid = "topic-subscription-arn:${var.customer_events_topic_arn}"
+    sid = "allow-topic-to-sqs-messages"
 
     effect = "Allow"
 
     principals {
-      identifiers = ["*"]
       type = "AWS"
+      identifiers = ["*"]
     }
 
     actions = ["SQS:SendMessage"]
@@ -49,5 +49,24 @@ data "aws_iam_policy_document" "sqs_policy_document" {
       values = [var.customer_events_topic_arn]
       variable = "aws:SourceArn"
     }
+  }
+
+  statement {
+    sid = "allow-sqs-operations-from-app"
+
+    effect = "Allow"
+
+    principals {
+      type = "AWS"
+      identifiers = [var.service_account_arn]
+    }
+
+    actions = [
+      "SQS:ReceiveMessage",
+      "SQS:DeleteMessage",
+      "SQS:ChangeMessageVisibility"
+    ]
+
+    resources = [aws_sqs_queue.customer_events_to_shipment_service.arn]
   }
 }
