@@ -24,10 +24,14 @@ output "oidc_provider" {
 
 output "service_accounts_roles" {
   description = "Name of the IAM roles for Microservice Runners Service Accounts"
-  value = toset(module.service_accounts[*].service_account_role_name)
+  value = [
+    for sa in module.service_accounts : sa.service_account_role_name
+  ]
 }
 
 output "service_accounts_arn_map" {
   description = "Name of the IAM roles for Microservice Runners Service Accounts"
-  value = zipmap(module.service_accounts[*].service_account_role_name, module.service_accounts[*].service_account_role_arn)
+  value = {
+    for sa in module.service_accounts : sa.service_account_role_name => sa.service_account_role_arn
+  }
 }
