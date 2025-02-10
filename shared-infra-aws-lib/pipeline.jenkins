@@ -1,0 +1,21 @@
+evaluate(readFileFromWorkspace("${WORKSPACE}/cicd/jobdsl/commonPipelineJobDefinitions.groovy"))
+
+def libName = 'shared-infra-aws-lib'
+
+pipelineJob(libName) {
+  definition {
+    cpsScm {
+      scm {
+        git {
+          remote {
+            url(GIT_URL)
+            credentials(GIT_CREDENTIALS_ID)
+          }
+          branch(GIT_BRANCH)
+        }
+      }
+      scriptPath("${libName}/${PIPELINE_SCRIPT_NAME}")
+      lightweight()
+    }
+  }
+}
