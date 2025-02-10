@@ -10,8 +10,10 @@ resource "aws_sns_topic_policy" "customer_events_topic_policy" {
 data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "customer_events_topic_policy_document" {
+  policy_id = "__default_policy_ID"
+
   statement {
-    sid = "allow-all-sns-operations-from-owner"
+    sid = "__default_statement_ID"
 
     effect = "Allow"
 
@@ -20,7 +22,16 @@ data "aws_iam_policy_document" "customer_events_topic_policy_document" {
       type = "AWS"
     }
 
-    actions = ["SNS:*"]
+    actions = [
+      "SNS:GetTopicAttributes",
+      "SNS:SetTopicAttributes",
+      "SNS:AddPermission",
+      "SNS:RemovePermission",
+      "SNS:DeleteTopic",
+      "SNS:Subscribe",
+      "SNS:ListSubscriptionsByTopic",
+      "SNS:Publish"
+    ]
     resources = [aws_sns_topic.customer_events_topic.arn]
   }
 
