@@ -125,15 +125,15 @@ spec:
       - name: kubernetes
         version: "4302.va_756e4b_67715"
       - name: workflow-job
-        version: "1472.ve4d5eca_143c4"
+        version: "1498.v33a_0c6f3a_4b_4"
       - name: workflow-aggregator
         version: "600.vb_57cdd26fdd7"
       - name: git
-        version: "5.6.0"
+        version: "5.7.0"
       - name: job-dsl
         version: "1.90"
       - name: configuration-as-code
-        version: "1903.v004d55388f30"
+        version: "1915.vcdd0a_d0d2625"
       - name: kubernetes-credentials-provider
         version: "1.262.v2670ef7ea_0c5"
       - name: maven-plugin
