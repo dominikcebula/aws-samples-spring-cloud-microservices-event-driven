@@ -241,9 +241,9 @@ function delete_sns_topics() {
 
 function delete_codeartifact_repositories() {
     echo "Fetching CodeArtifact repositories..."
-    repositories=$(aws codeartifact list-repositories --query "repositories[*].{Name:repositoryName,Domain:domainName}" ${AWS_CLI_FLAGS})
+    repositories=$(aws codeartifact list-repositories --query "repositories[*].{name:name,domain:domainName}" ${AWS_CLI_FLAGS})
 
-    while read -r repo domain; do
+    while read -r domain repo; do
         if [[ -n "$repo" && -n "$domain" ]]; then
             echo "Deleting CodeArtifact repository: $repo in domain: $domain"
             aws codeartifact delete-repository --domain "$domain" --repository "$repo" ${AWS_CLI_FLAGS}
