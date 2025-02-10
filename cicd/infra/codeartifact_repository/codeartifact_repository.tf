@@ -1,5 +1,5 @@
 resource "aws_codeartifact_repository" "this" {
-  repository = "spring-cloud-microservices-event-driven"
+  repository = "aws-codeartifact-maven-snapshots"
   domain     = aws_codeartifact_domain.this.domain
 }
 

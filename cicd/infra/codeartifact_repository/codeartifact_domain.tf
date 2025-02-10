@@ -1,5 +1,5 @@
 resource "aws_codeartifact_domain" "this" {
-  domain = "spring-cloud-microservices-event-driven"
+  domain = "default"
 }
 
 data "aws_iam_policy_document" "domain_policy" {
