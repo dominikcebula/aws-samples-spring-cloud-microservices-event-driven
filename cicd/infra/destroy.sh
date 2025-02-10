@@ -239,6 +239,28 @@ function delete_sns_topics() {
     done
 }
 
+function delete_codeartifact_repositories() {
+    echo "Fetching CodeArtifact repositories..."
+    repositories=$(aws codeartifact list-repositories --query "repositories[*].{Name:repositoryName,Domain:domainName}" ${AWS_CLI_FLAGS})
+
+    while read -r repo domain; do
+        if [[ -n "$repo" && -n "$domain" ]]; then
+            echo "Deleting CodeArtifact repository: $repo in domain: $domain"
+            aws codeartifact delete-repository --domain "$domain" --repository "$repo" ${AWS_CLI_FLAGS}
+        fi
+    done <<< "$repositories"
+}
+
+function delete_codeartifact_domains() {
+    echo "Fetching CodeArtifact domains..."
+    domains=$(aws codeartifact list-domains --query "domains[*].name" ${AWS_CLI_FLAGS})
+
+    for domain in $domains; do
+        echo "Deleting CodeArtifact domain: $domain"
+        aws codeartifact delete-domain --domain "$domain" ${AWS_CLI_FLAGS}
+    done
+}
+
 function destroy_terraform_resources() {
   terraform destroy -auto-approve
 }
@@ -257,6 +279,8 @@ delete_vpcs
 delete_sqs_queues
 delete_sns_subscriptions
 delete_sns_topics
+delete_codeartifact_repositories
+delete_codeartifact_domains
 destroy_terraform_resources
 
 echo "Deletion process completed."
