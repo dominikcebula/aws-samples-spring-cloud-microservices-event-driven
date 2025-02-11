@@ -51,6 +51,7 @@ def call(Map pipelineParams) {
                 echo 'Deploying library...'
 
                 configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
+                    sh "cat ${MAVEN_SETTINGS}"
                     sh "mvn -s ${MAVEN_SETTINGS} help:effective-settings"
                     sh "mvn -s ${MAVEN_SETTINGS} -f ${WORKSPACE}/${pipelineParams.libName}/pom.xml deploy"
                 }
