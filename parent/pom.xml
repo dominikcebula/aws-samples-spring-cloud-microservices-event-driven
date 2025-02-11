@@ -118,8 +118,7 @@
             </repositories>
             <distributionManagement>
                 <repository>
-                    <id>default-aws-codeartifact-maven-snapshots</id>
-                    <name>default-aws-codeartifact-maven-snapshots</name>
+                    <id>aws-codeartifact-maven-snapshots</id>
                     <url>${env.AWS_CODEARTIFACT_MAVEN_SNAPSHOTS_URL}</url>
                 </repository>
             </distributionManagement>
