@@ -45,8 +45,6 @@ def call(Map pipelineParams) {
             stage('Deploy') {
                 echo 'Deploying library...'
 
-                sh "cat /root/.m2/settings.xml"
-                sh "mvn help:effective-settings"
                 sh "mvn -f ${WORKSPACE}/${pipelineParams.libName}/pom.xml deploy"
             }
         }
