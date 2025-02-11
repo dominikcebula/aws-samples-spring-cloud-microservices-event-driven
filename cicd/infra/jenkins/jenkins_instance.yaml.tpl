@@ -62,6 +62,27 @@ data:
                   git:
                     remote: https://github.com/dominikcebula/aws-samples-spring-cloud-microservices-event-driven.git
                     credentialsId: jenkins-github-token
+  03-maven-settings.yaml: |
+    unclassified:
+      globalConfigFiles:
+        configs:
+          - mavenSettings:
+              id: maven-settings
+              name: MavenSettings
+              comment: Maven Settings
+              isReplaceAll: false
+              content: |
+                <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+                  <servers>
+                    <server>
+                      <id>aws-codeartifact-maven-snapshots</id>
+                      <username>aws</username>
+                      <password>${env.AWS_CODEARTIFACT_AUTH_TOKEN}</password>
+                    </server>
+                  </servers>
+                </settings>
 ---
 apiVersion: v1
 kind: ServiceAccount

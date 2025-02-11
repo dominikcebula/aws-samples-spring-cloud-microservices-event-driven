@@ -1,0 +1,125 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.dominikcebula.aws.samples.spring.cloud.eda</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>21</java.version>
+        <spring.boot.version>3.3.6</spring.boot.version>
+        <spring-cloud.version>2023.0.3</spring-cloud.version>
+        <querydsl.version>5.1.0</querydsl.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.dominikcebula.aws.samples.spring.cloud.eda</groupId>
+                <artifactId>shared-infra-aws-lib</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dominikcebula.aws.samples.spring.cloud.eda</groupId>
+                <artifactId>shared-model-lib</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dominikcebula.aws.samples.spring.cloud.eda</groupId>
+                <artifactId>shared-test-lib</artifactId>
+                <scope>test</scope>
+                <type>test-jar</type>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>2.29.43</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-apt</artifactId>
+                <classifier>jakarta</classifier>
+                <version>${querydsl.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-jpa</artifactId>
+                <classifier>jakarta</classifier>
+                <version>${querydsl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.modelmapper</groupId>
+                <artifactId>modelmapper</artifactId>
+                <version>3.2.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>de.idealo.spring</groupId>
+                <artifactId>spring-cloud-stream-binder-sns</artifactId>
+                <version>2.1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.idealo.spring</groupId>
+                <artifactId>spring-cloud-stream-binder-sqs</artifactId>
+                <version>3.0.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.4.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>aws-codeartifact-maven-snapshots</id>
+            <repositories>
+                <repository>
+                    <id>aws-codeartifact-maven-snapshots</id>
+                    <url>${env.AWS_CODEARTIFACT_MAVEN_SNAPSHOTS_URL}</url>
+                </repository>
+            </repositories>
+            <distributionManagement>
+                <repository>
+                    <id>default-aws-codeartifact-maven-snapshots</id>
+                    <name>default-aws-codeartifact-maven-snapshots</name>
+                    <url>${env.AWS_CODEARTIFACT_MAVEN_SNAPSHOTS_URL}</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+</project>
