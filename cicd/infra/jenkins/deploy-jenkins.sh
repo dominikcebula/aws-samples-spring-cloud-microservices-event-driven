@@ -51,6 +51,9 @@ unset AWS_ACCESS_KEY_ID
 unset AWS_SECRET_ACCESS_KEY
 unset AWS_SESSION_TOKEN
 
+AWS_CODEARTIFACT_MAVEN_SNAPSHOTS_URL=$(aws codeartifact get-repository-endpoint --repository aws-codeartifact-maven-snapshots --domain default --format maven --output text)
+export AWS_CODEARTIFACT_MAVEN_SNAPSHOTS_URL
+
 JENKINS_GITHUB_TOKEN_USERNAME=$(aws secretsmanager get-secret-value --secret-id jenkins-github-token --query SecretString --output text |jq --raw-output '.github_username')
 export JENKINS_GITHUB_TOKEN_USERNAME
 

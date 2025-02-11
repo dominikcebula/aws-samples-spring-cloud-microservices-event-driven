@@ -56,6 +56,8 @@ data:
             value: ${ECR_REPO_NAMESPACE_URL}
           - key: AWS_EKS_CLUSTER_NAME
             value: ${AWS_EKS_CLUSTER_NAME}
+          - key: AWS_CODEARTIFACT_MAVEN_SNAPSHOTS_URL
+            value: ${AWS_CODEARTIFACT_MAVEN_SNAPSHOTS_URL}
   02-global-trusted-pipeline-libraries.yaml: |
     unclassified:
       globalLibraries:
