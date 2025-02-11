@@ -1,3 +1,3 @@
 @Library('pipeline') _
 
-runLibPipeline.groovy(libName: 'parent')
+runLibPipeline(libName: 'parent')

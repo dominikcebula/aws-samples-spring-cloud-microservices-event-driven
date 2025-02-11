@@ -1,3 +1,3 @@
 @Library('pipeline') _
 
-runLibPipeline.groovy(libName: 'shared-test-lib')
+runLibPipeline(libName: 'shared-test-lib')
