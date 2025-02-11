@@ -19,7 +19,6 @@ def call(Map pipelineParams) {
                 echo 'Building the project...'
 
                 configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
-                    sh "env"
                     sh "mvn -s $MAVEN_SETTINGS -f ${WORKSPACE}/${pipelineParams.libName}/pom.xml clean compile"
                 }
             }
