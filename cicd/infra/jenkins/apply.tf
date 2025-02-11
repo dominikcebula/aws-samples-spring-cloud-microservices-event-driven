@@ -3,6 +3,4 @@ resource "terraform_data" "jenkins_instance" {
     command     = "./deploy-jenkins.sh"
     working_dir = path.module
   }
-
-  depends_on = [aws_iam_role.jenkins_cicd_role]
 }
