@@ -4,7 +4,7 @@ def call(Map pipelineParams) {
             agentContainer: 'maven', agentInjection: true, serviceAccount: 'jenkins-cicd-sa',
             containers: [
                     containerTemplate(name: 'maven', image: 'maven:3.9-eclipse-temurin-21',
-                            envVars: [secretEnvVar(key: 'AWS_CODE_ARTIFACT_AUTH_TOKEN', secretName: 'aws-code-artifact-token')])
+                            envVars: [secretEnvVar(key: 'AWS_CODE_ARTIFACT_AUTH_TOKEN', secretName: 'aws-code-artifact-token', secretKey: 'AWS_CODE_ARTIFACT_AUTH_TOKEN')])
             ],
             volumes: [
                     persistentVolumeClaim(claimName: 'maven-repo', mountPath: '/root/.m2/repository')
