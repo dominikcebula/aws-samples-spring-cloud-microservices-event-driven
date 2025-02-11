@@ -19,8 +19,7 @@ data "aws_iam_policy_document" "domain_policy" {
       "codeartifact:GetAuthorizationToken",
       "codeartifact:GetDomainPermissionsPolicy",
       "codeartifact:ListRepositoriesInDomain",
-      "codeartifact:PutDomainPermissionsPolicy",
-      "sts:GetServiceBearerToken"
+      "codeartifact:PutDomainPermissionsPolicy"
     ]
 
     resources = [aws_codeartifact_domain.this.arn]
@@ -39,8 +38,7 @@ data "aws_iam_policy_document" "domain_policy" {
       "codeartifact:DescribeDomain",
       "codeartifact:GetAuthorizationToken",
       "codeartifact:GetDomainPermissionsPolicy",
-      "codeartifact:ListRepositoriesInDomain",
-      "sts:GetServiceBearerToken"
+      "codeartifact:ListRepositoriesInDomain"
     ]
 
     resources = [aws_codeartifact_domain.this.arn]

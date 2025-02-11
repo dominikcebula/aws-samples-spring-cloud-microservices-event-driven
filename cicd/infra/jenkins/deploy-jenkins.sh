@@ -37,6 +37,20 @@ export ECR_REPO_NAMESPACE_URL="${ECR_REPO_HOSTNAME}/${ECR_REPO_NAMESPACE}"
 AWS_EKS_CLUSTER_NAME=$(kubectl config view --minify -o jsonpath='{.clusters[].name}' |grep -oP 'cluster/.*' |sed 's/cluster\///')
 export AWS_EKS_CLUSTER_NAME
 
+ASSUMED_ROLE_SESSION=$(aws sts assume-role \
+  --role-arn arn:aws:iam::${AWS_ACCOUNT_ID}:role/jenkins-cicd-role \
+  --role-session-name jenkins-cicd-role \
+  --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
+  --output text)
+export AWS_ACCESS_KEY_ID=$(echo ${ASSUMED_ROLE_SESSION} | cut -d' ' -f1)
+export AWS_SECRET_ACCESS_KEY=$(echo ${ASSUMED_ROLE_SESSION} | cut -d' ' -f2)
+export AWS_SESSION_TOKEN=$(echo ${ASSUMED_ROLE_SESSION} | cut -d' ' -f3)
+AWS_CODE_ARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain default --domain-owner ${AWS_ACCOUNT_ID} --region ${AWS_REGION} --query authorizationToken --output text)
+export AWS_CODE_ARTIFACT_AUTH_TOKEN
+unset AWS_ACCESS_KEY_ID
+unset AWS_SECRET_ACCESS_KEY
+unset AWS_SESSION_TOKEN
+
 JENKINS_GITHUB_TOKEN_USERNAME=$(aws secretsmanager get-secret-value --secret-id jenkins-github-token --query SecretString --output text |jq --raw-output '.github_username')
 export JENKINS_GITHUB_TOKEN_USERNAME
 

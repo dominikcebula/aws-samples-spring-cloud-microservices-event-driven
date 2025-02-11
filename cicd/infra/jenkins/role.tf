@@ -14,6 +14,15 @@ data "aws_iam_policy_document" "eks_assume_role_policy" {
     effect = "Allow"
     actions = ["sts:AssumeRole"]
     principals {
+      type = "AWS"
+      identifiers = [data.aws_caller_identity.current.arn]
+    }
+  }
+
+  statement {
+    effect = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
       type = "Service"
       identifiers = ["eks.amazonaws.com"]
     }
@@ -97,4 +106,23 @@ resource "aws_iam_policy_attachment" "AmazonEKSWorkerNodePolicy" {
 
 data "aws_iam_policy" "AmazonEKSWorkerNodePolicy" {
   name = "AmazonEKSWorkerNodePolicy"
+}
+
+resource "aws_iam_role_policy" "CiCdStsRolePolicy" {
+  name   = "CiCdStsRolePolicy"
+  role   = aws_iam_role.jenkins_cicd_role.id
+  policy = data.aws_iam_policy_document.CiCdStsRolePolicy.json
+}
+
+data "aws_iam_policy_document" "CiCdStsRolePolicy" {
+  statement {
+    effect = "Allow"
+    actions = ["sts:GetServiceBearerToken"]
+    resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "sts:AWSServiceName"
+      values = ["codeartifact.amazonaws.com"]
+    }
+  }
 }

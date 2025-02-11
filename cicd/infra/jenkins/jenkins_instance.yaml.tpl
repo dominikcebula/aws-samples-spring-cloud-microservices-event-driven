@@ -7,6 +7,13 @@ stringData:
   password:  ${JENKINS_GITHUB_TOKEN_PASSWORD}
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: aws-code-artifact-token
+stringData:
+  token: ${AWS_CODE_ARTIFACT_AUTH_TOKEN}
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: maven-repo
