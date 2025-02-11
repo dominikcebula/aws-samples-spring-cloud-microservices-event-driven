@@ -9,6 +9,13 @@ stringData:
 apiVersion: v1
 kind: Secret
 metadata:
+  name: aws-code-artifact-token
+stringData:
+  AWS_CODE_ARTIFACT_AUTH_TOKEN: ${AWS_CODE_ARTIFACT_AUTH_TOKEN}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: maven-settings
 data:
   settings.xml: |
@@ -17,7 +24,7 @@ data:
             <server>
                 <id>aws-codeartifact-maven-snapshots</id>
                 <username>aws</username>
-                <password>${AWS_CODEARTIFACT_AUTH_TOKEN}</password>
+                <password>${env.AWS_CODEARTIFACT_AUTH_TOKEN}</password>
             </server>
         </servers>
     </settings>
