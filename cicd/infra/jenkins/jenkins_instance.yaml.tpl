@@ -11,7 +11,7 @@ kind: Secret
 metadata:
   name: aws-code-artifact-token
 stringData:
-  token: ${AWS_CODE_ARTIFACT_AUTH_TOKEN}
+  AWS_CODE_ARTIFACT_AUTH_TOKEN: ${AWS_CODE_ARTIFACT_AUTH_TOKEN}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
