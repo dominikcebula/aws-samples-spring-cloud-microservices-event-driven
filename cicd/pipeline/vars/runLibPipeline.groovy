@@ -19,7 +19,7 @@ def call(Map pipelineParams) {
                 echo 'Building the project...'
 
                 configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
-                    sh "mvn -s $MAVEN_SETTINGS -f ${WORKSPACE}/${pipelineParams.libName}/pom.xml clean compile"
+                    sh "mvn -s ${MAVEN_SETTINGS} -f ${WORKSPACE}/${pipelineParams.libName}/pom.xml clean compile"
                 }
             }
 
@@ -27,7 +27,7 @@ def call(Map pipelineParams) {
                 echo 'Running unit tests...'
 
                 configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
-                    sh "mvn -s $MAVEN_SETTINGS -f ${WORKSPACE}/${pipelineParams.libName}/pom.xml test"
+                    sh "mvn -s ${MAVEN_SETTINGS} -f ${WORKSPACE}/${pipelineParams.libName}/pom.xml test"
                 }
             }
 
@@ -35,7 +35,7 @@ def call(Map pipelineParams) {
                 echo 'Running integration tests...'
 
                 configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
-                    sh "mvn -s $MAVEN_SETTINGS -f ${WORKSPACE}/${pipelineParams.libName}/pom.xml verify"
+                    sh "mvn -s ${MAVEN_SETTINGS} -f ${WORKSPACE}/${pipelineParams.libName}/pom.xml verify"
                 }
             }
 
@@ -43,7 +43,7 @@ def call(Map pipelineParams) {
                 echo 'Packaging library...'
 
                 configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
-                    sh "mvn -s $MAVEN_SETTINGS -f ${WORKSPACE}/${pipelineParams.libName}/pom.xml package"
+                    sh "mvn -s ${MAVEN_SETTINGS} -f ${WORKSPACE}/${pipelineParams.libName}/pom.xml package"
                 }
             }
 
@@ -51,7 +51,8 @@ def call(Map pipelineParams) {
                 echo 'Deploying library...'
 
                 configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
-                    sh "mvn -s $MAVEN_SETTINGS -f ${WORKSPACE}/${pipelineParams.libName}/pom.xml deploy"
+                    sh "mvn -s ${MAVEN_SETTINGS} help:effective-settings"
+                    sh "mvn -s ${MAVEN_SETTINGS} -f ${WORKSPACE}/${pipelineParams.libName}/pom.xml deploy"
                 }
             }
         }
