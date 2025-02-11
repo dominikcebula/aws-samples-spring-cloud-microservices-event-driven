@@ -72,17 +72,15 @@ data:
               comment: Maven Settings
               isReplaceAll: false
               content: |
-                <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-                  <servers>
-                    <server>
-                      <id>aws-codeartifact-maven-snapshots</id>
-                      <username>aws</username>
-                      <password>${env.AWS_CODEARTIFACT_AUTH_TOKEN}</password>
-                    </server>
-                  </servers>
-                </settings>
+                    <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+                        <servers>
+                            <server>
+                                <id>aws-codeartifact-maven-snapshots</id>
+                                <username>aws</username>
+                                <password>${env.AWS_CODEARTIFACT_AUTH_TOKEN}</password>
+                            </server>
+                        </servers>
+                    </settings>
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -163,6 +161,8 @@ spec:
         version: "2.0.2"
       - name: blueocean
         version: "1.27.16"
+      - name: config-file-provider
+        version: "982.vb_a_e458a_37021"
   service:
     type: LoadBalancer
     port: 80
