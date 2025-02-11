@@ -107,6 +107,9 @@
     <profiles>
         <profile>
             <id>aws-codeartifact-maven-snapshots</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <repositories>
                 <repository>
                     <id>aws-codeartifact-maven-snapshots</id>
