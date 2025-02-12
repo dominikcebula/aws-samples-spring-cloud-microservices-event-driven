@@ -37,7 +37,7 @@ data "aws_iam_policy_document" "repository_policy" {
       "codeartifact:UpdateRepository"
     ]
 
-    resources = [aws_codeartifact_repository.this.arn]
+    resources = ["arn:aws:codeartifact:${var.region}:${data.aws_caller_identity.current.account_id}:*"]
   }
 
   statement {
@@ -62,7 +62,7 @@ data "aws_iam_policy_document" "repository_policy" {
       "codeartifact:ReadFromRepository"
     ]
 
-    resources = [aws_codeartifact_repository.this.arn]
+    resources = ["arn:aws:codeartifact:${var.region}:${data.aws_caller_identity.current.account_id}:*"]
   }
 }
 
