@@ -26,7 +26,7 @@ data:
             <server>
                 <id>aws-codeartifact-maven-snapshots</id>
                 <username>aws</username>
-                <password>${env.AWS_CODEARTIFACT_AUTH_TOKEN}</password>
+                <password>${env.AWS_CODE_ARTIFACT_AUTH_TOKEN}</password>
             </server>
         </servers>
     </settings>
