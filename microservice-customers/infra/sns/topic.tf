@@ -41,7 +41,8 @@ data "aws_iam_policy_document" "customer_events_topic_policy_document" {
     effect = "Allow"
 
     actions = [
-      "SNS:Publish",
+      "SNS:GetTopicAttributes",
+      "SNS:Publish"
     ]
 
     principals {
