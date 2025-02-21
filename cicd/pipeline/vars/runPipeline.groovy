@@ -4,7 +4,7 @@ def call(Map pipelineParams) {
             containerTemplate(name: 'kaniko', image: "gcr.io/kaniko-project/executor:debug", command: '/busybox/cat', ttyEnabled: true),
             containerTemplate(name: 'awscli', image: 'amazon/aws-cli:2.22.26', command: 'cat', ttyEnabled: true),
             containerTemplate(name: 'kubectl', image: 'alpine/k8s:1.29.12', command: 'cat', ttyEnabled: true, runAsUser: '0'),
-            containerTemplate(name: 'docker-daemon', image: 'docker:19.03.1-dind', privileged: 'true'),
+            containerTemplate(name: 'docker-daemon', image: 'docker:27.5.1-dind', privileged: 'true'),
     ], volumes: [
             persistentVolumeClaim(claimName: 'maven-local-repo', mountPath: '/root/.m2/repository'),
             configMapVolume(configMapName: 'kaniko-config', mountPath: '/kaniko/.docker'),
