@@ -62,6 +62,8 @@ data "aws_iam_policy_document" "sqs_policy_document" {
     }
 
     actions = [
+      "SQS:GetQueueUrl",
+      "SQS:GetQueueAttributes",
       "SQS:ReceiveMessage",
       "SQS:DeleteMessage",
       "SQS:ChangeMessageVisibility"
