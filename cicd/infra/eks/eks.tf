@@ -27,7 +27,7 @@ module "eks" {
     one = {
       name = "node-group-1"
 
-      instance_types = ["t3.medium"]
+      instance_types = ["m5a.xlarge"]
 
       min_size     = 4
       max_size     = 4
