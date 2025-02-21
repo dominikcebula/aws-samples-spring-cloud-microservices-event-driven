@@ -3,7 +3,7 @@ variable "service_account_id" {
   type        = string
 }
 
-variable "service_account_arn" {
-  description = "Service Account ARN used to run Microservice"
+variable "customer_events_topic_arn" {
+  description = "Customer Events Topic ARN"
   type        = string
 }

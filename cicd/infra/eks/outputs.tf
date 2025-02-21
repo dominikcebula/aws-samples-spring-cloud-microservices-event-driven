@@ -29,6 +29,13 @@ output "service_accounts_roles" {
   ]
 }
 
+output "service_accounts_id_map" {
+  description = "IDs of the IAM roles for Microservice Runners Service Accounts"
+  value       = {
+    for sa in module.service_accounts : sa.service_account_role_name => sa.service_account_role_id
+  }
+}
+
 output "service_accounts_arn_map" {
   description = "Name of the IAM roles for Microservice Runners Service Accounts"
   value = {
