@@ -160,7 +160,7 @@ spec:
       - name: job-dsl
         version: "1.90"
       - name: configuration-as-code
-        version: "1915.vcdd0a_d0d2625"
+        version: "1932.v75cb_b_f1b_698d"
       - name: kubernetes-credentials-provider
         version: "1.262.v2670ef7ea_0c5"
       - name: maven-plugin
