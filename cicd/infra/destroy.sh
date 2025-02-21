@@ -262,6 +262,7 @@ function delete_codeartifact_domains() {
 }
 
 function destroy_terraform_resources() {
+  terraform state list |grep postgresql |xargs terraform state rm
   terraform destroy -auto-approve
 }
 
