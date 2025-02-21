@@ -1,4 +1,4 @@
-resource "terraform_data" "jenkins_instance" {
+resource "terraform_data" "kube_sa" {
   provisioner "local-exec" {
     command = "envsubst < kube_sa_template.tpl | kubectl apply -f -"
     working_dir = path.module
