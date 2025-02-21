@@ -5,7 +5,7 @@ def call(Map pipelineParams) {
             containerTemplate(name: 'awscli', image: 'amazon/aws-cli:2.22.26', command: 'cat', ttyEnabled: true),
             containerTemplate(name: 'kubectl', image: 'alpine/k8s:1.29.12', command: 'cat', ttyEnabled: true, runAsUser: '0')
     ], volumes: [
-            persistentVolumeClaim(claimName: 'maven-repo', mountPath: '/root/.m2/repository'),
+            persistentVolumeClaim(claimName: 'maven-local-repo', mountPath: '/root/.m2/repository'),
             configMapVolume(configMapName: 'kaniko-config', mountPath: '/kaniko/.docker'),
             emptyDirVolume(mountPath: '/.kube')
     ]) {
