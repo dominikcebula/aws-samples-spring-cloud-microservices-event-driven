@@ -46,6 +46,13 @@ resource "postgresql_grant" "app_user_connect" {
   privileges = ["CONNECT"]
 }
 
+resource "postgresql_grant" "app_user_create" {
+  database    = aws_rds_cluster.aurora_cluster.database_name
+  role        = postgresql_role.app_user.name
+  object_type = "database"
+  privileges = ["CREATE"]
+}
+
 resource "aws_iam_policy" "db_app_user_policy" {
   name        = "RdsDbAppUserConnectPolicy"
   description = "IAM policy allowing connection to RDS DB using ${postgresql_role.app_user.name} account."
